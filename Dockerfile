@@ -79,69 +79,82 @@ ENV PATH="$PATH:/root/.asdf/bin"
 # Add asdf shims to PATH, so installed executables can be run in this Dockerfile
 ENV PATH="$PATH:/root/.asdf/shims"
 
-# RUN asdf plugin add awscli && \
-#     # asdf plugin add azure-cli && \
-#     asdf plugin add gradle && \
-#     asdf plugin add helm && \
-#     asdf plugin add java && \
-#     asdf plugin add kubectl && \
-#     asdf plugin add maven && \
-#     asdf plugin add nodejs && \
-#     asdf plugin add oc && \
-#     asdf plugin add pre-commit && \
-#     asdf plugin add python && \
-#     asdf plugin add sbt && \
-#     asdf plugin add scala && \
-#     asdf plugin add steampipe && \
-#     asdf plugin add terraform && \
-#     asdf plugin add trivy
+RUN asdf plugin add awscli && \
+    # asdf plugin add azure-cli && \
+    asdf plugin add gradle && \
+    asdf plugin add helm && \
+    asdf plugin add java && \
+    asdf plugin add kubectl && \
+    asdf plugin add maven && \
+    asdf plugin add nodejs && \
+    asdf plugin add oc && \
+    asdf plugin add pre-commit && \
+    asdf plugin add podman https://github.com/tvon/asdf-podman.git && \
+    asdf plugin add python && \
+    asdf plugin add sbt && \
+    asdf plugin add scala && \
+    asdf plugin add steampipe && \
+    asdf plugin add terraform && \
+    asdf plugin add trivy
 
 # # COPY config/.tool-versions "$PATH:/root/.asdf/.tool-versions"
 # # RUN asdf install
 
-# RUN asdf install awscli 2.13.26 && \
-#     # asdf install azure-cli 2.53.0 && \
-#     asdf install gradle 8.2.1 && \
-#     asdf install helm 3.12.3 && \
-#     asdf install java temurin-11.0.20+8 && \
-#     asdf install kubectl 1.28.2 && \
-#     asdf install maven 3.9.5 && \
-#     asdf install nodejs 18.18.1 && \
-#     asdf install oc 4.13.16 && \
-#     asdf install pre-commit 3.3.3 && \
-#     asdf install python 3.11.6 && \
-#     asdf install sbt 1.7.1 && \
-#     asdf install scala 3.1.3 && \
-#     asdf install steampipe 0.20.12 && \
-#     asdf install terraform 1.5.3 && \
-#     asdf install trivy 0.45.0
+RUN asdf install awscli 2.13.26 && \
+    # asdf install azure-cli 2.53.0 && \
+    asdf install gradle 8.2.1 && \
+    asdf install helm 3.12.3 && \
+    asdf install java temurin-11.0.20+8 && \
+    asdf install kubectl 1.28.2 && \
+    asdf install maven 3.9.5 && \
+    asdf install nodejs 18.18.1 && \
+    asdf install oc 4.13.16 && \
+    asdf install podman 4.7.1 && \
+    asdf install pre-commit 3.3.3 && \
+    asdf install python 3.11.6 && \
+    asdf install sbt 1.7.1 && \
+    asdf install scala 3.1.3 && \
+    asdf install steampipe 0.20.12 && \
+    asdf install terraform 1.5.3 && \
+    asdf install trivy 0.45.0
 
-# RUN asdf global awscli 2.13.26 && \
-#     # asdf global azure-cli 2.53.0 && \
-#     asdf global gradle 8.2.1 && \
-#     asdf global helm 3.12.3 && \
-#     asdf global java temurin-11.0.20+8 && \
-#     asdf global kubectl 1.28.2 && \
-#     asdf global maven 3.9.5 && \
-#     asdf global nodejs 18.18.1 && \
-#     asdf global oc 4.13.16 && \
-#     asdf global pre-commit 3.3.3 && \
-#     asdf global python 3.11.6 && \
-#     asdf global sbt 1.7.1 && \
-#     asdf global scala 3.1.3 && \
-#     asdf global steampipe 0.20.12 && \
-#     asdf global terraform 1.5.3 && \
-#     asdf global trivy 0.45.0
+RUN asdf global awscli 2.13.26 && \
+    # asdf global azure-cli 2.53.0 && \
+    asdf global gradle 8.2.1 && \
+    asdf global helm 3.12.3 && \
+    asdf global java temurin-11.0.20+8 && \
+    asdf global kubectl 1.28.2 && \
+    asdf global maven 3.9.5 && \
+    asdf global nodejs 18.18.1 && \
+    asdf global oc 4.13.16 && \
+    asdf global podman 4.7.1 && \
+    asdf global pre-commit 3.3.3 && \
+    asdf global python 3.11.6 && \
+    asdf global sbt 1.7.1 && \
+    asdf global scala 3.1.3 && \
+    asdf global steampipe 0.20.12 && \
+    asdf global terraform 1.5.3 && \
+    asdf global trivy 0.45.0
 
-###########################################
-## Update bashrc with auto branch complete
-###########################################
+###########################################################################
+## Update bashrc with auto branch complete so that the branch shows up in  
+## the folder when using git and branches... this indication prevents
+## accidental check-ins or deletions.
+###########################################################################
 RUN echo 'parse_git_branch() {' >> /root/.bashrc && \
   echo '    git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \(.*\)/ (\1)/"' >> /root/.bashrc && \
   echo '}' >> /root/.bashrc && \
   echo 'export PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$(parse_git_branch)\$ "' >> /root/.bashrc
 
-# Clean up the local repository of retrieved package files
+###########################################################################
+## Copy helpful bash scripts over for testing the environment.
+###########################################################################
+COPY scripts/add-user.sh opt/scripts/add-user.sh
+COPY scripts/check-google.sh opt/scripts/check-google.sh
+COPY scripts/fix-time.sh opt/scripts/fix-time.sh
+
+# Clean up the local repository of retrieved package files, useful only for
+# local environments which don't have any cleanup mechanism.
 RUN apt-get clean
 
 # Start a shell when the container runs
