@@ -1,0 +1,43 @@
+name: Release WSL Image
+
+on:
+  push:
+    branches:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Podman
+        run: |
+          # Install Podman (if not already installed)
+          if ! command -v podman &> /dev/null; then
+            sudo apt update
+            sudo apt install -y podman
+          fi
+          # Display Podman version
+          podman --version
+        shell: bash
+
+      - name: Generate tars
+        run: |
+          bash build.sh
+
+      - name: Set date
+        id: get-date
+        run: |
+          echo "date=$(/bin/date -u +%Y%m%d%I%M)" >> $GITHUB_ENV
+
+      - name: Create Release
+        if: github.ref == 'refs/heads/main' # only deploy from main branch
+        run: |
+          gh release create ${{ env.date }} images/*.tar --generate-notes -t "WSL Release ${{ env.date }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
