@@ -24,6 +24,22 @@ to run
 
 `wsl -d ubuntu-22.04`
 
+## Installing Extra Tools
+
+Inside the image, the /opt/scripts folder has a script to install [an additional list](./scripts/add-extra-tools.sh) of tools.
+
+To install this list of tools, run `bash /opt/scripts/add-extra-tools.sh`. We couldn't fit it all into the image due to a [2GB restriction](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
+
+## Change Tool versions
+
+We utilize [asdf](https://asdf-vm.com/) to install common programming tools and it comes with a [tool versions file](./config/.tool-versions).
+
+To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.11.6, save the file, and run `asdf install`.
+
+Once it is completed, you can run `python -v` with python 3.11.6.
+
+Use `asdf list-all python` to figure out the available versions of python you can install.
+
 ## WSL Tricks
 
 To find out what distros are running, run `wsl --list --running`.
@@ -53,6 +69,9 @@ For whatever reason, occasionally if you run `wsl --shutdown`, you may end up cr
 - update-ca-certificates don't seem to update any certificates
   - Fixed - had to change the format of the file from .pem to a .crt for update-ca-certificates to pick it up.
 - azure-cli with asdf can't install and won't run.
+  - Fixed - needed to install Python and use a ~/.tool-versions file to install.
+- Github Releases per file has a [upper limit of 2GB](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
+  - Sort of fixed - slim down the image.
 
 ## Links to Follow
 
