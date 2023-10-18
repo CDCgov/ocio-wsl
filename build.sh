@@ -20,7 +20,7 @@ fi
 TAR_DIR="$PWD/images"
 mkdir -p "$TAR_DIR"
 IMAGE_NAME="ubuntu-22.04-cdc"
-IMAGE_VERSION="1.1"
+IMAGE_VERSION="1.2"
 
 # Build, run, and save the image as a docker image in a tar file
 # so it can be used later
