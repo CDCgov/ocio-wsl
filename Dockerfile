@@ -58,7 +58,7 @@ RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1 && \
   echo ". $HOME/.asdf/asdf.sh" >> /root/.bashrc && \
   echo ". $HOME/.asdf/asdf.sh" >> /root/.zshrc
 
-COPY config/.tool-versions ".tool-versions"
+COPY config/.tool-versions /root/.tool-versions
 
 # Add asdf to profile, so it is available in `podman run`
 ENV PATH="$PATH:/root/.asdf/bin"
@@ -67,18 +67,20 @@ ENV PATH="$PATH:/root/.asdf/bin"
 ENV PATH="$PATH:/root/.asdf/shims"
 
 ##############################################################################
-## Python itself can take up 1GB. All other tools are in the folder:
+## All other tools are in the folder:
 ## opt/scripts/add-extra-tools.sh
 ##
-## There is a side limit to releases of 2GB by Github.
+## There is a file limit to Github releases of 2GB:
+## 
 ##############################################################################
 RUN asdf plugin add awscli && \
-    asdf plugin add azure-cli && \
-    asdf plugin add oc && \
-    asdf plugin add python && \
-    asdf plugin add podman https://github.com/tvon/asdf-podman.git && \
-    asdf plugin add terraform && \
-    asdf install
+  asdf plugin add azure-cli && \
+  asdf plugin add oc && \
+  asdf plugin add python && \
+  asdf plugin add podman https://github.com/tvon/asdf-podman.git && \
+  asdf plugin add terraform && \
+  asdf install
+
 
 ###########################################################################
 ## Update bashrc with auto branch complete so that the branch shows up in  
@@ -102,7 +104,7 @@ COPY config/wsl.conf /etc/wsl.conf
 ###########################################################################
 ## Copy helpful bash scripts over for testing the environment.
 ###########################################################################
-COPY scripts/ opt/scripts/
+COPY scripts/ /opt/scripts/
 
 # Clean up the local repository of retrieved package files, useful only for
 # local environments which don't have any cleanup mechanism.
