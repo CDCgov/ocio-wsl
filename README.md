@@ -11,14 +11,16 @@ Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup
 2. Import a tar file and wait a bit.
    `wsl --import <distroName> <virtual hard disk> <tar file>`
 
-3. Once imported, run the distro:
+3. Once the distro has been imported, DNS resolution does not yet work! Download this [fix-dns.ps1 powershell script](./scripts/fix-dns.ps1) and run it by running `powershell -executionpolicy bypass -File fix-dns.ps1 <distro_name>`.
+
+4. Once imported, run the distro:
    `wsl -d <distroName>`
 
 Example:
 
 For the Ubuntu 22.04 distro, with a **virtual hard disk** path of **C:\Users\tpz7\ubuntu-22.04-vhd** and the tar file in **C:\Users\tpz7\Downloads\ubuntu-22.04-cdc:1.0-131020231108.tar**
 
-`wsl --import ubuntu-22.04 C:\Users\tpz7\ubuntu-22.04-vhd C:\Users\tpz7\Downloads\ubuntu-22.04-cdc:1.0-131020231108.tar`
+`wsl --import ubuntu-22.04-cdc-1.23 C:\Users\tpz7\ubuntu-22.04-vhd C:\Users\tpz7\Downloads\ubuntu-22.04-cdc:1.3-131020231108.tar`
 
 to run
 
@@ -55,11 +57,17 @@ For whatever reason, occasionally if you run `wsl --shutdown`, you may end up cr
 1. Restart the **vmcompute** service by running `Restart-Service vmcompute` in your admin powershell.
 1. Try using `wsl` again.
 
+It is possible to navigate the filesystem of the distro by going to \\wsl$\ and finding the distribution folder using Windows. Otherwise, one quick way to access it is to `wsl -d <distro>` and go to the root `cd ~` and then run `explorer.exe .`, a Window will pop up going to the filesystem.
+
 ## Local Testing
 
 - Build the Container: `bash build.sh`
 
 - Run a simple curl: `podman run -t ubuntu-22.04-cdc:1.0 bash -c "curl -vv google.com"`
+
+- Check whether going to google.com works: `podman run -t ubuntu-22.04-cdc:1.3 bash -c "bash /opt/scripts/check-google.sh"`
+
+- Download additional software: `podman run -t ubuntu-22.04-cdc:1.3 bash -c "bash /opt/scripts/add-extra-tools.sh"`
 
 ## Issues
 
