@@ -3,7 +3,7 @@
 set -eu
 
 IMAGE_NAME="ubuntu-22.04-cdc"
-IMAGE_VERSION="1.2"
+IMAGE_VERSION="1.3"
 
 # Use awk to extract container IDs into an array
 containerIDs=($(podman container ls -a | grep -i "$IMAGE_NAME:$IMAGE_VERSION" | awk '{print $1}'))
