@@ -35,9 +35,14 @@ jobs:
         run: |
           echo "date=$(/bin/date -u +%Y%m%d%I%M)" >> $GITHUB_ENV
 
+      - name: Set version
+        id: get-version
+        run: |
+          echo "version=$(cat "${{ github.workspace }}/VERSION")" >> $GITHUB_ENV
+
       - name: Create Release
         if: github.ref == 'refs/heads/main' # only deploy from main branch
         run: |
-          gh release create ${{ env.date }} images/*.tar --generate-notes -t "WSL Release ${{ env.date }}"
+          gh release create ${{ env.version }}-${{ env.date }} images/*.tar --generate-notes -t "WSL Release ${{ env.version }}-${{ env.date }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
