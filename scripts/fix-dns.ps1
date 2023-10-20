@@ -52,6 +52,7 @@ $DNSFile = "\\wsl$\$distroName\etc\resolv.conf"
 
 $hasError = $false
 foreach ($DNS in $DNSList) {
+  Write-Host "IP address for DNS Resolver: $DNS"
   $command = "wsl -d $distroName echo -e 'nameserver $DNS' 2>&1 | % ToString | Out-File -FilePath $DNSFile -Encoding UTF8 -NoNewLine"
   $result = Invoke-Expression $command
   if ($result -match "error") {
