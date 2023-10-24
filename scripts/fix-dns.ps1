@@ -49,13 +49,22 @@ if ($distroName -match '[\\/:*?"<>|]') {
 ############################################################################
 $DNSList = Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandProperty ServerAddresses
 $DNSFile = "\\wsl$\$distroName\etc\resolv.conf"
+
+$hasError = $false
 foreach ($DNS in $DNSList) {
+  Write-Host "IP address for DNS Resolver: $DNS"
   $command = "wsl -d $distroName echo -e 'nameserver $DNS' 2>&1 | % ToString | Out-File -FilePath $DNSFile -Encoding UTF8 -NoNewLine"
-  Invoke-Expression $command
+  $result = Invoke-Expression $command
+  if ($result -match "error") {
+    $hasError = $true
+    break
+  }
 }
 
-$RawString = Get-Content -Raw $DNSFile
-$Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
-[System.IO.File]::WriteAllText($DNSFile, $RawString, $Utf8NoBomEncoding)
+if (-not $hasError) {
+  $RawString = Get-Content -Raw $DNSFile
+  $Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False
+  [System.IO.File]::WriteAllText($DNSFile, $RawString, $Utf8NoBomEncoding)
 
-Write-Host "DNS resolution has been updated for $distroName."
+  Write-Host "DNS resolution has been updated for $distroName."
+}

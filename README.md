@@ -20,7 +20,7 @@ Example:
 
 For the Ubuntu 22.04 distro, with a **virtual hard disk** path of **C:\Users\tpz7\ubuntu-22.04-vhd** and the tar file in **C:\Users\tpz7\Downloads\ubuntu-22.04-cdc:1.0-131020231108.tar**
 
-`wsl --import ubuntu-22.04-cdc-1.23 C:\Users\tpz7\ubuntu-22.04-vhd C:\Users\tpz7\Downloads\ubuntu-22.04-cdc:1.3-131020231108.tar`
+`wsl --import ubuntu-22.04-cdc-1.23 C:\Users\tpz7\ubuntu-22.04-vhd C:\Users\tpz7\Downloads\ubuntu-22.04-cdc:1.4-131020231108.tar`
 
 to run
 
@@ -65,9 +65,9 @@ It is possible to navigate the filesystem of the distro by going to \\wsl$\ and 
 
 - Run a simple curl: `podman run -t ubuntu-22.04-cdc:1.0 bash -c "curl -vv google.com"`
 
-- Check whether going to google.com works: `podman run -t ubuntu-22.04-cdc:1.3 bash -c "bash /opt/scripts/check-google.sh"`
+- Check whether going to google.com works: `podman run -t ubuntu-22.04-cdc:1.4 bash -c "bash /opt/scripts/check-google.sh"`
 
-- Download additional software: `podman run -t ubuntu-22.04-cdc:1.3 bash -c "bash /opt/scripts/add-extra-tools.sh"`
+- Download additional software: `podman run -t ubuntu-22.04-cdc:1.4 bash -c "bash /opt/scripts/add-extra-tools.sh"`
 
 ## Issues
 

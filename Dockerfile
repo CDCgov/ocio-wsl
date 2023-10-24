@@ -20,6 +20,7 @@ RUN apt-get update -q && apt-get install -y \
   iperf3 \
   nano \
   netcat \
+  strace \
   rsync \
   unzip \
   wget \
@@ -43,6 +44,7 @@ RUN apt-get update -q && apt-get install -y \
 ## to drop or terminate a socket connection.
 ###############################################################################
 COPY config/bundle-ca.pem /usr/local/share/ca-certificates/enterprise-bundle.crt
+COPY config/bundle-ca.pem /usr/lib/ssl/cert.pem
 RUN update-ca-certificates
 
 ###############################################################################
@@ -80,7 +82,6 @@ RUN asdf plugin add awscli && \
   asdf plugin add podman https://github.com/tvon/asdf-podman.git && \
   asdf plugin add terraform && \
   asdf install
-
 
 ###########################################################################
 ## Update bashrc with auto branch complete so that the branch shows up in  
