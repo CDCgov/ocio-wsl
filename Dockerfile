@@ -92,7 +92,7 @@ RUN echo 'parse_git_branch() {' >> /root/.bashrc && \
 ## Podman requires knowing which container registries to pull from
 ## Provide a list of options for the registries.
 ###########################################################################
-RUN echo "unqualified-search-registries = ['imagehub.cdc.gov', registry.fedoraproject.org', 'registry.access.redhat.com', 'registry.centos.org', 'docker.io']" \
+RUN echo "unqualified-search-registries = ['imagehub.cdc.gov:6989', 'registry.access.redhat.com', 'docker.io', 'registry.centos.org', 'registry.fedoraproject.org']" \
   >> /etc/containers/registries.conf
 
 ##############################################################################
