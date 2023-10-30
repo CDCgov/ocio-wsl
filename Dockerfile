@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:22.04
 
-LABEL updated_at=2023-10-13
+LABEL updated_at=2023-10-30
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -20,6 +20,7 @@ RUN apt-get update -q && apt-get install -y \
   iperf3 \
   nano \
   netcat \
+  podman \
   strace \
   rsync \
   unzip \
@@ -36,6 +37,7 @@ RUN apt-get update -q && apt-get install -y \
   libssl-dev \
   libffi-dev \
   liblzma-dev \
+  python3.10-venv \
   zlib1g-dev
 
 ###############################################################################
@@ -44,8 +46,8 @@ RUN apt-get update -q && apt-get install -y \
 ## to drop or terminate a socket connection.
 ###############################################################################
 COPY config/bundle-ca.pem /usr/local/share/ca-certificates/enterprise-bundle.crt
-COPY config/bundle-ca.pem /usr/lib/ssl/cert.pem
-RUN update-ca-certificates
+RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.pem && \
+  update-ca-certificates
 
 ###############################################################################
 ## Install asdf to install a variety of programming languages and command line
@@ -73,15 +75,8 @@ ENV PATH="$PATH:/root/.asdf/shims"
 ## opt/scripts/add-extra-tools.sh
 ##
 ## There is a file limit to Github releases of 2GB:
-## 
 ##############################################################################
-RUN asdf plugin add awscli && \
-  asdf plugin add azure-cli && \
-  asdf plugin add oc && \
-  asdf plugin add python && \
-  asdf plugin add podman https://github.com/tvon/asdf-podman.git && \
-  asdf plugin add terraform && \
-  asdf install
+RUN asdf plugin add python && asdf install
 
 ###########################################################################
 ## Update bashrc with auto branch complete so that the branch shows up in  

@@ -2,16 +2,20 @@
 
 set -eu
 
-asdf plugin add java
-asdf plugin add nodejs
-asdf plugin add helm
+asdf plugin add awscli
+asdf plugin add azure-cli
 asdf plugin add gradle
+asdf plugin add helm
+asdf plugin add java
 asdf plugin add kubectl
 asdf plugin add maven
+asdf plugin add nodejs
+asdf plugin add oc
 asdf plugin add pre-commit
 asdf plugin add sbt
 asdf plugin add scala
 asdf plugin add steampipe
+asdf plugin add terraform
 asdf plugin add trivy
 asdf plugin add yarn
 
