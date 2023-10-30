@@ -88,6 +88,13 @@ RUN echo 'parse_git_branch() {' >> /root/.bashrc && \
   echo '}' >> /root/.bashrc && \
   echo 'export PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$(parse_git_branch)\$ "' >> /root/.bashrc
 
+###########################################################################
+## Podman requires knowing which container registries to pull from
+## Provide a list of options for the registries.
+###########################################################################
+RUN echo "unqualified-search-registries = ['imagehub.cdc.gov', registry.fedoraproject.org', 'registry.access.redhat.com', 'registry.centos.org', 'docker.io']" \
+  >> /etc/containers/registries.conf
+
 ##############################################################################
 ## Ensure DNS is working properly: 
 ## https://gist.github.com/ThePlenkov/6ecf2a43e2b3898e8cd4986d277b5ecf
