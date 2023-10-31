@@ -83,10 +83,8 @@ RUN asdf plugin add python && asdf install
 ## the folder when using git and branches... this indication prevents
 ## accidental check-ins or deletions.
 ###########################################################################
-RUN echo 'parse_git_branch() {' >> /root/.bashrc && \
-  echo '    git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \(.*\)/ (\1)/"' >> /root/.bashrc && \
-  echo '}' >> /root/.bashrc && \
-  echo 'export PS1="\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$(parse_git_branch)\$ "' >> /root/.bashrc
+RUN printf 'parse_git_branch() {\n  git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \\(.*\\)/(\\1)/"\n}\n' >> /root/.bashrc && \
+  printf "PS1='\${debian_chroot:+(\$debian_chroot)}\[\\\\033[01;32m\\\\]\u@\\h\\[\\\\033[00m\\\\]:\\[\\\\033[01;34m\\\\]\w\[\\\\033[01;31m\\\\]\$(parse_git_branch)\[\\\\033[00m\\\\]\\$ '\n" >> /root/.bashrc
 
 ###########################################################################
 ## Podman requires knowing which container registries to pull from
