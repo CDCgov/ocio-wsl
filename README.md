@@ -18,9 +18,9 @@ Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup
 
 Example:
 
-For the Ubuntu 22.04 distro, with a **virtual hard disk** path of **C:\Users\tpz7\ubuntu-22.04-vhd** and the tar file in **C:\Users\tpz7\Downloads\ubuntu-22.04-cdc:1.0-131020231108.tar**
+For the Ubuntu 22.04 distro, with a **virtual hard disk** path of **C:\Users\tpz7\ubuntu-22.04-vhd** and the tar file in **C:\Users\tpz7\Downloads\ubuntu-22.04-cdc.tar**
 
-`wsl --import ubuntu-22.04-cdc-1.23 C:\Users\tpz7\ubuntu-22.04-vhd C:\Users\tpz7\Downloads\ubuntu-22.04-cdc:1.4-131020231108.tar`
+`wsl --import ubuntu-22.04-cdc C:\Users\tpz7\ubuntu-22.04-vhd C:\Users\tpz7\Downloads\ubuntu-22.04-cdc.tar`
 
 to run
 
@@ -63,11 +63,21 @@ It is possible to navigate the filesystem of the distro by going to \\wsl$\ and 
 
 - Build the Container: `bash build.sh`
 
-- Run a simple curl: `podman run -t ubuntu-22.04-cdc:1.0 bash -c "curl -vv google.com"`
+- Run a simple curl: `podman run -t ubuntu-22.04-cdc bash -c "curl -vv google.com"`
 
-- Check whether going to google.com works: `podman run -t ubuntu-22.04-cdc:1.4 bash -c "bash /opt/scripts/check-google.sh"`
+- Check whether going to google.com works: `podman run -t ubuntu-22.04-cdc bash -c "bash /opt/scripts/check-google.sh"`
 
-- Download additional software: `podman run -t ubuntu-22.04-cdc:1.4 bash -c "bash /opt/scripts/add-extra-tools.sh"`
+- Download additional software: `podman run -t ubuntu-22.04-cdc bash -c "bash /opt/scripts/add-extra-tools.sh"`
+
+## Releases
+
+We utilize Conventional Commits messages and automated tagging via Semantic Versioning
+
+The most important prefixes you should have in mind are:
+
+    fix: which represents bug fixes, and correlates to a SemVer patch.
+    feat: which represents a new feature, and correlates to a SemVer minor.
+    feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a SemVer major.
 
 ## Issues
 
@@ -83,4 +93,4 @@ It is possible to navigate the filesystem of the distro by going to \\wsl$\ and 
 
 ## Links to Follow
 
-- https://github.com/mvaisakh/wsl-distro-tars
+- [mvaisakh/wsl-distro-tars](https://github.com/mvaisakh/wsl-distro-tars)

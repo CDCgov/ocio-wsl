@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:22.04
 
-LABEL updated_at=2023-10-30
+LABEL updated_at=2023-11-01
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
