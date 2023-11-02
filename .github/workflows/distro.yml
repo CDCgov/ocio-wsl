@@ -2,18 +2,36 @@ name: Release WSL Image
 
 on:
   push:
-    branches:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read # for checkout
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
     steps:
       - name: Checkout the codebase
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm clean-install
+
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
 
       - name: Set up Podman
         run: |
@@ -30,19 +48,9 @@ jobs:
         run: |
           bash build.sh
 
-      - name: Set date
-        id: get-date
-        run: |
-          echo "date=$(/bin/date -u +%Y%m%d%I%M)" >> $GITHUB_ENV
-
-      - name: Set version
-        id: get-version
-        run: |
-          echo "version=$(cat "${{ github.workspace }}/VERSION")" >> $GITHUB_ENV
-
-      - name: Create Release
-        if: github.ref == 'refs/heads/main' # only deploy from main branch
-        run: |
-          gh release create ${{ env.version }}-${{ env.date }} images/*.tar --generate-notes -t "WSL Release ${{ env.version }}-${{ env.date }}"
+      - name: Release
+        if: github.ref == 'refs/heads/main'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        run: |
+          npx semantic-release

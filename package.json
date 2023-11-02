@@ -1,0 +1,59 @@
+{
+  "name": "cdc-wsl-build",
+  "version": "1.0.0",
+  "description": "For building Windows Subsystem Linux (WSL) images",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cdc/ocio-wsl.git"
+  },
+  "keywords": [
+    "wsl",
+    "builds",
+    "linux",
+    "distro"
+  ],
+  "author": "Boris Ning",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cdc/ocio-wsl/issues"
+  },
+  "homepage": "https://github.com/cdc/ocio-wsl#readme",
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "conventional-changelog-conventionalcommits": "^7.0.2",
+    "semantic-release": "^22.0.6"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "tagFormat": "${version}",
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "conventionalcommits"
+        }
+      ],
+      [
+        "@semantic-release/github",
+        {
+          "assets": [
+            {
+              "path": "images/ubuntu-22.04-cdc.tar",
+              "label": "Image distribution"
+            }
+          ]
+        }
+      ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/git"
+    ]
+  }
+}

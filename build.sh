@@ -17,44 +17,26 @@ else
   exit
 fi
 
-file_path="VERSION"
-
-is_valid_version() {
-  [[ $1 =~ ^[0-9]+\.[0-9]+$ ]]
-}
-
-if [ -f "$file_path" ]; then
-  VERSION="$(cat "$(pwd)/$file_path")"
-  if is_valid_version "$VERSION"; then
-    echo "VERSION: $VERSION"
-  else
-    echo "Error: Invalid version format in file: $file_path"
-  fi
-else
-  echo "File not found: $file_path"
-fi
-
 TAR_DIR="$PWD/images"
 mkdir -p "$TAR_DIR"
 IMAGE_NAME="ubuntu-22.04-cdc"
-IMAGE_VERSION="$VERSION"
 
 # Build, run, and save the image as a docker image in a tar file
 # so it can be used later
-echo "Building image $IMAGE_NAME:$IMAGE_VERSION"
-podman build . -t "$IMAGE_NAME:$IMAGE_VERSION"
+echo "Building image $IMAGE_NAME"
+podman build . -t "$IMAGE_NAME"
 
-echo "Running image $IMAGE_NAME:$IMAGE_VERSION"
-podman run -t "$IMAGE_NAME:$IMAGE_VERSION" sh -c echo
-containerID=$(podman container ls -a | grep -i "$IMAGE_NAME:$IMAGE_VERSION" | awk '{print $1}')
-TAR_NAME=$(echo "$IMAGE_NAME:$IMAGE_VERSION" | tr '/' '_')-$(date -u +%Y%m%d%I%M).tar
+echo "Running image $IMAGE_NAME"
+podman run -t "$IMAGE_NAME" sh -c echo
+containerID=$(podman container ls -a | grep -i "$IMAGE_NAME" | awk '{print $1}')
+TAR_NAME=$(echo "$IMAGE_NAME" | tr '/' '_').tar
 
 echo "Exporting image $containerID > $TAR_DIR/$TAR_NAME"
 podman export "$containerID" > "$TAR_DIR"/"$TAR_NAME"
 
 # Remove the image from podman container storage to avoid piling up of containers
-containerIDs=($(podman container ls -a | grep -i "$IMAGE_NAME:$IMAGE_VERSION" | awk '{print $1}'))
-echo "Removing containers with image: $IMAGE_NAME:$IMAGE_VERSION"
+containerIDs=($(podman container ls -a | grep -i "$IMAGE_NAME" | awk '{print $1}'))
+echo "Removing containers with image: $IMAGE_NAME"
 for containerID in "${containerIDs[@]}"
 do
   echo "Removing container ID: $containerID"
