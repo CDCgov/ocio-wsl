@@ -18,6 +18,7 @@ RUN apt-get update -q && apt-get install -y \
   dnsperf \
   git \
   iperf3 \
+  jq \
   nano \
   netcat \
   podman \
