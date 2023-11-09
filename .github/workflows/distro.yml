@@ -1,8 +1,27 @@
 name: Release WSL Image
 
 on:
-  push:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'config/**'
+      - 'scripts/**'
+      - 'build.sh'
+      - 'Dockerfile'
+      - 'package.json'
+      - '.github/workflows/distro.yml'
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - 'config/**'
+      - 'scripts/**'
+      - 'build.sh'
+      - 'Dockerfile'
+      - 'package.json'
+      - '.github/workflows/distro.yml'
 
 permissions:
   contents: read # for checkout
