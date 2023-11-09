@@ -1,10 +1,16 @@
 # Windows Subsystem Build
 
-This builds an Windows Subsystem Linux tar image for CDC as part of the developer experience.
+This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience.
+
+## Prerequisities
+
+For requirements and prerequisities, go to [docs/prerequisities.md](docs/prerequisites.md).
 
 ## How to use this?
 
 Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup properly by opening powershell and typing `wsl`.
+
+**Note**: when running `wsl` for the first time, WSL will require administrative rights using your -su account in powershell. The username is your 4 letter user name + `-su` (ex. tpz7-su) and the password is in [CyberArk](https://cyber.cdc.gov).
 
 1. Download the [latest release](https://github.com/cdcent/ocio-wsl/releases).
 
