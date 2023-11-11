@@ -1,5 +1,7 @@
 # Windows Subsystem Build
 
+![deploy badge](https://github.com/cdcent/ocio-wsl/actions/workflows/distro.yml/badge.svg)
+
 This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience.
 
 ## Prerequisities
