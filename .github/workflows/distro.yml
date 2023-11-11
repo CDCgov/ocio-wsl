@@ -5,23 +5,15 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'config/**'
-      - 'scripts/**'
-      - 'build.sh'
-      - 'Dockerfile'
-      - 'package.json'
-      - '.github/workflows/distro.yml'
+    paths-ignore:
+      - 'images/**'
+      - '**.md'
   pull_request:
     branches:
       - '**'
-    paths:
-      - 'config/**'
-      - 'scripts/**'
-      - 'build.sh'
-      - 'Dockerfile'
-      - 'package.json'
-      - '.github/workflows/distro.yml'
+    paths-ignore:
+      - 'images/**'
+      - '**.md'
 
 permissions:
   contents: read # for checkout
