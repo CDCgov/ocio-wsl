@@ -1,10 +1,18 @@
 # Windows Subsystem Build
 
-This builds an Windows Subsystem Linux tar image for CDC as part of the developer experience.
+![deploy badge](https://github.com/cdcent/ocio-wsl/actions/workflows/distro.yml/badge.svg)
+
+This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience.
+
+## Prerequisities
+
+For requirements and prerequisities, go to [docs/prerequisities.md](docs/prerequisites.md).
 
 ## How to use this?
 
 Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup properly by opening powershell and typing `wsl`.
+
+**Note**: when running `wsl` for the first time, WSL will require administrative rights using your -su account in powershell. The username is your 4 letter user name + `-su` (ex. tpz7-su) and the password is in [CyberArk](https://cyber.cdc.gov).
 
 1. Download the [latest release](https://github.com/cdcent/ocio-wsl/releases).
 
@@ -71,9 +79,9 @@ It is possible to navigate the filesystem of the distro by going to \\wsl$\ and 
 
 ## Releases
 
-We utilize Conventional Commits messages and automated tagging via Semantic Versioning
+We utilize [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) messages and automated tagging via Semantic Versioning.
 
-The most important prefixes you should have in mind are:
+The most important prefixes you should have in mind when writing git commit messages are:
 
     fix: which represents bug fixes, and correlates to a SemVer patch.
     feat: which represents a new feature, and correlates to a SemVer minor.

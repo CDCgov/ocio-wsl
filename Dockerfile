@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:22.04
 
-LABEL updated_at=2023-11-01
+LABEL updated_at=2023-11-10
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -18,6 +18,7 @@ RUN apt-get update -q && apt-get install -y \
   dnsperf \
   git \
   iperf3 \
+  jq \
   nano \
   netcat \
   podman \
