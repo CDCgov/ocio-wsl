@@ -6,12 +6,14 @@ on:
     branches:
       - main
     paths-ignore:
+      - 'docs/**'
       - 'images/**'
       - '**.md'
   pull_request:
     branches:
       - '**'
     paths-ignore:
+      - 'docs/**'
       - 'images/**'
       - '**.md'
 
