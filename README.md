@@ -10,8 +10,6 @@ For requirements and prerequisities, go to [docs/prerequisities.md](docs/prerequ
 
 ## How to use this?
 
-![WSL demo](docs/wsl-demo.mp4)
-
 Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup properly by opening powershell and typing `wsl`.
 
 **Note**: when running `wsl` for the first time, WSL will require administrative rights using your -su account in powershell. The username is your 4 letter user name + `-su` (ex. tpz7-su) and the password is in [CyberArk](https://cyber.cdc.gov).
