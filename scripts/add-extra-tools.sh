@@ -2,8 +2,8 @@
 
 set -eu
 
-asdf plugin add awscli
-asdf plugin add azure-cli
+asdf plugin add awscli 
+asdf plugin add azure-cli https://github.com/boris-ning-usds/asdf-azure-cli
 asdf plugin add gradle
 asdf plugin add helm
 asdf plugin add java
