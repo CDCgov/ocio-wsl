@@ -73,7 +73,7 @@ ENV PATH="$PATH:/root/.asdf/shims"
 
 ##############################################################################
 ## All other tools are in the folder:
-## opt/scripts/add-extra-tools.sh
+## /opt/scripts/add-extra-tools.sh
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
