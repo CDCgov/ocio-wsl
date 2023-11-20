@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/cdcent/ocio-wsl/compare/1.0.0...1.0.1) (2023-11-20)
+
+
+### Bug Fixes
+
+* upgrading dev tools baseline, include python 3.11 support ([#16](https://github.com/cdcent/ocio-wsl/issues/16)) ([c50b27c](https://github.com/cdcent/ocio-wsl/commit/c50b27c8b9b129553a3a9eb397487832259203a4))
+
 # 1.0.0 (2023-11-13)
 
 
