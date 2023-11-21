@@ -44,6 +44,10 @@
             {
               "path": "images/ubuntu-22.04-cdc.tar",
               "label": "Image distribution"
+            },
+            {
+              "path": "images/checksums.txt",
+              "label": "Checksums for integrity validation"
             }
           ]
         }

@@ -59,6 +59,13 @@ jobs:
         run: |
           bash build.sh
 
+      - name: Generate checksum
+        env:
+          IMAGE_NAME: 'ubuntu-22.04-cdc.tar'
+        run: |
+          sha256sum "$IMAGE_NAME" > checksums.txt
+        working-directory: ./images
+
       ## The default Github token does not provide a way for semantic release
       ## to publish to a protected branch without having an administrative bot
       ## account with bypass options within the repository's settings.
