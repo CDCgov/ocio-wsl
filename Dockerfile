@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:22.04
 
-LABEL updated_at=2023-11-10
+LABEL updated_at=2023-11-22
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -59,7 +59,8 @@ RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.
 ## find the latest version, update the ~/.tool-versions file for the version
 ## they want, and run asdf install to install that version.
 ###############################################################################
-RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1 && \
+ENV ASDF_VERSION="0.13.1"
+RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_VERSION}" && \
   echo ". $HOME/.asdf/asdf.sh" >> /root/.bashrc && \
   echo ". $HOME/.asdf/asdf.sh" >> /root/.zshrc
 
@@ -72,12 +73,12 @@ ENV PATH="$PATH:/root/.asdf/bin"
 ENV PATH="$PATH:/root/.asdf/shims"
 
 ##############################################################################
-## All other tools are in the folder:
+## All other tools are in the folder: python requires special care to install.
 ## /opt/scripts/add-extra-tools.sh
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
-RUN asdf plugin add python && asdf install
+RUN asdf plugin add python && asdf install && asdf global python 3.11.6
 
 ###########################################################################
 ## Update bashrc with auto branch complete so that the branch shows up in  
