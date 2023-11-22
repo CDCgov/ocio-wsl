@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/cdcent/ocio-wsl/compare/1.0.2...1.0.3) (2023-11-22)
+
+
+### Bug Fixes
+
+* set python to global usage and clean up documentation ([#18](https://github.com/cdcent/ocio-wsl/issues/18)) ([523381c](https://github.com/cdcent/ocio-wsl/commit/523381c288d23805900a44e209a2f341d2d0e286))
+
 ## [1.0.2](https://github.com/cdcent/ocio-wsl/compare/1.0.1...1.0.2) (2023-11-22)
 
 
