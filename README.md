@@ -33,7 +33,7 @@ For the Ubuntu 22.04 distro, with a **virtual hard disk** path of **C:\Users\tpz
 
 1. `wsl --import ubuntu-22.04-cdc C:\Users\tpz7\ubuntu-22.04-vhd C:\Users\tpz7\Downloads\ubuntu-22.04-cdc.tar`
 
-2. Fix the DNS: `powershell -executionpolicy bypass -File fix-dns.ps1`
+2. Fix the DNS: `powershell -executionpolicy bypass -File fix-dns.ps1 ubuntu-22.04-cdc`.
 
 3. Run the distro: `wsl -d ubuntu-22.04-cdc`
 
