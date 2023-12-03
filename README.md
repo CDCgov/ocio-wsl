@@ -1,8 +1,6 @@
 # Windows Subsystem Build
 
-![deploy badge](https://github.com/cdcent/ocio-wsl/actions/workflows/distro.yml/badge.svg)
-
-[![semantic-release: conventional-commit](https://img.shields.io/badge/semantic--release-conventionalcommit-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
+![deploy badge](https://github.com/cdcent/ocio-wsl/actions/workflows/distro.yml/badge.svg) [![semantic-release: conventional-commit](https://img.shields.io/badge/semantic--release-conventionalcommit-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
 This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience.
 
