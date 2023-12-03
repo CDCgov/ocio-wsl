@@ -1,3 +1,11 @@
+## [1.0.4](https://github.com/cdcent/ocio-wsl/compare/1.0.3...1.0.4) (2023-12-03)
+
+
+### Bug Fixes
+
+* bump version and add troubleshoot link ([#22](https://github.com/cdcent/ocio-wsl/issues/22)) ([29f79ba](https://github.com/cdcent/ocio-wsl/commit/29f79ba31c56f8d749f0a241922be1893b70c8fd))
+* magenta color for terminal directory, fix time change script, update README ([#23](https://github.com/cdcent/ocio-wsl/issues/23)) ([f8fa80d](https://github.com/cdcent/ocio-wsl/commit/f8fa80d84245b44c8857b9cf3869c7da29916a86))
+
 ## [1.0.3](https://github.com/cdcent/ocio-wsl/compare/1.0.2...1.0.3) (2023-11-22)
 
 
