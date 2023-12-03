@@ -70,6 +70,8 @@ For whatever reason, occasionally if you run `wsl --shutdown`, you may end up cr
 
 It is possible to navigate the filesystem of the distro by going to \\wsl$\ and finding the distribution folder using Windows. Otherwise, one quick way to access it is to `wsl -d <distro>` and go to the root `cd ~` and then run `explorer.exe .`, a Window will pop up going to the filesystem.
 
+For more troubleshooting, visit [Microsoft WSL Troubleshooting](https://learn.microsoft.com/en-us/windows/wsl/troubleshooting).
+
 ## Local Testing
 
 - Build the Container: `bash build.sh`
