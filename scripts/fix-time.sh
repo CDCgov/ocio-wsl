@@ -32,7 +32,7 @@ set_timezone() {
   esac
 
   # Set the timezone
-  sudo timedatectl set-timezone $timezone
+  timedatectl set-timezone $timezone
 
   echo "Timezone set to $timezone"
 }
@@ -47,7 +47,7 @@ fi
 ## Usage of this script: sudo ./set_timezone.sh Eastern
 ##########################################################
 if [ $# -eq 0 ]; then
-  echo "Usage: sudo $0 [Eastern|Central|Mountain|Pacific|UTC]"
+  echo "Usage: $0 [Eastern|Central|Mountain|Pacific|UTC]"
   exit 1
 fi
 
