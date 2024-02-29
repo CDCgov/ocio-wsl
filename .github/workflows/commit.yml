@@ -1,0 +1,25 @@
+name: Redeploy Monthly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 1 14 * *' # at 1:30 UTC every 14th of the month
+
+permissions:
+  contents: write # for checkout
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Empty commit to bump versions
+        run: |
+          git config --global user.email "boris-ning-usds@users.noreply.github.com"
+          git config --global user.name "Boris Ning"
+          git commit --allow-empty -m "fix: monthly security updates"
