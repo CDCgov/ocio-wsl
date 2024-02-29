@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:22.04
 
-LABEL updated_at=2023-11-22
+LABEL updated_at=2024-02-29
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -78,7 +78,7 @@ ENV PATH="$PATH:/root/.asdf/shims"
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
-RUN asdf plugin add python && asdf install && asdf global python 3.11.6
+RUN asdf plugin add python && asdf install && asdf global python 3.11.8
 
 ###########################################################################
 ## Update bashrc with auto branch complete so that the branch shows up in  
