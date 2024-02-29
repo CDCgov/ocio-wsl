@@ -1,4 +1,4 @@
-name: Redeploy Monthly
+name: Commit Monthly
 
 on:
   workflow_dispatch:
