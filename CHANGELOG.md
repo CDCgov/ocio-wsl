@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/cdcent/ocio-wsl/compare/1.0.4...1.0.5) (2024-02-29)
+
+
+### Bug Fixes
+
+* adding deployment cron job ([#25](https://github.com/cdcent/ocio-wsl/issues/25)) ([54ea624](https://github.com/cdcent/ocio-wsl/commit/54ea624d5f306140df94b1e2d28c745fc978890e))
+
 ## [1.0.4](https://github.com/cdcent/ocio-wsl/compare/1.0.3...1.0.4) (2023-12-03)
 
 
