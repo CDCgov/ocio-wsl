@@ -1,0 +1,80 @@
+name: Redeploy Monthly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 1 15 * *' # at 1:30 UTC every 15th of the month
+
+permissions:
+  contents: read # for checkout
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-app-cdc-coe-botfrey
+    steps:
+      - name: Checkout the codebase
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 'lts/*'
+
+      - name: Install dependencies
+        run: npm clean-install
+
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
+
+      - name: Set up Podman
+        run: |
+          # Install Podman (if not already installed)
+          if ! command -v podman &> /dev/null; then
+            sudo apt update
+            sudo apt install -y podman
+          fi
+          # Display Podman version
+          podman --version
+        shell: bash
+
+      - name: Generate tars
+        run: |
+          bash build.sh
+
+      - name: Generate checksum
+        env:
+          IMAGE_NAME: 'ubuntu-22.04-cdc.tar'
+        run: |
+          sha256sum "$IMAGE_NAME" > checksums.txt
+        working-directory: ./images
+
+      ## The default Github token does not provide a way for semantic release
+      ## to publish to a protected branch without having an administrative bot
+      ## account with bypass options within the repository's settings.
+      ## https://github.com/orgs/community/discussions/25305
+      - name: Get Github App token
+        if: github.ref == 'refs/heads/main'
+        id: generate_token
+        run: |
+          echo "${{ secrets.PRIVATE_KEY }}" > private.pem
+
+          result=$(npx github-app-installation-token \
+            --appId ${{ vars.APP_ID }} \
+            --installationId ${{ vars.INSTALLATION_ID }} \
+            --privateKeyLocation private.pem)
+
+          echo "TOKEN=$result" >> "$GITHUB_OUTPUT"
+
+      - name: Release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
+          GITHUB_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
+        run: |
+          npx semantic-release
