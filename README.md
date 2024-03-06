@@ -1,13 +1,12 @@
 # Windows Subsystem Build
 
-![deploy badge](https://github.com/cdcent/ocio-wsl/actions/workflows/distro.yml/badge.svg)
 [![semantic-release: conventional-commit](https://img.shields.io/badge/semantic--release-conventionalcommit-e10079?logo=semantic-release&style=for-the-badge)](https://github.com/semantic-release/semantic-release)
 [![last release](https://cdc-badge.app.cloud.gov/github/release-date/cdcent/ocio-wsl?style=for-the-badge)](https://github.com/cdcent/ocio-wsl/releases)
 ![total downloads](https://cdc-badge.app.cloud.gov/github/downloads/cdcent/ocio-wsl/total?style=for-the-badge)
 [![latest tag](https://cdc-badge.app.cloud.gov/github/v/tag/cdcent/ocio-wsl?style=for-the-badge)](https://github.com/cdcent/ocio-wsl/releases)
 ![commit history](https://cdc-badge.app.cloud.gov/github/commit-activity/y/cdcent/ocio-wsl?label=commits&style=for-the-badge)
 
-This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience.
+This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://github.com/cdcent/ocio-wsl/actions/workflows/distro.yml/badge.svg).
 
 ## Prerequisities
 
