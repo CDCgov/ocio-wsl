@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:22.04
 
-LABEL updated_at=2024-02-29
+LABEL updated_at=2024-03-10
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -59,7 +59,7 @@ RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.
 ## find the latest version, update the ~/.tool-versions file for the version
 ## they want, and run asdf install to install that version.
 ###############################################################################
-ENV ASDF_VERSION="0.13.1"
+ENV ASDF_VERSION="0.14.0"
 RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_VERSION}" && \
   echo ". $HOME/.asdf/asdf.sh" >> /root/.bashrc && \
   echo ". $HOME/.asdf/asdf.sh" >> /root/.zshrc
