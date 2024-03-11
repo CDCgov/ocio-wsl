@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/cdcent/ocio-wsl/compare/1.0.5...1.0.6) (2024-03-11)
+
+
+### Bug Fixes
+
+* dependencies update based on latest provided dependencies ([#28](https://github.com/cdcent/ocio-wsl/issues/28)) ([57d155c](https://github.com/cdcent/ocio-wsl/commit/57d155c454813645edf5eab07c95d71b696e8eed))
+
 ## [1.0.5](https://github.com/cdcent/ocio-wsl/compare/1.0.4...1.0.5) (2024-02-29)
 
 
