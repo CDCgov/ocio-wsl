@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/cdcent/ocio-wsl/compare/1.0.6...1.0.7) (2024-03-16)
+
+
+### Bug Fixes
+
+* adding ripgrep and r, fixing yarn ([#29](https://github.com/cdcent/ocio-wsl/issues/29)) ([46c14b0](https://github.com/cdcent/ocio-wsl/commit/46c14b0e90d47ae5bf2d9e8e0a1c0d84fbb4a6bb))
+
 ## [1.0.6](https://github.com/cdcent/ocio-wsl/compare/1.0.5...1.0.6) (2024-03-11)
 
 
