@@ -12,6 +12,8 @@ asdf plugin add maven
 asdf plugin add nodejs
 asdf plugin add oc
 asdf plugin add pre-commit
+asdf plugin add r
+asdf plugin add ripgrep
 asdf plugin add sbt
 asdf plugin add scala
 asdf plugin add steampipe

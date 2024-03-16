@@ -28,6 +28,8 @@ RUN apt-get update -q && apt-get install -y \
   wget \
   whois \
   tcpdump \
+
+  # For python installation
   build-essential \
   libbz2-dev \
   libncurses5-dev \
@@ -39,7 +41,19 @@ RUN apt-get update -q && apt-get install -y \
   libffi-dev \
   liblzma-dev \
   python3.10-venv \
-  zlib1g-dev
+  zlib1g-dev \
+
+  # For R installation: https://github.com/asdf-community/asdf-r
+  libcurl3-dev \
+  gfortran \
+  liblzma5 \
+  libbz2-1.0 \
+  libbz2-dev \
+  xorg-dev \
+  libbz2-dev \
+  liblzma-dev \
+  libpcre2-dev && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
 
 ###############################################################################
 ## Install the enterprise certificates into the operating system truststore
