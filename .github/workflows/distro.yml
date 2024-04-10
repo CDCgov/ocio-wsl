@@ -124,7 +124,7 @@ jobs:
             const body = [SEMANTIC_RELEASE_BODY_HEADER, res].join('\n');
 
             // get last comment
-            const comments = await github.issues.listComments({
+            const comments = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo
@@ -137,7 +137,7 @@ jobs:
 
             // delete comments
             const prms = commentsToDelete.map((comment) =>
-              github.issues.deleteComment({
+              github.rest.issues.deleteComment({
                 comment_id: comment.id,
                 owner: context.repo.owner,
                 repo: context.repo.repo
@@ -147,7 +147,7 @@ jobs:
             await Promise.all(prms);
 
             // create new comment for release note
-            github.issues.createComment({
+            github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
