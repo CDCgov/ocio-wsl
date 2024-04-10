@@ -2,6 +2,7 @@ awscli 2.15.37
 azure-cli 2.59.0
 checkov 3.2.60
 gradle 8.7
+grype 0.75.0
 helm 3.14.3
 java openjdk-18.0.2.1
 kubectl 1.29.3
