@@ -18,7 +18,7 @@ on:
       - '**.md'
 
 permissions:
-  contents: read # for checkout
+  contents: write # for checkout
   pull-requests: write
   issues: write
 
@@ -67,28 +67,8 @@ jobs:
           sha256sum "$IMAGE_NAME" > checksums.txt
         working-directory: ./images
 
-      ## The default Github token does not provide a way for semantic release
-      ## to publish to a protected branch without having an administrative bot
-      ## account with bypass options within the repository's settings.
-      ## https://github.com/orgs/community/discussions/25305
-      - name: Get Github App token
-        if: github.ref == 'refs/heads/main'
-        id: generate_token
-        run: |
-          echo "${{ secrets.PRIVATE_KEY }}" > private.pem
-
-          result=$(npx github-app-installation-token \
-            --appId ${{ vars.APP_ID }} \
-            --installationId ${{ vars.INSTALLATION_ID }} \
-            --privateKeyLocation private.pem)
-
-          echo "TOKEN=$result" >> "$GITHUB_OUTPUT"
-
       - name: 🔬 Check semantic versioning
         id: semantic-release
-        env:
-          GH_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
-          GITHUB_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
         if: github.event_name == 'pull_request'
         run: |
           GITHUB_REF=${{ github.head_ref }}
@@ -100,9 +80,6 @@ jobs:
       # https://github.com/semantic-release/semantic-release/discussions/1886#discussioncomment-8185820
       - name: 📝 Report semantic versioning
         uses: actions/github-script@v7
-        env:
-          GH_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
-          GITHUB_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
         if: ${{ steps.semantic-release.outputs.releaseNote != '' }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -156,6 +133,21 @@ jobs:
               repo: context.repo.repo,
               body
             });
+            
+      ## The default Github token does not provide a way for semantic release
+      ## to publish to a protected branch without having an administrative bot
+      ## account with bypass options within the repository's settings.
+      ## https://github.com/orgs/community/discussions/25305
+      - name: Get Github App token
+        if: github.ref == 'refs/heads/main'
+        id: generate_token
+        run: |
+          echo "${{ secrets.PRIVATE_KEY }}" > private.pem
+          result=$(npx github-app-installation-token \
+            --appId ${{ vars.APP_ID }} \
+            --installationId ${{ vars.INSTALLATION_ID }} \
+            --privateKeyLocation private.pem)
+          echo "TOKEN=$result" >> "$GITHUB_OUTPUT"
 
       - name: Release
         if: github.ref == 'refs/heads/main'
