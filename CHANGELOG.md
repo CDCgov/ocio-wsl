@@ -1,3 +1,12 @@
+## [1.0.8](https://github.com/cdcent/ocio-wsl/compare/1.0.7...1.0.8) (2024-04-11)
+
+
+### Bug Fixes
+
+* adding extra tools installation as a test ([#34](https://github.com/cdcent/ocio-wsl/issues/34)) ([33f219c](https://github.com/cdcent/ocio-wsl/commit/33f219c43e32fa1a289d674c8ed44da0f2421091))
+* **workflow:** avoid running dryrun if not in a Pull Request ([#35](https://github.com/cdcent/ocio-wsl/issues/35)) ([09f6ca0](https://github.com/cdcent/ocio-wsl/commit/09f6ca03fe35aed422f3e57fdd006ba62f503fae))
+* **workflow:** reordering and providing greater permissions ([#37](https://github.com/cdcent/ocio-wsl/issues/37)) ([756d953](https://github.com/cdcent/ocio-wsl/commit/756d953a986639ba7c831b702b0703543aa96b66))
+
 ## [1.0.7](https://github.com/cdcent/ocio-wsl/compare/1.0.6...1.0.7) (2024-03-16)
 
 
