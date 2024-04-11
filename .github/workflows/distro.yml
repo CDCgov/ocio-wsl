@@ -89,6 +89,7 @@ jobs:
         env:
           GH_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
           GITHUB_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
+        if: github.event_name == 'pull_request'
         run: |
           GITHUB_REF=${{ github.head_ref }}
           npx semantic-release --no-ci --dry-run --plugins @semantic-release/commit-analyzer,@semantic-release/release-notes-generator --branches ${{ github.head_ref }} > output.txt
