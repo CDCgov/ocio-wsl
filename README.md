@@ -53,7 +53,7 @@ We utilize [asdf](https://asdf-vm.com/) to install common programming tools and 
 
 To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.11.6, save the file, and run `asdf install`.
 
-Once it is completed, you can run `python -v` with python 3.11.8.
+Once it is completed, you can run `python -v` with python 3.11.9.
 
 Use `asdf list-all python` to figure out the available versions of python you can install.
 
