@@ -92,7 +92,7 @@ ENV PATH="$PATH:/root/.asdf/shims"
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
-RUN asdf plugin add python && asdf install && asdf global python 3.11.8
+RUN asdf plugin add python && asdf install && asdf global python 3.11.9
 
 ###########################################################################
 ## Update bashrc with auto branch complete so that the branch shows up in  
