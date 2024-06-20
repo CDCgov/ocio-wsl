@@ -28,11 +28,25 @@ jobs:
     environment:
       name: github-app-cdc-coe-botfrey
     steps:
+      ## The default Github token does not provide a way for semantic release
+      ## to publish to a protected branch without having an administrative bot
+      ## account with bypass options within the repository's settings.
+      ## https://github.com/orgs/community/discussions/25305
+      - name: Get Github App token
+        id: generate_token
+        run: |
+          echo "${{ secrets.PRIVATE_KEY }}" > private.pem
+          result=$(npx github-app-installation-token \
+            --appId ${{ vars.APP_ID }} \
+            --installationId ${{ vars.INSTALLATION_ID }} \
+            --privateKeyLocation private.pem)
+          echo "TOKEN=$result" >> "$GITHUB_OUTPUT"
+
       - name: Checkout the codebase
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          token: ${{ steps.generate_token.outputs.TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -134,21 +148,6 @@ jobs:
               repo: context.repo.repo,
               body
             });
-
-      ## The default Github token does not provide a way for semantic release
-      ## to publish to a protected branch without having an administrative bot
-      ## account with bypass options within the repository's settings.
-      ## https://github.com/orgs/community/discussions/25305
-      - name: Get Github App token
-        if: github.ref == 'refs/heads/main'
-        id: generate_token
-        run: |
-          echo "${{ secrets.PRIVATE_KEY }}" > private.pem
-          result=$(npx github-app-installation-token \
-            --appId ${{ vars.APP_ID }} \
-            --installationId ${{ vars.INSTALLATION_ID }} \
-            --privateKeyLocation private.pem)
-          echo "TOKEN=$result" >> "$GITHUB_OUTPUT"
 
       - name: Release
         if: github.ref == 'refs/heads/main'
