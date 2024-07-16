@@ -1,3 +1,11 @@
+## [1.0.9](https://github.com/cdcent/ocio-wsl/compare/1.0.8...1.0.9) (2024-06-20)
+
+
+### Bug Fixes
+
+* dependencies update for tools and package ([#38](https://github.com/cdcent/ocio-wsl/issues/38)) ([20e75b6](https://github.com/cdcent/ocio-wsl/commit/20e75b61993e64e5f3dd3341250b4072e5a8a420))
+* fixing deployment by not persisting checkout token ([#40](https://github.com/cdcent/ocio-wsl/issues/40)) ([a30bbe0](https://github.com/cdcent/ocio-wsl/commit/a30bbe09f7509920c70b0c5a74428958d8749340))
+
 ## [1.0.8](https://github.com/cdcent/ocio-wsl/compare/1.0.7...1.0.8) (2024-04-11)
 
 
