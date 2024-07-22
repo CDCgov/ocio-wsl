@@ -1,3 +1,10 @@
+## [1.0.11](https://github.com/cdcent/ocio-wsl/compare/1.0.10...1.0.11) (2024-07-22)
+
+
+### Bug Fixes
+
+* setting up certificate trust by default for basic languages ([#43](https://github.com/cdcent/ocio-wsl/issues/43)) ([cccb1b6](https://github.com/cdcent/ocio-wsl/commit/cccb1b6517b9ed1f4af4a4ccd17de9520302c614))
+
 ## [1.0.10](https://github.com/cdcent/ocio-wsl/compare/1.0.9...1.0.10) (2024-07-22)
 
 
