@@ -1,3 +1,10 @@
+## [1.0.10](https://github.com/cdcent/ocio-wsl/compare/1.0.9...1.0.10) (2024-07-22)
+
+
+### Bug Fixes
+
+* updating to the latest supported tools version ([#42](https://github.com/cdcent/ocio-wsl/issues/42)) ([1d36b8d](https://github.com/cdcent/ocio-wsl/commit/1d36b8d8eb9e56f0125e2cfe39279f3da9833477))
+
 ## [1.0.9](https://github.com/cdcent/ocio-wsl/compare/1.0.8...1.0.9) (2024-06-20)
 
 
