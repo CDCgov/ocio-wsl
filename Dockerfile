@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:22.04
 
-LABEL updated_at=2024-04-10
+LABEL updated_at=2024-07-22
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -85,6 +85,29 @@ ENV PATH="$PATH:/root/.asdf/bin"
 
 # Add asdf shims to PATH, so installed executables can be run in this Dockerfile
 ENV PATH="$PATH:/root/.asdf/shims"
+
+# Ensure Python trusts the CDC root certificates, so that it can access internal 
+# websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
+# certificate
+# The root certificate of Ubuntu is /etc/ssl/certs/ca-certificates.crt based on
+# https://go.dev/src/crypto/x509/root_linux.go
+ENV REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
+ENV SSL_CERT_FILE='/etc/ssl/certs/ca-certificates.crt'
+
+# Ensure NodeJS trusts the CDC root certificates, so that it can access internal 
+# websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
+# certificate
+ENV NODE_OPTIONS='--use-openssl-ca'
+
+# Ensure curl trusts the CDC root certificates, so that it can access internal 
+# websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
+# certificate
+ENV CURL_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
+
+# Ensure git trusts the CDC root certificates, so that it can access internal 
+# websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
+# certificate
+RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 
 ##############################################################################
 ## All other tools are in the folder: python requires special care to install.
