@@ -9,6 +9,7 @@ on:
       - 'docs/**'
       - 'images/**'
       - '**.md'
+      - '.github/workflows/stats.yml'
   pull_request:
     branches:
       - '**'
@@ -16,6 +17,7 @@ on:
       - 'docs/**'
       - 'images/**'
       - '**.md'
+      - '.github/workflows/stats.yml'
 
 permissions:
   contents: write # for checkout
@@ -86,7 +88,6 @@ jobs:
         id: semantic-release
         if: github.event_name == 'pull_request'
         run: |
-          GITHUB_REF=${{ github.head_ref }}
           npx semantic-release --no-ci --dry-run --plugins @semantic-release/commit-analyzer,@semantic-release/release-notes-generator --branches ${{ github.head_ref }} > output.txt
           OUTPUT=$(cat output.txt | base64 -w 0)
           echo "releaseNote=$OUTPUT" >> "$GITHUB_OUTPUT"
