@@ -8,6 +8,8 @@
 
 This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://github.com/cdcent/ocio-wsl/actions/workflows/distro.yml/badge.svg).
 
+For longer term repository statistics, visit the [Github pages](https://bookish-fishstick-m61kqvo.pages.github.io/cdcent/ocio-wsl/latest-report/report.html).
+
 ## Prerequisities
 
 For requirements and prerequisities, go to [docs/prerequisities.md](docs/prerequisites.md).
