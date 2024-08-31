@@ -86,9 +86,10 @@ jobs:
 
       - name: 🔬 Check semantic versioning
         id: semantic-release
-        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_REF: ${{ github.head_ref }}
         run: |
-          npx semantic-release --no-ci --dry-run --plugins @semantic-release/commit-analyzer,@semantic-release/release-notes-generator --branches ${{ github.head_ref }} > output.txt
+          npx semantic-release --no-ci --dry-run --plugins @semantic-release/commit-analyzer,@semantic-release/release-notes-generator --branches ${{ env.GITHUB_REF }} > output.txt
           OUTPUT=$(cat output.txt | base64 -w 0)
           echo "releaseNote=$OUTPUT" >> "$GITHUB_OUTPUT"
 

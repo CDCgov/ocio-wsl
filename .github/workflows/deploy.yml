@@ -1,9 +1,7 @@
-name: Redeploy Monthly
+name: Redeploy Manually
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '30 1 15 * *' # at 1:30 UTC every 15th of the month
 
 permissions:
   contents: read # for checkout
