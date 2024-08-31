@@ -84,17 +84,19 @@ jobs:
           sha256sum "$IMAGE_NAME" > checksums.txt
         working-directory: ./images
 
+      # Hack around --dry-run to get the result of the PR merge on the correct ref
+      # https://github.com/semantic-release/semantic-release/issues/1890#issuecomment-974512960
       - name: 🔬 Check semantic versioning
         id: semantic-release
         env:
           GITHUB_REF: ${{ github.head_ref }}
         run: |
+          git checkout -b ${{ github.base_ref }} pull/${{ github.event.number }}/merge
+          unset GITHUB_ACTIONS;
           npx semantic-release --no-ci --dry-run --plugins @semantic-release/commit-analyzer,@semantic-release/release-notes-generator --branches ${{ env.GITHUB_REF }} > output.txt
           OUTPUT=$(cat output.txt | base64 -w 0)
           echo "releaseNote=$OUTPUT" >> "$GITHUB_OUTPUT"
 
-      # Updated version of this follow discussion:
-      # https://github.com/semantic-release/semantic-release/discussions/1886#discussioncomment-8185820
       - name: 📝 Report semantic versioning
         uses: actions/github-script@v7
         if: ${{ steps.semantic-release.outputs.releaseNote != '' }}
