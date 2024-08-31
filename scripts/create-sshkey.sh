@@ -66,7 +66,7 @@ fi
 ## For RSA keys, this script will generate the following:
 ## ssh-keygen -t rsa -b 4096 -C "<email>" -N "" -f ~/.ssh/id_ed25519
 ##############################################################################
-ssh-keygen $key_options $email $password_option -f ~/.ssh/"${key_filename}"
+ssh-keygen "$key_options" "$email" "$password_option" -f ~/.ssh/"${key_filename}"
 
 echo "Generated Key Results: "
 echo "Private key path: ~/.ssh/$key_filename"
