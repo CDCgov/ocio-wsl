@@ -42,4 +42,3 @@ do
   echo "Removing container ID: $containerID"
   podman rm "$containerID"
 done
-
