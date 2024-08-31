@@ -42,7 +42,7 @@
         {
           "assets": [
             {
-              "path": "images/ubuntu-22.04-cdc.tar",
+              "path": "images/ubuntu-24.04-cdc.tar",
               "label": "Image distribution"
             },
             {

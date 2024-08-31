@@ -79,7 +79,7 @@ jobs:
 
       - name: Generate checksum
         env:
-          IMAGE_NAME: 'ubuntu-22.04-cdc.tar'
+          IMAGE_NAME: 'ubuntu-24.04-cdc.tar'
         run: |
           sha256sum "$IMAGE_NAME" > checksums.txt
         working-directory: ./images

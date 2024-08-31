@@ -19,7 +19,7 @@ fi
 
 TAR_DIR="$PWD/images"
 mkdir -p "$TAR_DIR"
-IMAGE_NAME="ubuntu-22.04-cdc"
+IMAGE_NAME="ubuntu-24.04-cdc"
 
 # Build, run, and save the image as a docker image in a tar file
 # so it can be used later

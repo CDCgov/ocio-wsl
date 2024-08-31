@@ -35,13 +35,13 @@ Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup
 
 Example:
 
-For the Ubuntu 22.04 distro, with a **virtual hard disk** path of **C:\Users\tpz7\ubuntu-22.04-vhd** and the tar file in **C:\Users\tpz7\Downloads\ubuntu-22.04-cdc.tar**
+For the Ubuntu 24.04 distro, with a **virtual hard disk** path of **C:\Users\tpz7\ubuntu-24.04-vhd** and the tar file in **C:\Users\tpz7\Downloads\ubuntu-24.04-cdc.tar**
 
-1. `wsl --import ubuntu-22.04-cdc C:\Users\tpz7\ubuntu-22.04-vhd C:\Users\tpz7\Downloads\ubuntu-22.04-cdc.tar`
+1. `wsl --import ubuntu-24.04-cdc C:\Users\tpz7\ubuntu-24.04-vhd C:\Users\tpz7\Downloads\ubuntu-24.04-cdc.tar`
 
-2. Fix the DNS: `powershell -executionpolicy bypass -File fix-dns.ps1 ubuntu-22.04-cdc`.
+2. Fix the DNS: `powershell -executionpolicy bypass -File fix-dns.ps1 ubuntu-24.04-cdc`.
 
-3. Run the distro: `wsl -d ubuntu-22.04-cdc`
+3. Run the distro: `wsl -d ubuntu-24.04-cdc`
 
 ## Installing Extra Tools
 
@@ -55,7 +55,7 @@ We utilize [asdf](https://asdf-vm.com/) to install common programming tools and 
 
 To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.11.6, save the file, and run `asdf install`.
 
-Once it is completed, you can run `python -v` with python 3.11.9.
+Once it is completed, you can run `python -v` with python 3.12.5.
 
 Use `asdf list-all python` to figure out the available versions of python you can install.
 
@@ -82,11 +82,11 @@ For more troubleshooting, visit [Microsoft WSL Troubleshooting](https://learn.mi
 
 - Build the Container: `bash build.sh`
 
-- Run a simple curl: `podman run -t ubuntu-22.04-cdc bash -c "curl -vv google.com"`
+- Run a simple curl: `podman run -t ubuntu-24.04-cdc bash -c "curl -vv google.com"`
 
-- Check whether going to google.com works: `podman run -t ubuntu-22.04-cdc bash -c "bash /opt/scripts/check-google.sh"`
+- Check whether going to google.com works: `podman run -t ubuntu-24.04-cdc bash -c "bash /opt/scripts/check-google.sh"`
 
-- Download additional software: `podman run -t ubuntu-22.04-cdc bash -c "bash /opt/scripts/add-extra-tools.sh"`
+- Download additional software: `podman run -t ubuntu-24.04-cdc bash -c "bash /opt/scripts/add-extra-tools.sh"`
 
 ## Releases
 
