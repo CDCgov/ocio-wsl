@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/cdcent/ocio-wsl,40,5
+/cdcent/ocio-wsl/pulls,32,2
+/cdcent/ocio-wsl/pull/47,31,2
+/cdcent/ocio-wsl/actions,30,2
+/cdcent/ocio-wsl/tree/main/scripts,23,2
+/cdcent/ocio-wsl/tree/main/docs,7,3
+/cdcent/ocio-wsl/actions/workflows/distro.yml,7,1
+/cdcent/ocio-wsl/blob/main/Dockerfile,6,2
+/cdcent/ocio-wsl/branches,6,2
+/cdcent/ocio-wsl/blob/main/scripts/fix-dns.ps1,6,1
