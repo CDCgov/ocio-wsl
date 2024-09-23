@@ -88,16 +88,17 @@ jobs:
       # https://github.com/semantic-release/semantic-release/issues/1890#issuecomment-974512960
       - name: 🔬 Check semantic versioning
         id: semantic-release
+        if: ${{ github.ref != 'refs/heads/main' }}
         run: |
           git checkout -b ${{ github.base_ref }} pull/${{ github.event.number }}/merge
           unset GITHUB_ACTIONS;
           npx semantic-release --no-ci --dry-run --plugins @semantic-release/commit-analyzer,@semantic-release/release-notes-generator > output.txt
-          OUTPUT=$(cat output.txt | base64 -w 0)
+          OUTPUT=$(base64 -w 0 < output.txt)
           echo "releaseNote=$OUTPUT" >> "$GITHUB_OUTPUT"
 
       - name: 📝 Report semantic versioning
         uses: actions/github-script@v7
-        if: ${{ steps.semantic-release.outputs.releaseNote != '' }}
+        if: github.ref != 'refs/heads/main' && steps.semantic-release.outputs.releaseNote != ''
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
