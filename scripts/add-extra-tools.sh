@@ -20,6 +20,7 @@ asdf plugin add ripgrep
 asdf plugin add rust
 asdf plugin add sbt
 asdf plugin add scala
+asdf plugin add shellcheck
 asdf plugin add steampipe
 asdf plugin add terraform
 asdf plugin add trivy
