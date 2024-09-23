@@ -1,3 +1,19 @@
+# [2.0.0](https://github.com/cdcent/ocio-wsl/compare/1.0.11...2.0.0) (2024-09-23)
+
+
+### Features
+
+* Dev/upgrade to ubuntu 24.04 (Waiting on 24.04.01 release) ([#47](https://github.com/cdcent/ocio-wsl/issues/47)) ([75096ea](https://github.com/cdcent/ocio-wsl/commit/75096ea141baaedd983269e3f5f2e8675b86d637))
+
+
+### BREAKING CHANGES
+
+* Upgrade to Ubuntu 24.04
+
+* chore[update]: updating dependencies, add shellcheck
+
+* chore[update]: update semantic versioning
+
 ## [1.0.11](https://github.com/cdcent/ocio-wsl/compare/1.0.10...1.0.11) (2024-07-22)
 
 
