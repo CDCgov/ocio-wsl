@@ -23,7 +23,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "conventional-changelog-conventionalcommits": "^8.0.0",
-    "semantic-release": "^24.0.0"
+    "semantic-release": "^24.1.1"
   },
   "release": {
     "branches": [
@@ -42,7 +42,7 @@
         {
           "assets": [
             {
-              "path": "images/ubuntu-22.04-cdc.tar",
+              "path": "images/ubuntu-24.04-cdc.tar",
               "label": "Image distribution"
             },
             {
