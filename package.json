@@ -1,6 +1,6 @@
 {
   "name": "cdc-wsl-build",
-  "version": "1.0.0",
+  "version": "2.0.1",
   "description": "For building Windows Subsystem Linux (WSL) images",
   "main": "index.js",
   "repository": {
