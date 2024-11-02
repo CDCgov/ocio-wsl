@@ -105,10 +105,6 @@ Review through [commit-analyzer](https://github.com/semantic-release/commit-anal
 - Should I be using a dedicated user to install asdf?
   - [Example of adduser for asdf](https://github.com/webofmars/docker-asdf/blob/master/Dockerfile)
   - [Storing all asdf downloads into /opt](https://github.com/asdf-vm/asdf/issues/577)
-- update-ca-certificates don't seem to update any certificates
-  - Fixed - had to change the format of the file from .pem to a .crt for update-ca-certificates to pick it up.
-- azure-cli with asdf can't install and won't run.
-  - Fixed - needed to install Python and use a ~/.tool-versions file to install.
 - Github Releases per file has a [upper limit of 2GB](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
   - Sort of fixed - slim down the image.
 
