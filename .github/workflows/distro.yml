@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'README.md'
     paths-ignore:
       - 'docs/**'
       - 'images/**'
@@ -13,6 +15,8 @@ on:
   pull_request:
     branches:
       - '**'
+    paths:
+      - 'README.md'
     paths-ignore:
       - 'docs/**'
       - 'images/**'
