@@ -5,22 +5,20 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'README.md'
     paths-ignore:
       - 'docs/**'
       - 'images/**'
       - '**.md'
+      - '!README.md'
       - '.github/workflows/stats.yml'
   pull_request:
     branches:
       - '**'
-    paths:
-      - 'README.md'
     paths-ignore:
       - 'docs/**'
       - 'images/**'
       - '**.md'
+      - '!README.md'
       - '.github/workflows/stats.yml'
 
 permissions:
