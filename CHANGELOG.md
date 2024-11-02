@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/cdcent/ocio-wsl/compare/2.0.0...2.0.1) (2024-11-02)
+
+
+### Bug Fixes
+
+* **doc:** update the README ([a434089](https://github.com/cdcent/ocio-wsl/commit/a434089b3dbd3468e6170eb1662ef4e18bc48021))
+
 # [2.0.0](https://github.com/cdcent/ocio-wsl/compare/1.0.11...2.0.0) (2024-09-23)
 
 
