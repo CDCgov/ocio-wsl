@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:24.04
 
-LABEL updated_at=2024-09-23
+LABEL updated_at=2024-11-02
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -115,7 +115,7 @@ RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
-RUN asdf plugin add python && asdf install && asdf global python 3.12.5
+RUN asdf plugin add python && asdf install && asdf global python 3.12.7
 
 ###########################################################################
 ## Update bashrc with auto branch complete so that the branch shows up in  
