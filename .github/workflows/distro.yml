@@ -9,6 +9,7 @@ on:
       - 'docs/**'
       - 'images/**'
       - '**.md'
+      - '!README.md'
       - '.github/workflows/stats.yml'
   pull_request:
     branches:
@@ -17,6 +18,7 @@ on:
       - 'docs/**'
       - 'images/**'
       - '**.md'
+      - '!README.md'
       - '.github/workflows/stats.yml'
 
 permissions:
@@ -61,28 +63,6 @@ jobs:
 
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: npm audit signatures
-
-      - name: Set up Podman
-        run: |
-          # Install Podman (if not already installed)
-          if ! command -v podman &> /dev/null; then
-            sudo apt update
-            sudo apt install -y podman
-          fi
-          # Display Podman version
-          podman --version
-        shell: bash
-
-      - name: Generate tars
-        run: |
-          bash build.sh
-
-      - name: Generate checksum
-        env:
-          IMAGE_NAME: 'ubuntu-24.04-cdc.tar'
-        run: |
-          sha256sum "$IMAGE_NAME" > checksums.txt
-        working-directory: ./images
 
       # Hack around --dry-run to get the result of the PR merge on the correct ref
       # https://github.com/semantic-release/semantic-release/issues/1890#issuecomment-974512960
@@ -151,6 +131,28 @@ jobs:
               repo: context.repo.repo,
               body
             });
+
+      - name: Set up Podman
+        run: |
+          # Install Podman (if not already installed)
+          if ! command -v podman &> /dev/null; then
+            sudo apt update
+            sudo apt install -y podman
+          fi
+          # Display Podman version
+          podman --version
+        shell: bash
+
+      - name: Generate tars
+        run: |
+          bash build.sh
+
+      - name: Generate checksum
+        env:
+          IMAGE_NAME: 'ubuntu-24.04-cdc.tar'
+        run: |
+          sha256sum "$IMAGE_NAME" > checksums.txt
+        working-directory: ./images
 
       - name: Release
         if: github.ref == 'refs/heads/main'

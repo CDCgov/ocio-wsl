@@ -98,6 +98,8 @@ The most important prefixes you should have in mind when writing git commit mess
     feat: which represents a new feature, and correlates to a SemVer minor.
     feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a SemVer major.
 
+Review through [commit-analyzer](https://github.com/semantic-release/commit-analyzer/blob/master/lib/default-release-rules.js) for a set of meaningful terms to use.
+
 ## Issues
 
 - Should I be using a dedicated user to install asdf?
