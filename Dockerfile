@@ -115,7 +115,7 @@ RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
-RUN asdf plugin add python && asdf install && asdf global python 3.12.7
+RUN asdf plugin add python && asdf install && asdf global python 3.12.8
 
 ###########################################################################
 ## Update bashrc with auto branch complete so that the branch shows up in  
