@@ -221,3 +221,4 @@ $RECYCLE.BIN/
 # Don't save any docker image files, the files are at least hundreds of MB each
 images/*.tar
 images/checksums.txt
+.tool-versions.latest
