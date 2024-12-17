@@ -1,3 +1,11 @@
+## [2.0.2](https://github.com/cdcent/ocio-wsl/compare/2.0.1...2.0.2) (2024-12-17)
+
+
+### Bug Fixes
+
+* updating dockerfile date ([f3fedd0](https://github.com/cdcent/ocio-wsl/commit/f3fedd08b0ef62ccc9a5fa07ffabd51e48ad35c3))
+* updating python version ([ced58da](https://github.com/cdcent/ocio-wsl/commit/ced58da40f5ab8347d2e4beb73181013f797d125))
+
 ## [2.0.1](https://github.com/cdcent/ocio-wsl/compare/2.0.0...2.0.1) (2024-11-02)
 
 
