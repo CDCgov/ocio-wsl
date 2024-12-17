@@ -53,9 +53,9 @@ To install this list of tools, run `bash /opt/scripts/add-extra-tools.sh`. We co
 
 We utilize [asdf](https://asdf-vm.com/) to install common programming tools and it comes with a [tool versions file](./config/.tool-versions).
 
-To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.11.6, save the file, and run `asdf install`.
+To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.11.11, save the file, and run `asdf install`.
 
-Once it is completed, you can run `python -v` with python 3.12.7.
+Once it is completed, you can run `python -v` with python 3.12.8.
 
 Use `asdf list-all python` to figure out the available versions of python you can install.
 
