@@ -10,6 +10,16 @@ This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of th
 
 For longer term repository statistics, visit the [Github pages](https://bookish-fishstick-m61kqvo.pages.github.io/cdcent/ocio-wsl/latest-report/report.html).
 
+## Specific Centers Implementation
+
+Other Centers within CDC has already started their own implementation of distros for Windows Subsystem Linux (WSL) due to specialized needs of those centers.
+
+For example,
+
+- [Centers for Forecast Analytics and Outbreaks (CFA) Virtual Analytics Platform (VAP)](https://github.com/cdcent/cfa-vap-autoconfig) contains an Ubuntu based image with R, Python, and specialized disk mounts for a [CFA developer's needs](https://github.com/cdcent/cfa-vap-user-guides/blob/main/src/IV-wsl/00-wsl_intro.md).
+- [NCEZID - Office of the Advanced Molecular Detection Platform (OAMDP)](https://github.com/cdcent/oamd-infra-utils/blob/develop/docs/WSL_INSTALL_GUIDE.md?plain=1) includes an Ubuntu based image with a series of steps to install an Ubuntu image with podman, python, and Github API (gh).
+- [CDC Data Hub (CDH) Lifecycle, Analysis, Visualization Accelerator (LAVA) Guide](https://wcms-wp-intra.cdc.gov/datahub/dashboards/recipes/wsl_on_prem_configure.html) provides a guide for data scientists working within EDAV or another data pipelines.
+
 ## Prerequisities
 
 For requirements and prerequisities, go to [docs/prerequisities.md](docs/prerequisites.md).
@@ -100,9 +110,9 @@ The most important prefixes you should have in mind when writing git commit mess
 
 Review through [commit-analyzer](https://github.com/semantic-release/commit-analyzer/blob/master/lib/default-release-rules.js) for a set of meaningful terms to use.
 
-## Issues
+## Ongoing Issues
 
-- Should I be using a dedicated user to install asdf?
+- asdf should be accessible by all Linux users in the WSL distro
   - [Example of adduser for asdf](https://github.com/webofmars/docker-asdf/blob/master/Dockerfile)
   - [Storing all asdf downloads into /opt](https://github.com/asdf-vm/asdf/issues/577)
 - Github Releases per file has a [upper limit of 2GB](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
