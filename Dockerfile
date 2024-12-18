@@ -87,6 +87,7 @@ ENV PATH="$PATH:${ASDF_DATA_DIR}/.asdf/bin"
 ENV PATH="$PATH:${ASDF_DATA_DIR}/.asdf/shims"
 
 RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_VERSION}" && \
+  mkdir -p "${ASDF_DATA_DIR}" && \
   echo ". $HOME/.asdf/asdf.sh" >> "${ASDF_DATA_DIR}/.bashrc" && \
   echo ". $HOME/.asdf/asdf.sh" >> "${ASDF_DATA_DIR}/.zshrc" && \
   echo ". $HOME/.asdf/completions/asdf.bash" >> "${ASDF_DATA_DIR}/.bashrc" && \
