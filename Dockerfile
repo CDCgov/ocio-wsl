@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:24.04
 
-LABEL updated_at=2024-12-17
+LABEL updated_at=2024-12-18
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -93,7 +93,7 @@ RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_VERS
   echo ". $HOME/.asdf/completions/asdf.bash" >> "${ASDF_DATA_DIR}/.bashrc" && \
   echo ". $HOME/.asdf/completions/asdf.bash" >> "${ASDF_DATA_DIR}/.zshrc"
 
-COPY config/.tool-versions "${ASDF_DATA_DIR}/.tool-versions
+COPY config/.tool-versions "${ASDF_DATA_DIR}/.tool-versions"
 
 # Ensure Python trusts the CDC root certificates, so that it can access internal 
 # websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
