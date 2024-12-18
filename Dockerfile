@@ -72,19 +72,27 @@ RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.
 ## To update these tools, users can run asdf list-all <tool> such as python to
 ## find the latest version, update the ~/.tool-versions file for the version
 ## they want, and run asdf install to install that version.
+##
+## To install ASDF into the /opt directory so that all users can use
+## asdf, we follow the instructions from this issue:
+## https://github.com/asdf-vm/asdf/issues/577
 ###############################################################################
 ENV ASDF_VERSION="0.14.1"
-RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_VERSION}" && \
-  echo ". $HOME/.asdf/asdf.sh" >> /root/.bashrc && \
-  echo ". $HOME/.asdf/asdf.sh" >> /root/.zshrc
-
-COPY config/.tool-versions /root/.tool-versions
+ENV ASDF_DATA_DIR=/opt/asdf
 
 # Add asdf to profile, so it is available in `podman run`
-ENV PATH="$PATH:/root/.asdf/bin"
+ENV PATH="$PATH:${ASDF_DATA_DIR}/.asdf/bin"
 
 # Add asdf shims to PATH, so installed executables can be run in this Dockerfile
-ENV PATH="$PATH:/root/.asdf/shims"
+ENV PATH="$PATH:${ASDF_DATA_DIR}/.asdf/shims"
+
+RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "v${ASDF_VERSION}" && \
+  echo ". $HOME/.asdf/asdf.sh" >> "${ASDF_DATA_DIR}/.bashrc" && \
+  echo ". $HOME/.asdf/asdf.sh" >> "${ASDF_DATA_DIR}/.zshrc" && \
+  echo ". $HOME/.asdf/completions/asdf.bash" >> "${ASDF_DATA_DIR}/.bashrc" && \
+  echo ". $HOME/.asdf/completions/asdf.bash" >> "${ASDF_DATA_DIR}/.zshrc"
+
+COPY config/.tool-versions "${ASDF_DATA_DIR}/.tool-versions
 
 # Ensure Python trusts the CDC root certificates, so that it can access internal 
 # websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
