@@ -108,6 +108,8 @@ Review through [commit-analyzer](https://github.com/semantic-release/commit-anal
 - Github Releases per file has a [upper limit of 2GB](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
   - Sort of fixed - slim down the image.
 
-## Links to Follow
+## External Guides on making WSL work
 
-- [mvaisakh/wsl-distro-tars](https://github.com/mvaisakh/wsl-distro-tars)
+- [mvaisakh/wsl-distro-tars](https://github.com/mvaisakh/wsl-distro-tars) - teaches us how to build a tar file for a Linux distro
+- [Linux user creation for WSL](https://superuser.com/questions/1566022/how-to-set-default-user-for-manually-installed-wsl-distro) - on how to create a default user for a manually installed WSL distro
+- [Finding Windows username from WSL](https://www.reddit.com/r/bashonubuntuonwindows/comments/8dhhrr/comment/dxn9obq/) - on access to cmd.exe via WSL (apparently cmd is accessible via WSL by default)
