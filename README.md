@@ -17,7 +17,7 @@ Other Centers within CDC has already started their own implementation of distros
 For example,
 
 - [Centers for Forecast Analytics and Outbreaks (CFA) Virtual Analytics Platform (VAP)](https://github.com/cdcent/cfa-vap-autoconfig) contains an Ubuntu based image with R, Python, and specialized disk mounts for a [CFA developer's needs](https://github.com/cdcent/cfa-vap-user-guides/blob/main/src/IV-wsl/00-wsl_intro.md).
-- [NCEZID - Office of the Advanced Molecular Detection Platform (OAMDP)](https://github.com/cdcent/oamd-infra-utils/blob/develop/docs/WSL_INSTALL_GUIDE.md?plain=1) includes an Ubuntu based image with a series of steps to install an Ubuntu image with podman, python, and Github API (gh).
+- [NCEZID - Office of the Advanced Molecular Detection Platform (OAMDP)](https://github.com/cdcent/oamd-infra-utils/blob/develop/docs/WSL_INSTALL_GUIDE.md) includes an Ubuntu based image with a series of steps to install an Ubuntu image with podman, python, and Github API (gh).
 - [CDC Data Hub (CDH) Lifecycle, Analysis, Visualization Accelerator (LAVA) Guide](https://wcms-wp-intra.cdc.gov/datahub/dashboards/recipes/wsl_on_prem_configure.html) provides a guide for data scientists working within EDAV or another data pipelines.
 
 ## Prerequisities
