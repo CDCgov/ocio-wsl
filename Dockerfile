@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:24.04
 
-LABEL updated_at=2024-12-18
+LABEL updated_at=2024-12-19
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -22,6 +22,7 @@ RUN apt-get update -q && apt-get install -y \
   nano \
   netcat-openbsd \
   podman \
+  sudo \
   strace \
   rsync \
   unzip \
