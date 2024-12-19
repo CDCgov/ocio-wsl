@@ -79,10 +79,13 @@ RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.
 ###############################################################################
 ENV ASDF_VERSION="0.14.1"
 ENV ASDF_DATA_DIR=/opt/asdf
+ENV ASDF_DIR=/opt/asdf
 
-RUN git clone https://github.com/asdf-vm/asdf.git /opt/asdf --branch "v${ASDF_VERSION}" && \
-  echo ". /opt/asdf/asdf.sh" >> /etc/profile.d/asdf.sh && \
-  echo ". /opt/asdf/asdf.sh" >> /etc/bash.bashrc
+RUN git clone https://github.com/asdf-vm/asdf.git "${ASDF_DIR}" --branch "v${ASDF_VERSION}" && \
+  echo ". ${ASDF_DIR}/asdf.sh\n\n" >> /etc/profile.d/asdf.sh && \
+  echo ". ${ASDF_DIR}/completions/asdf.bash\n\n" >> /etc/profile.d/asdf.sh && \
+  echo ". ${ASDF_DIR}/asdf.sh\n\n" >> /etc/bash.bashrc && \
+  echo ". ${ASDF_DIR}/completions/asdf.bash\n\n" >> /etc/bash.bashrc
 
 COPY config/.tool-versions /root/.tool-versions
 
