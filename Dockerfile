@@ -78,7 +78,7 @@ RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.
 ## asdf, we follow the instructions from this issue:
 ## https://github.com/asdf-vm/asdf/issues/577
 ###############################################################################
-ENV ASDF_VERSION="0.14.1"
+ENV ASDF_VERSION="0.15.0"
 ENV ASDF_DATA_DIR=/opt/asdf
 ENV ASDF_DIR=/opt/asdf
 
@@ -89,6 +89,7 @@ RUN git clone https://github.com/asdf-vm/asdf.git "${ASDF_DIR}" --branch "v${ASD
   echo ". ${ASDF_DIR}/completions/asdf.bash\n\n" >> /etc/bash.bashrc
 
 COPY config/.tool-versions /root/.tool-versions
+COPY config/.tool-versions "${ASDF_DATA_DIR}/.tool-versions"
 
 # Add asdf to profile, so it is available in `podman run`
 ENV PATH="$PATH:${ASDF_DATA_DIR}/bin"
@@ -127,21 +128,15 @@ RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 ##############################################################################
 RUN asdf plugin add python && asdf install && asdf global python 3.12.8
 
-###########################################################################
-## Update bashrc with auto branch complete so that the branch shows up in  
-## the folder when using git and branches... this indication prevents
-## accidental check-ins or deletions.
-###########################################################################
-RUN printf 'parse_git_branch() {\n  git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \\(.*\\)/(\\1)/"\n}\n' >> /root/.bashrc && \
-  printf "PS1='\${debian_chroot:+(\$debian_chroot)}\[\\\\033[01;32m\\\\]\u@\\h\\[\\\\033[00m\\\\]:\\[\\\\033[01;35m\\\\]\w\[\\\\033[01;31m\\\\]\$(parse_git_branch)\[\\\\033[00m\\\\]\\$ '\n" >> /root/.bashrc && \
-  printf "alias python=python3\n" >> /root/.bashrc && \
+##############################################################################
+## Create skeleton bashrc files for users to use when they login to the
+## container. These files will be copied to the user's home directory.
+##############################################################################
+COPY config/.bashrc /root/.bashrc
+COPY config/.bashrc /etc/skel/.bashrc
 
-###########################################################################
-## Podman requires knowing which container registries to pull from
-## Provide a list of options for the registries.
-###########################################################################
-  echo "unqualified-search-registries = ['imagehub.cdc.gov:6989', 'registry.access.redhat.com', 'docker.io', 'registry.centos.org', 'registry.fedoraproject.org']" \
-    >> /etc/containers/registries.conf
+COPY config/.bash_aliases /root/.bash_aliases
+COPY config/.bash_aliases /etc/skel/.bash_aliases
 
 ##############################################################################
 ## Ensure DNS is working properly: 
