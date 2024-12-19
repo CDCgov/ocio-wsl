@@ -1,3 +1,24 @@
+# [2.1.0](https://github.com/cdcent/ocio-wsl/compare/2.0.2...2.1.0) (2024-12-19)
+
+
+### Bug Fixes
+
+* add sudo to default plugin, so that new users can have superpowers ([fa1c655](https://github.com/cdcent/ocio-wsl/commit/fa1c65512c0907c011dfca57a4e06b0008fba2c3))
+* adding default path and testing ([6a9ddb6](https://github.com/cdcent/ocio-wsl/commit/6a9ddb644cdd0845a39a88aac6dfdfd74dfee129))
+* creating the asdf directory to ensure it is there ([8f539c5](https://github.com/cdcent/ocio-wsl/commit/8f539c50b5bc4835e7d3a59d5cbc42c7bd7c68c4))
+* ensuring we end the quote properly ([4f9373f](https://github.com/cdcent/ocio-wsl/commit/4f9373faa1d14c56990dc31520ea251a490009d5))
+* fixing asdf's brokeness ([3454dfd](https://github.com/cdcent/ocio-wsl/commit/3454dfd4f01239f49dad402aa84d677f364fa662))
+* removing sudo usage and properly adding a new user to login ([b954731](https://github.com/cdcent/ocio-wsl/commit/b9547313193c02d0300d0160afd4bff5fd07aa6e))
+* setting up default bash scripts for new user in Linux ([c59fa1e](https://github.com/cdcent/ocio-wsl/commit/c59fa1e1ec6e59463f4d39f867e31c1e30d20e15))
+* simple cleanup ([666fc5e](https://github.com/cdcent/ocio-wsl/commit/666fc5e12c30fd0f14a1bb5736d09b8e9dd7908e))
+
+
+### Features
+
+* default bashrc files for new user in distro ([eb39667](https://github.com/cdcent/ocio-wsl/commit/eb39667378a3f3d2ea410a39821e0c39241a66c9))
+* new user creation and folder restructuring ([4f7c487](https://github.com/cdcent/ocio-wsl/commit/4f7c4876e3cc122db3e73da77270da846b8e81c9))
+* updating README with other WSL implementations ([2889d37](https://github.com/cdcent/ocio-wsl/commit/2889d37de54e605b64d76fdfe6bc0cf5da6c453e))
+
 ## [2.0.2](https://github.com/cdcent/ocio-wsl/compare/2.0.1...2.0.2) (2024-12-17)
 
 
