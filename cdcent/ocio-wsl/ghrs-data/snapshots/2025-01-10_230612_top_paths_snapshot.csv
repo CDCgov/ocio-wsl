@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/cdcent/ocio-wsl/releases/tag/2.1.0,3,1
+/cdcent/ocio-wsl/tree/2.1.0,3,1
+/cdcent/ocio-wsl,2,2
+/cdcent/ocio-wsl/blob/2.1.0/scripts/add-user.sh,2,1
+/cdcent/ocio-wsl/blob/2.1.0/build.sh,1,1
+/cdcent/ocio-wsl/blob/2.1.0/config/.bash_aliases,1,1
+/cdcent/ocio-wsl/blob/2.1.0/config/.bashrc,1,1
+/cdcent/ocio-wsl/blob/2.1.0/config/bundle-ca.pem,1,1
+/cdcent/ocio-wsl/blob/2.1.0/config/.tool-versions,1,1
+/cdcent/ocio-wsl/blob/2.1.0/config/wsl.conf,1,1
