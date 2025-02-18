@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/cdcent/ocio-wsl,10,5
+/cdcent/ocio-wsl/blob/main/scripts/fix-dns.ps1,2,1
+/cdcent/ocio-wsl/tree/main/images,2,1
+/cdcent/ocio-wsl/blob/main/config/wsl.conf,1,1
+/cdcent/ocio-wsl/blob/main/Dockerfile,1,1
+/cdcent/ocio-wsl/blob/main/README.md,1,1
+/cdcent/ocio-wsl/branches,1,1
+/cdcent/ocio-wsl/commits/main,1,1
+/cdcent/ocio-wsl/issues,1,1
+/cdcent/ocio-wsl/issues/52,1,1
