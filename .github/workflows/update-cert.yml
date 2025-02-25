@@ -1,0 +1,21 @@
+name: Pull and Update to latest certificate bundle
+
+on:
+  schedule:
+    # Run this once per day, towards the end of the day for keeping the most
+    # recent data point most meaningful (hours are interpreted in UTC).
+    - cron: "15 23 * * *"
+  workflow_dispatch: # Allow for running this manually.
+
+jobs:
+  repostats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Pull latest certificate into repository
+        if: github.ref == 'refs/heads/main'
+        run: |
+          curl https://raw.githubusercontent.com/CDCgov/ocio-certificates/refs/heads/main/data/min-cdc-bundle-ca.crt > config/bundle-ca.pem
