@@ -2,11 +2,12 @@
 
 set -eu
 
-# Get the Windows username and extract only the part after the domain (if present)
+# use the Windows username and extract only the part after the domain (if present)
+# which is normally the way we login into Windows
 RAWUSER=$(cmd.exe /c "echo %USERNAME%" | tr -d '\r')
 NEWUSER=$(echo "$RAWUSER" | awk -F'/' '{print $NF}')
 
-# Check if the user already exists
+# check and verify if the user already exists
 if getent passwd "$NEWUSER" > /dev/null; then
   echo -e "The user '$NEWUSER' already exists - skipping creation."
 else

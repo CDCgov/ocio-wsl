@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:24.04
 
-LABEL updated_at=2024-12-19
+LABEL updated_at=2025-02-27
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -17,6 +17,7 @@ RUN apt-get update -q && apt-get install -y \
   curl \
   dnsperf \
   git \
+  gpg \
   iperf3 \
   jq \
   nano \
@@ -66,40 +67,46 @@ RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.
   update-ca-certificates
 
 ###############################################################################
-## Install asdf to install a variety of programming languages and command line
+## Install mise to install a variety of programming languages and command line
 ## tools. Users can find and install their own tools by following instructions
-## on https://asdf-vm.com/manage/plugins.html.
+## on https://mise.jdx.dev/getting-started.html.
 ##
-## To update these tools, users can run asdf list-all <tool> such as python to
-## find the latest version, update the ~/.tool-versions file for the version
-## they want, and run asdf install to install that version.
+## To update these tools, users can run mise list to find all software installed to
+## find the latest version, update the ~/.config/mise/config.toml file for the version
+## they want, and run mise upgrade to install that version.
 ##
-## To install ASDF into the /opt directory so that all users can use
-## asdf, we follow the instructions from this issue:
-## https://github.com/asdf-vm/asdf/issues/577
+## To install mise into the /opt directory so that all users can use
+## mise, we follow the instructions from this issue:
+## https://github.com/jdx/mise/blob/main/packaging/mise/Dockerfile
 ###############################################################################
-ENV ASDF_VERSION="0.15.0"
-ENV ASDF_DATA_DIR=/opt/asdf
-ENV ASDF_DIR=/opt/asdf
+# Set environment variables to install tools globally
+ENV MISE_DATA_DIR=/opt/mise
+ENV XDG_DATA_HOME=/opt/mise
+ENV MISE_CONFIG_DIR=/opt/mise/config
+ENV PATH="/opt/mise/bin:/opt/mise/shims:$PATH"
 
-RUN git clone https://github.com/asdf-vm/asdf.git "${ASDF_DIR}" --branch "v${ASDF_VERSION}" && \
-  echo ". ${ASDF_DIR}/asdf.sh\n\n" >> /etc/profile.d/asdf.sh && \
-  echo ". ${ASDF_DIR}/completions/asdf.bash\n\n" >> /etc/profile.d/asdf.sh && \
-  echo ". ${ASDF_DIR}/asdf.sh\n\n" >> /etc/bash.bashrc && \
-  echo ". ${ASDF_DIR}/completions/asdf.bash\n\n" >> /etc/bash.bashrc
+# Install mise
+RUN install -dm 755 /etc/apt/keyrings && \
+  wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null && \
+  echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | tee /etc/apt/sources.list.d/mise.list && \
+  apt update && \
+  apt install -y mise && \
+  mkdir -p /opt/mise/bin && \
+  ln -s /usr/bin/mise /opt/mise/bin/mise && \
+  apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY config/.tool-versions /root/.tool-versions
-COPY config/.tool-versions "${ASDF_DATA_DIR}/.tool-versions"
+# Copy config file
+COPY config/config.toml "${MISE_CONFIG_DIR}/config.toml"
 
-# Add asdf to profile, so it is available in `podman run`
-ENV PATH="$PATH:${ASDF_DATA_DIR}/bin"
-
-# Add asdf shims to PATH, so installed executables can be run in this Dockerfile
-ENV PATH="$PATH:${ASDF_DATA_DIR}/shims"
+# Ensure mise is initialized for all users
+RUN echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /etc/skel/.bashrc
+RUN echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /root/.bashrc
+RUN echo 'eval "$(mise activate bash)"' >> /etc/skel/.bashrc
+RUN echo 'eval "$(mise activate bash)"' >> /root/.bashrc
 
 # Ensure Python trusts the CDC root certificates, so that it can access internal 
 # websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
-# certificate
+# certificate:
 # The root certificate of Ubuntu is /etc/ssl/certs/ca-certificates.crt based on
 # https://go.dev/src/crypto/x509/root_linux.go
 ENV REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
@@ -122,11 +129,11 @@ RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 
 ##############################################################################
 ## All other tools are in the folder: python requires special care to install.
-## /opt/scripts/add-extra-tools.sh
+## Install all other tools by running: mise upgrade
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
-RUN asdf plugin add python && asdf install && asdf global python 3.12.8
+RUN mise use python@3.12.9 --global
 
 ##############################################################################
 ## Create skeleton bashrc files for users to use when they login to the
