@@ -8,4 +8,4 @@
 
 ![Administrative Privilege for Windows](admin-priv-windows.png)
 
-2. You must have access to [github.com/cdcent](https://github.com/cdcent/ocio-wsl/releases) to download the image. Ask for access via [Google Form](https://forms.office.com/Pages/ResponsePage.aspx?id=aQjnnNtg_USr6NJ2cHf8j44WSiOI6uNOvdWse4I-C2NUQjVJVDlKS1c0SlhQSUxLNVBaOEZCNUczVS4u).
+1. You must have access to [github.com/cdcent](https://github.com/cdcent/ocio-wsl/releases) to download the image. Ask for access via [Google Form](https://forms.office.com/Pages/ResponsePage.aspx?id=aQjnnNtg_USr6NJ2cHf8j44WSiOI6uNOvdWse4I-C2NUQjVJVDlKS1c0SlhQSUxLNVBaOEZCNUczVS4u).
