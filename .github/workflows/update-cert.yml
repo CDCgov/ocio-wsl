@@ -18,4 +18,18 @@ jobs:
       - name: Pull latest certificate into repository
         if: github.ref == 'refs/heads/main'
         run: |
-          curl https://raw.githubusercontent.com/CDCgov/ocio-certificates/refs/heads/main/data/min-cdc-bundle-ca.crt > config/bundle-ca.pem
+          set -e
+          curl -L -k https://raw.githubusercontent.com/CDCgov/ocio-certificates/refs/heads/main/data/min-cdc-bundle-ca.crt -o config/bundle-ca.pem
+          if [ $? -ne 0 ]; then
+            echo "Failed to download the certificate"
+            exit 1
+          fi
+          echo "Certificate downloaded successfully"
+      - name: Verify certificate file
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if [ ! -s config/bundle-ca.pem ]; then
+            echo "Certificate file is empty or does not exist"
+            exit 1
+          fi
+          echo "Certificate file verified successfully"
