@@ -1,10 +1,10 @@
-name: Pull and Update to latest certificate bundle
+name: Update Certificate Bundle
 
 on:
   schedule:
     # Run this once per day, towards the end of the day for keeping the most
     # recent data point most meaningful (hours are interpreted in UTC).
-    - cron: "15 23 * * *"
+    - cron: "45 17 * * *"
   workflow_dispatch: # Allow for running this manually.
 
 jobs:
@@ -15,6 +15,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Pull latest certificate into repository
         if: github.ref == 'refs/heads/main'
         run: |
@@ -25,6 +26,7 @@ jobs:
             exit 1
           fi
           echo "Certificate downloaded successfully"
+          
       - name: Verify certificate file
         if: github.ref == 'refs/heads/main'
         run: |
@@ -33,3 +35,13 @@ jobs:
             exit 1
           fi
           echo "Certificate file verified successfully"
+        
+      - name: Commit to push latest certificate bundle
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config --global user.email "noreply@github.com"
+          git config --global user.name "github-automation"
+          git status
+          git add .
+          git commit --allow-empty -m "fix(users): Syncing to latest certificate bundle"
+          git push -u origin main
