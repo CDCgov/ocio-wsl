@@ -4,11 +4,15 @@ on:
   schedule:
     # Run this once per day, towards the end of the day for keeping the most
     # recent data point most meaningful (hours are interpreted in UTC).
-    - cron: "45 17 * * *"
+    - cron: "33 23 * * *"
   workflow_dispatch: # Allow for running this manually.
 
+env:
+  CERTIFICATE_URL: https://raw.githubusercontent.com/CDCgov/ocio-certificates/refs/heads/main/data/min-cdc-bundle-ca.crt
+  PEM_FILE_PATH: config/bundle-ca.pem
+
 jobs:
-  repostats:
+  update-certificate:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -20,8 +24,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           set -e
-          curl -L -k https://raw.githubusercontent.com/CDCgov/ocio-certificates/refs/heads/main/data/min-cdc-bundle-ca.crt -o config/bundle-ca.pem
-          if [ $? -ne 0 ]; then
+          if ! curl -L -k "${{ env.CERTIFICATE_URL }}" -o "${{ env.PEM_FILE_PATH }}"; then
             echo "Failed to download the certificate"
             exit 1
           fi
@@ -30,7 +33,7 @@ jobs:
       - name: Verify certificate file
         if: github.ref == 'refs/heads/main'
         run: |
-          if [ ! -s config/bundle-ca.pem ]; then
+          if [ ! -s "${{ env.PEM_FILE_PATH }}" ]; then
             echo "Certificate file is empty or does not exist"
             exit 1
           fi
