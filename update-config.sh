@@ -2,43 +2,45 @@
 
 set -eu
 
-# Default path to config.toml file if not set
+# Default paths
 TOOL_VERSIONS_PATH=${1:-config/config.toml}
 OUTPUT_FILE=${2:-config.toml.latest}
 
-get_latest_version() {
-  local package=$1
-  local latest_version
-  latest_version=$(mise latest "$package" 2>&1)
-  if [[ $? -ne 0 ]]; then
-    echo "error: $latest_version"
-  else
-    echo "$latest_version"
-  fi
-}
-
-if [[ ! -f $TOOL_VERSIONS_PATH ]]; then
-  echo "File not found: $TOOL_VERSIONS_PATH"
+# Ensure required tools are installed
+if ! command -v yq &>/dev/null; then
+  echo "error: yq is required but not installed. Install it from https://github.com/mikefarah/yq"
   exit 1
 fi
 
-# Read the config.toml file and update with latest versions
-echo "[tool]" > "$OUTPUT_FILE"
+if ! command -v mise &>/dev/null; then
+  echo "error: mise is required but not installed. Install it from https://mise.jdx.dev"
+  exit 1
+fi
 
-first_line_skipped=false
-while read -r line; do
-  if [ "$first_line_skipped" = false ]; then
-    first_line_skipped=true
-    continue
-  fi
-  package=$(echo "$line" | awk '{print $1}' | tr -d '"')
-  version=$(echo "$line" | awk -F'=' '{print $2}' | tr -d ' "')
-  if [ "$version" = "latest" ]; then
-    latest_version="latest"
-  else
-    latest_version=$(get_latest_version "$package")
-  fi
-  echo "$package = \"$latest_version\"" >> "$OUTPUT_FILE"
-done < "$TOOL_VERSIONS_PATH"
+# Check if the input TOML file exists
+if [[ ! -f $TOOL_VERSIONS_PATH ]]; then
+  echo "error: File not found: $TOOL_VERSIONS_PATH"
+  exit 1
+fi
 
-echo "Updated config.toml file created as config.toml.latest"
+# Start the output file
+echo "[tools]" > "$OUTPUT_FILE"
+
+# Process top-level tools
+yq -r '.tools | to_entries | .[] | select(.value | type != "object") | "\(.key) \(.value)"' "$TOOL_VERSIONS_PATH" | while read -r package version; do
+  latest_version=$(mise latest "$package" 2>/dev/null || echo "$version")
+  echo "  $package = \"$latest_version\"" >> "$OUTPUT_FILE"
+done
+
+# Process nested tool categories like [tools.java]
+yq -r '.tools | to_entries | .[] | select(.value | type == "object") | .key' "$TOOL_VERSIONS_PATH" | while read -r category; do
+  echo "" >> "$OUTPUT_FILE"
+  echo "[tools.$category]" >> "$OUTPUT_FILE"
+
+  yq -r ".tools[\"$category\"] | to_entries | .[] | \"\(.key) \(.value)\"" "$TOOL_VERSIONS_PATH" | while read -r subpackage subversion; do
+    latest_version=$(mise latest "$subpackage" 2>/dev/null || echo "$subversion")
+    echo "  $subpackage = \"$latest_version\"" >> "$OUTPUT_FILE"
+  done
+done
+
+echo "Updated config.toml file created as $OUTPUT_FILE"

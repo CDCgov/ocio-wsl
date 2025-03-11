@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:24.04
 
-LABEL updated_at=2025-02-27
+LABEL updated_at=2025-03-11
 
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
@@ -85,7 +85,7 @@ ENV XDG_DATA_HOME=/opt/mise
 ENV MISE_CONFIG_DIR=/opt/mise/config
 ENV PATH="/opt/mise/bin:/opt/mise/shims:$PATH"
 
-# Install mise
+# Install mise, the package manager for command line tools
 RUN install -dm 755 /etc/apt/keyrings && \
   wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null && \
   echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | tee /etc/apt/sources.list.d/mise.list && \
@@ -97,12 +97,13 @@ RUN install -dm 755 /etc/apt/keyrings && \
 
 # Copy config file
 COPY config/config.toml "${MISE_CONFIG_DIR}/config.toml"
+COPY config/config.toml "/etc/mise/config.toml"
 
 # Ensure mise is initialized for all users
-RUN echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /etc/skel/.bashrc
-RUN echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /root/.bashrc
-RUN echo 'eval "$(mise activate bash)"' >> /etc/skel/.bashrc
-RUN echo 'eval "$(mise activate bash)"' >> /root/.bashrc
+RUN echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /etc/skel/.bashrc && \
+  echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /root/.bashrc && \
+  echo 'eval "$(mise activate bash)"' >> /etc/skel/.bashrc && \
+  echo 'eval "$(mise activate bash)"' >> /root/.bashrc
 
 # Ensure Python trusts the CDC root certificates, so that it can access internal 
 # websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
