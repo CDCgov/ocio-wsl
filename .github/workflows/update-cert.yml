@@ -4,12 +4,15 @@ on:
   schedule:
     # Run this once per day, towards the end of the day for keeping the most
     # recent data point most meaningful (hours are interpreted in UTC).
-    - cron: "33 23 * * *"
+    - cron: "35 23 * * *"
   workflow_dispatch: # Allow for running this manually.
 
 env:
   CERTIFICATE_URL: https://raw.githubusercontent.com/CDCgov/ocio-certificates/refs/heads/main/data/min-cdc-bundle-ca.crt
   PEM_FILE_PATH: config/bundle-ca.pem
+
+permissions:
+  contents: write
 
 jobs:
   update-certificate:
@@ -29,7 +32,7 @@ jobs:
             exit 1
           fi
           echo "Certificate downloaded successfully"
-          
+
       - name: Verify certificate file
         if: github.ref == 'refs/heads/main'
         run: |
@@ -38,13 +41,66 @@ jobs:
             exit 1
           fi
           echo "Certificate file verified successfully"
-        
-      - name: Commit to push latest certificate bundle
+
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.GIT_APP_OCIO_EDSO_APP_ID }}
+          private-key: ${{ secrets.GIT_APP_OCIO_EDSO_PRIVATE_KEY }}
+          owner: cdcent
+
+      - name: Configure Pull Request
         if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
         run: |
           git config --global user.email "noreply@github.com"
           git config --global user.name "github-automation"
           git status
+
+      - name: Switch to branch
+        if: github.ref == 'refs/heads/main'
+        id: switch_branch
+        run: |
+          date="$(date '+%Y-%m-%d-%H-%M-%S')"
+          export BRANCH_NAME="certificate-automation-update-${date}"
+          echo "BRANCH_NAME=${BRANCH_NAME}" >> "$GITHUB_OUTPUT"
+          git checkout -b "$BRANCH_NAME"
+
+      - name: Write to file
+        if: github.ref == 'refs/heads/main'
+        id: write_to_file
+        run: |
           git add .
-          git commit --allow-empty -m "fix(users): Syncing to latest certificate bundle"
-          git push -u origin main
+          # Check if there are any changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            echo "changes_exist=false" >> "$GITHUB_OUTPUT" # Set the output to indicate no changes
+            exit 0
+          else
+            echo "changes_exist=true" >> "$GITHUB_OUTPUT" # Set the output to indicate changes exist
+            # Commit and push if there are changes
+            git commit -m "chore[dev]: automate certificate updates - $(date '+%Y-%m-%d %H:%M:%S')"
+            git push -f -u origin HEAD
+          fi
+
+      - name: Create PR
+        if: github.ref == 'refs/heads/main' && steps.write_to_file.outputs.changes_exist == 'true'
+        env:
+          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+        run: |
+          gh pr create --title "Automate certificates update" --body "Automate certificates update" --base main --head '${{ steps.switch_branch.outputs.BRANCH_NAME }}'
+
+      - name: Merge PR
+        if: github.ref == 'refs/heads/main' && steps.write_to_file.outputs.changes_exist == 'true'
+        env:
+          GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+        run: |
+          # List PRs, gets the PR number for the first one (our PR)
+          pr_number=$(gh pr list --state open --limit 1 --json number --jq '.[0].number')
+
+          # Try to merge
+          if ! gh pr merge "$pr_number" --admin --squash; then
+            echo "PR can't be merged automatically. Merging with auto..."
+            gh pr merge "$pr_number" --admin --squash --auto
+          fi
