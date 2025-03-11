@@ -77,9 +77,12 @@ To shutdown WSL distros, run `wsl --shutdown` and [wait 8 seconds](https://learn
 
 When using `wsl --image` to run the image, it always logs you in [as the root user](https://learn.microsoft.com/en-us/windows/wsl/use-custom-distro#add-wsl-specific-components-like-a-default-user).
 
-For whatever reason, occasionally if you run `wsl --shutdown`, you may end up crashing the Windows `vmcompute` service, so running `wsl` to log back into your default machine will incur a **Logon failure: the user has not been granted the requested logon type at this computer, with an error code of wsl/service/CreateInstance/CreateVm**. If that occurs, these are your actions to fix it without restarting.
+For whatever reason, occasionally if you run `wsl --shutdown`, you may end up crashing the Windows `vmcompute` service, so running `wsl` to log back into your default machine will incur an error:  
+**Logon failure: the user has not been granted the requested logon type at this computer, with an error code of wsl/service/CreateInstance/CreateVm**.
 
-1. Run `gpupdate /force` to ensure you're up to day with Group Policy settings with the rest of the Enterprise. This could take up to 10 minutes. This probably won't fix your problem either, but good to keep updated on your own terms. Continue on!
+If that occurs, fix it like this (does not require restarting):
+
+1. (Optional) Run `gpupdate /force` to ensure you're up to day with Group Policy settings with the rest of the Enterprise. This could take up to 10 minutes. This probably won't fix your problem either, but good to keep updated on your own terms. Continue on!
 1. Find your -su user password and open an administrative powershell.
 1. Restart the **vmcompute** service by running `Restart-Service vmcompute` in your admin powershell.
 1. Try using `wsl` again.
