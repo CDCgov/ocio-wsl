@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/cdcent/ocio-wsl/compare/2.1.0...2.2.0) (2025-03-11)
+
+
+### Features
+
+* use mise instead of asdf ([#72](https://github.com/cdcent/ocio-wsl/issues/72)) ([0324327](https://github.com/cdcent/ocio-wsl/commit/03243273da76d86dd53ba22d7ad685670d7ecdf2))
+
 # [2.1.0](https://github.com/cdcent/ocio-wsl/compare/2.0.2...2.1.0) (2024-12-19)
 
 
