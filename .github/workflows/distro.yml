@@ -20,6 +20,7 @@ on:
       - '**.md'
       - '!README.md'
       - '.github/workflows/stats.yml'
+      - 'config/bundle-ca.pem'
 
 permissions:
   contents: write # for checkout
