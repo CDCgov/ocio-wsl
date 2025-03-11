@@ -61,13 +61,13 @@ To install this list of tools, run `bash /opt/scripts/add-extra-tools.sh`. We co
 
 ## Change Tool versions
 
-We utilize [asdf](https://asdf-vm.com/) to install common programming tools and it comes with a [tool versions file](./config/.tool-versions).
+We utilize [mise](https://mise.jdx.dev/getting-started.html) to install common programming tools and it comes with a [tool versions file](./config/config.toml).
 
-To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.11.11, save the file, and run `asdf install`.
+To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.12.9, save the file, and run `mise upgrade`.
 
-Once it is completed, you can run `python -v` with python 3.12.8.
+Once it is completed, you can run `python -v` with python 3.12.9.
 
-Use `asdf list-all python` to figure out the available versions of python you can install.
+Use `mise list` to figure out the available versions of python you can install.
 
 ## WSL Tricks
 
@@ -112,9 +112,7 @@ Review through [commit-analyzer](https://github.com/semantic-release/commit-anal
 
 ## Ongoing Issues
 
-- asdf should be accessible by all Linux users in the WSL distro
-  - [Example of adduser for asdf](https://github.com/webofmars/docker-asdf/blob/master/Dockerfile)
-  - [Storing all asdf downloads into /opt](https://github.com/asdf-vm/asdf/issues/577)
+- mise should be accessible by all Linux users in the WSL distro
 - Github Releases per file has a [upper limit of 2GB](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
   - Sort of fixed - slim down the image.
 

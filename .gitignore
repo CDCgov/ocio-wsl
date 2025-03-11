@@ -222,3 +222,4 @@ $RECYCLE.BIN/
 images/*.tar
 images/checksums.txt
 .tool-versions.latest
+config.toml.latest
