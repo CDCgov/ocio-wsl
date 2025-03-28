@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/cdcent/ocio-wsl,16,5
+/cdcent/ocio-wsl/blob/main/scripts/fix-dns.ps1,8,3
+/cdcent/ocio-wsl/releases/tag/2.2.0,6,3
+/cdcent/ocio-wsl/tree/main/scripts,6,2
+/cdcent/ocio-wsl/blob/main/Dockerfile,5,2
+/cdcent/ocio-wsl/issues,5,1
+/cdcent/ocio-wsl/tree/main,5,1
+/cdcent/ocio-wsl/blob/main/config/.tool-versions,4,1
+/cdcent/ocio-wsl/blob/main/docs/prerequisites.md,3,2
+/cdcent/ocio-wsl/blob/main/README.md,2,2
