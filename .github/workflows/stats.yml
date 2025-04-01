@@ -10,23 +10,19 @@ on:
 jobs:
   repostats:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     environment:
       name: github-app-ocio-github-repo-statistics
     steps:
-
-      - name: Get Github App token
-        if: github.ref == 'refs/heads/main'
-        id: generate_token
-        run: |
-          echo "${{ secrets.PRIVATE_KEY }}" > private.pem
-          result=$(npx github-app-installation-token \
-            --appId ${{ vars.APP_ID }} \
-            --installationId ${{ vars.INSTALLATION_ID }} \
-            --privateKeyLocation private.pem)
-          echo "TOKEN=$result" >> "$GITHUB_OUTPUT"
+      - uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1.12.0
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
 
       - name: run github repository stats
-        uses: jgehrcke/github-repo-stats@v1.4.2
+        uses: jgehrcke/github-repo-stats@306db38ad131cab2aa5f2cd3062bf6f8aa78c1aa # v1.4.2
         with:
-          ghtoken: ${{ steps.generate_token.outputs.TOKEN }}
+          ghtoken: ${{ steps.app-token.outputs.token }}
           ghpagesprefix: https://bookish-fishstick-m61kqvo.pages.github.io/
