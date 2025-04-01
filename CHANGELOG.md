@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/cdcent/ocio-wsl/compare/2.2.0...2.2.1) (2025-04-01)
+
+
+### Bug Fixes
+
+* updating dependencies, ordering dependencies for mise ([#76](https://github.com/cdcent/ocio-wsl/issues/76)) ([08d4719](https://github.com/cdcent/ocio-wsl/commit/08d47198ad87634ba6848141896b8b70f5fe6ef5))
+
 # [2.2.0](https://github.com/cdcent/ocio-wsl/compare/2.1.0...2.2.0) (2025-03-11)
 
 
