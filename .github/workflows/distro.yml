@@ -70,7 +70,7 @@ jobs:
           base_ref: ${{ github.base_ref }}
           event_number: ${ github.event.number }
         run: |
-          git checkout -b ${{ github.base_ref }} pull/${{ github.event.number }}/merge
+          git checkout -b ${{ env.base_ref }} pull/${{ env.event_number }}/merge
           unset GITHUB_ACTIONS;
           npx semantic-release --no-ci --dry-run --plugins @semantic-release/commit-analyzer,@semantic-release/release-notes-generator > output.txt
           OUTPUT=$(base64 -w 0 < output.txt)
