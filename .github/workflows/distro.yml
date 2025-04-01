@@ -69,7 +69,7 @@ jobs:
       # https://github.com/semantic-release/semantic-release/issues/1890#issuecomment-974512960
       - name: 🔬 Check semantic versioning
         id: semantic-release
-       # if: ${{ github.ref != 'refs/heads/main' }}
+       if: ${{ github.ref != 'refs/heads/main' }}
         run: |
           git checkout -b ${{ github.base_ref }} pull/${{ github.event.number }}/merge
           unset GITHUB_ACTIONS;
