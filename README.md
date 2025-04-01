@@ -59,6 +59,15 @@ Inside the image, the /opt/scripts folder has a script to install [an additional
 
 To install this list of tools, run `bash /opt/scripts/add-extra-tools.sh`. We couldn't fit it all into the image due to a [2GB restriction](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
 
+## Creating a Default User
+
+Inside the image, the /opt/scripts folder has a script to create a [default non-root user](./scripts/add-user.sh) based on your windows username.
+
+To create the non-root user account and set it as the default account on login, login and run `bash /opt/scripts/add-user.sh`.  If you are running an older image distro (e.g. ubuntu-22.04-cdc), make sure the sudo package is installed *first*, otherwise you may need to force a root login to install sudo, e.g. in a command shell, run `wsl -d ubuntu-22.04-cdc -u root`, then `apt install sudo`.
+
+On all subsequent logins, you should be logged in with your windows username showing in a regular user prompt. To sudo to the root user, type `sudo su root`, or `sudo su - root` to include the root environment.
+Packages requiring non-root user accounts with sudo access, such as [homebrew](https://brew.sh/) may now be installed. 
+
 ## Change Tool versions
 
 We utilize [mise](https://mise.jdx.dev/getting-started.html) to install common programming tools and it comes with a [tool versions file](./config/config.toml).
