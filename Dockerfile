@@ -66,7 +66,7 @@ RUN apt-get update -q && apt-get install -y \
 # RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.pem && \
 #   update-ca-certificates
 RUN wget -q -O /usr/local/share/ca-certificates/enterprise-bundle.crt \
-    https://raw.githubusercontent.com/cdcgov/ocio-certificate-infra/main/bundle-ca.pem && \
+    https://raw.githubusercontent.com/CDCgov/ocio-certificates/refs/heads/main/data/min-cdc-bundle-ca.crt && \
     cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.pem && \
     update-ca-certificates
 ###############################################################################
