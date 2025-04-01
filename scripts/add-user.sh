@@ -27,5 +27,6 @@ else
   echo "Default user '${NEWUSER}' is already set in WSL configuration."
 fi
 
-# Add mise to the user's bashrc
-echo "eval \"$(mise activate bash)\"" >> ~/.bashrc
+# Add mise to the user's bashrc for the user's environment for easy access
+# shellcheck disable=SC2016
+echo 'eval "$(mise activate bash)"' >> "/home/$NEWUSER/.bashrc"
