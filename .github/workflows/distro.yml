@@ -155,10 +155,10 @@ jobs:
           sha256sum "$IMAGE_NAME" > checksums.txt
         working-directory: ./images
 
-      - name: Release
-        if: github.ref == 'refs/heads/main'
-        env:
-          GH_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
-          GITHUB_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
-        run: |
-          npx semantic-release
+      # - name: Release
+      #   if: github.ref == 'refs/heads/main'
+      #   env:
+      #     GH_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
+      #     GITHUB_TOKEN: '${{ steps.generate_token.outputs.TOKEN }}'
+      #   run: |
+      #     npx semantic-release
