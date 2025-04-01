@@ -62,10 +62,13 @@ RUN apt-get update -q && apt-get install -y \
 ## to minimize the amount of SSL / TLS certificate problems for HTTP clients
 ## to drop or terminate a socket connection.
 ###############################################################################
-COPY config/bundle-ca.pem /usr/local/share/ca-certificates/enterprise-bundle.crt
-RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.pem && \
-  update-ca-certificates
-
+# COPY config/bundle-ca.pem /usr/local/share/ca-certificates/enterprise-bundle.crt
+# RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.pem && \
+#   update-ca-certificates
+RUN wget -q -O /usr/local/share/ca-certificates/enterprise-bundle.crt \
+    https://raw.githubusercontent.com/cdcgov/ocio-certificate-infra/main/bundle-ca.pem && \
+    cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.pem && \
+    update-ca-certificates
 ###############################################################################
 ## Install mise to install a variety of programming languages and command line
 ## tools. Users can find and install their own tools by following instructions
