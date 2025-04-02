@@ -1,0 +1,12 @@
+[Unit]
+Description=Run one-time actions on startup
+After=local-fs.target
+After=network.target
+
+[Service]
+ExecStart=/opt/scripts/run-once.sh
+RemainAfterExit=true
+Type=oneshot
+
+[Install]
+WantedBy=multi-user.target

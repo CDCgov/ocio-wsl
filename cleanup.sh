@@ -9,7 +9,7 @@ containerIDs=("$(podman container ls -a | grep -i "$IMAGE_NAME" | awk '{print $1
 
 # Remove the image from podman container storage to avoid piling up of containers
 echo "Removing containers with image: $IMAGE_NAME"
-for containerID in "${containerIDs[@]}"
+for containerID in $(echo ${containerIDs[@]})
 do
   echo "Removing container ID: $containerID"
   podman rm "$containerID"
