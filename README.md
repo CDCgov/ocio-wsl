@@ -70,6 +70,9 @@ If you login again and still see the root user prompt, then logout and wait for 
 
 If you wish to change the default login back to root, change the default user entry in /etc/wsl.conf to `root` and reboot.
 
+### Configuring DNS
+Also on first login, the run-once script will configure DNS resolution by getting the resolver IP or IPs from your Windows DNS configuration and adding them as nameserver entries to /etc/resolv.conf. This fixes a known issue with WSL's default DNS configuration. If you further customize the file, the script will not overwrite your changes as long as the file is not empty. Conversely, if you need to reset the DNS configuration, leave the file empty and reboot.
+
 ## Change Tool versions
 
 We utilize [mise](https://mise.jdx.dev/getting-started.html) to install common programming tools and it comes with a [tool versions file](./config/config.toml).
