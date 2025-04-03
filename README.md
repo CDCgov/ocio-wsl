@@ -59,14 +59,16 @@ Inside the image, the /opt/scripts folder has a script to install [an additional
 
 To install this list of tools, run `bash /opt/scripts/add-extra-tools.sh`. We couldn't fit it all into the image due to a [2GB restriction](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
 
-## Creating a Default User
+## First-time login automation
 
-Inside the image, the /opt/scripts folder has a script to create a [default non-root user](./scripts/add-user.sh) based on your windows username.
+Inside the image, the /opt/scripts folder has a [run-once](./scripts/run-once.sh) script to perform one-time automated actions. This script is run automatically on startup by the run-once.service systemd unit.
 
-To create the non-root user account and set it as the default account on login, login and run `bash /opt/scripts/add-user.sh`.  If you are running an older image distro (e.g. ubuntu-22.04-cdc), make sure the sudo package is installed *first*, otherwise you may need to force a root login to install sudo, e.g. in a command shell, run `wsl -d ubuntu-22.04-cdc -u root`, then `apt install sudo`.
+### Setting the default login user
+When you login for the first time, the run-once script creates a non-root user account based on your windows username and sets it as the default login user in /etc/wsl.conf.
 
-On all subsequent logins, you should be logged in with your windows username showing in a regular user prompt. To sudo to the root user, type `sudo su root`, or `sudo su - root` to include the root environment.
-Packages requiring non-root user accounts with sudo access, such as [homebrew](https://brew.sh/) may now be installed. 
+If you login again and still see the root user prompt, then logout and wait for 1 minute before logging back in and you should see your regular user prompt. From then on, all subsequent logins will default to your non-root user account, which has sudo privileges. To sudo to the root user, type `sudo su root`, or `sudo su - root` to include the root environment. Packages requiring non-root user accounts with sudo access, such as [homebrew](https://brew.sh/) can then be installed. 
+
+If you wish to change the default login back to root, change the default user entry in /etc/wsl.conf to `root` and reboot.
 
 ## Change Tool versions
 

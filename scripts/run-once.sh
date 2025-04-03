@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
+# This script is for any action to be run once on startup and is called by a custom systemd unit: run-once.service
+#
+# Currently, it does the following if not already configured:
+# - Creates and sets the default login user to a non-root user matching the windows login username and with sudo access
+#
+# To get the status or check for errors: sudo systemctl status run-once.service
+# To disable the service: sudo systemctl disable run-once.service
+# To reenable the service: sudo systemctl enable run-once.service
 
 set -eu
 
 # use the Windows username and extract only the part after the domain (if present)
 # which is normally the way we login into Windows
-RAWUSER=$(cmd.exe /c "echo %USERNAME%" | tr -d '\r')
+RAWUSER=$(/mnt/c/windows/system32/cmd.exe /c "echo %USERNAME%" | tr -d '\r')
 NEWUSER=$(echo "$RAWUSER" | awk -F'/' '{print $NF}')
 
 # check and verify if the user already exists, create if not

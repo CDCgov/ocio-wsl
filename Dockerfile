@@ -160,6 +160,13 @@ COPY config/wsl.conf /etc/wsl.conf
 ###########################################################################
 COPY scripts/ /opt/scripts/
 
+###########################################################################
+## Run the run-once.sh script on startup 
+###########################################################################
+COPY config/run-once.service /etc/systemd/system
+RUN chmod +x /opt/scripts/run-once.sh
+RUN systemctl enable run-once.service
+
 # Clean up the local repository of retrieved package files, useful only for
 # local environments which don't have any cleanup mechanism.
 RUN apt-get clean
