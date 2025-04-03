@@ -66,7 +66,7 @@ Inside the image, the /opt/scripts folder has a [run-once](./scripts/run-once.sh
 ### Setting the default login user
 When you login for the first time, the run-once script creates a non-root user account based on your windows username and sets it as the default login user in /etc/wsl.conf.
 
-If you login and still see the root user prompt, then logout and wait for 1 minute before logging back in and you should see your regular user prompt. From then on, all subsequent logins will default to your non-root user account, which has sudo privileges. To sudo to the root user, type `sudo su root`, or `sudo su - root` to include the root environment. Packages requiring non-root user accounts with sudo access, such as [homebrew](https://brew.sh/) can then be installed. 
+If you login again and still see the root user prompt, then logout and wait for 1 minute before logging back in and you should see your regular user prompt. From then on, all subsequent logins will default to your non-root user account, which has sudo privileges. To sudo to the root user, type `sudo su root`, or `sudo su - root` to include the root environment. Packages requiring non-root user accounts with sudo access, such as [homebrew](https://brew.sh/) can then be installed. 
 
 If you wish to change the default login back to root, change the default user entry in /etc/wsl.conf to `root` and reboot.
 
