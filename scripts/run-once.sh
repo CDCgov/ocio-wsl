@@ -4,7 +4,7 @@
 # Currently, it does the following if not already configured:
 # - Creates and sets the default login user to a non-root user matching the windows login username and with sudo access
 #
-# To get the status or check for errors: systemctl status run-once.service
+# To get the status or check for errors: sudo systemctl status run-once.service
 # To disable the service: sudo systemctl disable run-once.service
 # To reenable the service: sudo systemctl enable run-once.service
 
