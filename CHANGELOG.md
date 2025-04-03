@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/cdcent/ocio-wsl/compare/2.2.1...2.3.0) (2025-04-03)
+
+
+### Features
+
+* EDSO-1089 add default user on startup ([#80](https://github.com/cdcent/ocio-wsl/issues/80)) ([063fb69](https://github.com/cdcent/ocio-wsl/commit/063fb697d2dee8d4fff3d5a62ff4ce44c0ff7067))
+
 ## [2.2.1](https://github.com/cdcent/ocio-wsl/compare/2.2.0...2.2.1) (2025-04-01)
 
 
