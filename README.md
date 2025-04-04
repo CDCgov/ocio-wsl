@@ -35,13 +35,13 @@ Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup
 2. Import a tar file and wait a bit.
    `wsl --import <distroName> <virtual hard disk> <tar file>`
 
-3. Once the distro has been imported, DNS resolution does not yet work! Download this [fix-dns.ps1 powershell script](./scripts/fix-dns.ps1) and run it by running `powershell -executionpolicy bypass -File fix-dns.ps1 <distro_name>`.
-
-4. Set it as the default distro:
+3. Set it as the default distro:
    `wsl --set-default <distroName>`
 
-5. Once imported, run the distro:
+4. Once imported, run the distro. This first time, you will be logged in as root while the run-once script runs:
    `wsl` or `wsl -d <distroName>`
+
+5. Logout and wait for 1 minute (or else reboot) to ensure the run-once changes take effect before logging in again. You should now be logged in as your non-root user and DNS should be working.
 
 Example:
 
@@ -49,9 +49,10 @@ For the Ubuntu 24.04 distro, with a **virtual hard disk** path of **C:\Users\tpz
 
 1. `wsl --import ubuntu-24.04-cdc C:\Users\tpz7\ubuntu-24.04-vhd C:\Users\tpz7\Downloads\ubuntu-24.04-cdc.tar`
 
-2. Fix the DNS: `powershell -executionpolicy bypass -File fix-dns.ps1 ubuntu-24.04-cdc`.
+2. Run the distro once to trigger the run-once actions: `wsl -d ubuntu-24.04-cdc`
 
-3. Run the distro: `wsl -d ubuntu-24.04-cdc`
+3. Logout and wait for 1 minute before logging in again.
+
 
 ## Installing Extra Tools
 
