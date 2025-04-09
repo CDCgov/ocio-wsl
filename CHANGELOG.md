@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/cdcent/ocio-wsl/compare/2.3.0...2.4.0) (2025-04-09)
+
+
+### Features
+
+* Edso 2238 configure dns ([#81](https://github.com/cdcent/ocio-wsl/issues/81)) ([615b77d](https://github.com/cdcent/ocio-wsl/commit/615b77d89f76c620e6a982e725e84025c1f40042))
+
 # [2.3.0](https://github.com/cdcent/ocio-wsl/compare/2.2.1...2.3.0) (2025-04-03)
 
 
