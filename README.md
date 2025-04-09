@@ -35,13 +35,16 @@ Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup
 2. Import a tar file and wait a bit.
    `wsl --import <distroName> <virtual hard disk> <tar file>`
 
-3. Once the distro has been imported, DNS resolution does not yet work! Download this [fix-dns.ps1 powershell script](./scripts/fix-dns.ps1) and run it by running `powershell -executionpolicy bypass -File fix-dns.ps1 <distro_name>`.
-
-4. Set it as the default distro:
+3. Set it as the default distro:
    `wsl --set-default <distroName>`
 
-5. Once imported, run the distro:
+4. Once imported, run the distro. This first time, you will be logged in as root while the run-once script runs:
    `wsl` or `wsl -d <distroName>`
+
+5. Logout and either wait 1 minute, or else run the following command to ensure the distro restarts:
+   `wsl --terminate <distroName>`
+
+6. Login again and you should be logged in as your default non-root user with sudo access and DNS should be working going forward.
 
 Example:
 
@@ -49,9 +52,12 @@ For the Ubuntu 24.04 distro, with a **virtual hard disk** path of **C:\Users\tpz
 
 1. `wsl --import ubuntu-24.04-cdc C:\Users\tpz7\ubuntu-24.04-vhd C:\Users\tpz7\Downloads\ubuntu-24.04-cdc.tar`
 
-2. Fix the DNS: `powershell -executionpolicy bypass -File fix-dns.ps1 ubuntu-24.04-cdc`.
+2. Run the distro once to trigger the run-once actions: `wsl -d ubuntu-24.04-cdc`
 
-3. Run the distro: `wsl -d ubuntu-24.04-cdc`
+3. Logout and terminate the distro: `wsl --terminate ubuntu-24.04-cdc`
+
+4. Login again: `wsl -d ubuntu-24.04-cdc`
+
 
 ## Installing Extra Tools
 
@@ -68,7 +74,10 @@ When you login for the first time, the run-once script creates a non-root user a
 
 If you login again and still see the root user prompt, then logout and wait for 1 minute before logging back in and you should see your regular user prompt. From then on, all subsequent logins will default to your non-root user account, which has sudo privileges. To sudo to the root user, type `sudo su root`, or `sudo su - root` to include the root environment. Packages requiring non-root user accounts with sudo access, such as [homebrew](https://brew.sh/) can then be installed. 
 
-If you wish to change the default login back to root, change the default user entry in /etc/wsl.conf to `root` and reboot.
+If you wish to change the default login back to root, change the default user entry in /etc/wsl.conf to `root` and logout and terminate the distro before logging in again: `wsl --terminate <distroName>`.
+
+### Configuring DNS
+Also on first login, the run-once script will configure DNS resolution by getting the resolver IP or IPs from your Windows DNS configuration and adding them as nameserver entries to /etc/resolv.conf. This fixes a known issue with WSL's default DNS configuration. If you further customize the file, the script will not overwrite your changes as long as the file is not empty. Conversely, if you need to reset the DNS configuration, leave the file empty and logout and either terminate the distro directly, i.e. from a command shell: `wsl --terminate <distro_name>`, or wait one minute after logging out before logging back in, which should trigger the DNS configuration again.
 
 ## Change Tool versions
 
