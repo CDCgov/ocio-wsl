@@ -1,0 +1,10 @@
+url_path,views_total,views_unique
+/cdcent/ocio-wsl,3,2
+/cdcent/ocio-wsl/tree/main/.github,2,2
+/cdcent/ocio-wsl/tree/main/.github/workflows,2,2
+/cdcent/ocio-wsl/blob/main/.github/workflows/deploy.yml,1,1
+/cdcent/ocio-wsl/blob/main/.github/workflows/distro.yml,1,1
+/cdcent/ocio-wsl/blob/main/.github/workflows/update-cert.yml,1,1
+/cdcent/ocio-wsl/compare/EDSO-2038-incorporate-trivy-in-repos,1,1
+/cdcent/ocio-wsl/issues,1,1
+/cdcent/ocio-wsl/issues/73,1,1
