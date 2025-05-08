@@ -1,0 +1,151 @@
+name: Trivy Scan Dockerfiles
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  trivy-scan:
+    runs-on: [edso-non-prod-runner]
+    steps:
+      - name: Checkout code 
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: false
+
+      # Purpose is to identify files associated with a Dockerfile
+      # Reasoning is to validate that a script being copied into 
+      # the container at build time to configure the container 
+      # may introduce issues.
+      - name: Detect changed Dockerfiles or dependencies
+        id: detect_dockerfiles
+        run: |
+          # Reference the root dir of the cloned repo
+          echo "base_dir=$(pwd)" >> $GITHUB_ENV
+
+          # Identify files changed in this branch
+          changed_files=$(git diff --name-only origin/${{ github.event.pull_request.base.ref || 'master' }}...${{ github.sha }})
+          
+          echo "Changed files:"
+          echo "$changed_files"
+
+          affected_dirs=()
+
+          # Find all Dockerfiles
+          dockerfiles=$(find . -type f -name Dockerfile)
+
+          for changed in $changed_files; do
+            # 1. If the changed file *is* a Dockerfile
+            if [[ "$(basename "$changed")" == Dockerfile* ]]; then
+              dir=$(dirname "$changed")
+              affected_dirs+=("${dir#./}")
+              continue
+            fi
+
+            # 2. If the changed file is mentioned in any Dockerfile
+            for dockerfile in $dockerfiles; do
+              if grep -q "$(basename "$changed")" "$dockerfile"; then
+                dir=$(dirname "$dockerfile")
+                affected_dirs+=("${dir#./}")
+              fi
+            done
+          done
+
+          # Deduplicate
+          if [ ${#affected_dirs[@]} -eq 0 ]; then
+            echo "✅ No build-relevant changes found."
+            echo "changed_dirs=" >> $GITHUB_ENV
+            echo "should_continue=false" >> $GITHUB_OUTPUT
+          else
+            changed_dirs=$(printf "%s\n" "${affected_dirs[@]}" | sort -u | tr '\n' ' ')
+            echo "📦 Changed build contexts: $changed_dirs"
+            echo "changed_dirs=$changed_dirs" >> $GITHUB_ENV
+            echo "should_continue=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build & scan changed Docker contexts
+        if: steps.detect_dockerfiles.outputs.should_continue == 'true'
+        run: |
+          echo "Changes in $changed_dirs"
+          mkdir -p "$base_dir/reports/comments"
+
+          for dir in $changed_dirs; do
+            safe_name=${dir//\//-}
+            echo "Processing $dir (safe name: $safe_name)"
+            docker build -t tst-app:${safe_name} "$dir"
+
+            CONFIG_ARG=""
+            if [ -f ./trivy.yaml ]; then
+              CONFIG_ARG="--config /work/trivy.yaml"
+              CONFIG_MOUNT="-v $(pwd)/trivy.yaml:/work/trivy.yaml:ro"
+            elif [ -f "$base_dir/trivy.yaml" ]; then
+              CONFIG_ARG="--config /work/trivy.yaml"
+              CONFIG_MOUNT="-v $base_dir/trivy.yaml:/work/trivy.yaml:ro"
+            else
+              CONFIG_MOUNT=""
+            fi
+
+            echo  docker run --rm \
+              -v "./$dir":/src \
+              -v "$base_dir/reports":/reports \
+              $CONFIG_MOUNT \
+              aquasec/trivy:latest config $CONFIG_ARG \
+              --exit-code 0 \
+              --format json --output /reports/trivy-${safe_name}.json /src
+
+            # Run Trivy config scan in container
+            docker run --rm \
+              -v "./$dir":/src \
+              -v "$base_dir/reports":/reports \
+              $CONFIG_MOUNT \
+              aquasec/trivy:latest config $CONFIG_ARG \
+              --exit-code 0 \
+              --format json --output /reports/trivy-${safe_name}.json /src
+
+            pwd
+            echo ls -l $base_dir/test
+            ls -l $base_dir/test   
+            cat $base_dir/test/Dockerfile       
+
+            echo ls -l $base_dir/reports
+            ls -l $base_dir/reports
+            echo cat $base_dir/reports/trivy-${safe_name}.json
+            cat $base_dir/reports/trivy-${safe_name}.json
+
+            # Convert results
+            docker run --rm -v "$base_dir/reports":/reports aquasec/trivy:latest convert \
+              --format table --output /reports/trivy-${safe_name}.txt /reports/trivy-${safe_name}.json
+
+            docker run --rm -v "$base_dir/reports":/reports aquasec/trivy:latest convert \
+              --format sarif --output /reports/trivy-${safe_name}.sarif /reports/trivy-${safe_name}.json
+
+            comment_file="$base_dir/reports/comments/comment-${safe_name}.md"
+            if [ -s "$base_dir/reports/trivy-${safe_name}.txt" ]; then
+              echo -e "## 🔒 Trivy Scan for \`$dir\`\n<details><summary>View Findings</summary>\n\n\`\`\`\n$(cat "$base_dir/reports/trivy-${safe_name}.txt")\n\`\`\`\n</details>" > "$comment_file"
+            else
+              echo -e "## ✅ No Vulnerabilities Found in \`$dir\`" > "$comment_file"
+            fi
+          done
+
+      - name: Post Trivy results as PR comments
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const commentsDir = path.join(process.env.base_dir, 'reports/comments');
+            const files = fs.readdirSync(commentsDir).filter(f => f.endsWith('.md'));
+
+            for (const file of files) {
+              const body = fs.readFileSync(path.join(commentsDir, file), 'utf8');
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body
+              });
+            }
+
