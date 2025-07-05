@@ -27,7 +27,7 @@ echo "Building image $IMAGE_NAME"
 podman build . -t "$IMAGE_NAME"
 
 echo "Running image $IMAGE_NAME"
-podman run -t "$IMAGE_NAME" sh -c echo
+podman run --privileged -t "$IMAGE_NAME" sh -c echo
 containerID=$(podman container ls -a | grep -i "$IMAGE_NAME" | tail -1 | awk '{print $1}') # last one is most current
 TAR_NAME=$(echo "$IMAGE_NAME" | tr '/' '_').tar
 

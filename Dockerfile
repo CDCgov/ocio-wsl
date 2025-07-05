@@ -9,7 +9,7 @@ ENV LC_ALL C.UTF-8
 # Install Linux based tools for various activities such as networking,
 # certificate management, software engineering, and building other software.
 ##############################################################################
-RUN apt-get update -q && apt-get install -y \
+RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   autossh \
   ca-certificates \
   dnsutils \
@@ -27,6 +27,7 @@ RUN apt-get update -q && apt-get install -y \
   strace \
   rsync \
   unzip \
+  vim \
   wget \
   whois \
   tcpdump \

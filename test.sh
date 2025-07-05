@@ -8,7 +8,7 @@ CONTAINER_NAME="ubuntu-24.04-cdc-test"
 # Start the container in detached mode if it's not already running
 if ! podman ps --format "{{.Names}}" | grep -q "^${CONTAINER_NAME}$"; then
   echo "Starting container ${CONTAINER_NAME}..."
-  podman run -dt --name "${CONTAINER_NAME}" localhost/ubuntu-24.04-cdc bash
+  podman run --privileged -dt --name "${CONTAINER_NAME}" localhost/ubuntu-24.04-cdc bash
 else
   echo "Reusing existing container ${CONTAINER_NAME}..."
 fi
