@@ -70,7 +70,12 @@ jobs:
           mkdir -p "$base_dir/reports/comments"
 
           for dir in $changed_dirs; do
-            safe_name=${dir//\//-}
+            rel_dir=$(realpath --relative-to="." "$dir")
+            if [[ "$rel_dir" == "." ]] then
+              safe_name="latest"
+            else
+              safe_name="latest-${rel_dir//\//-}"
+            fi
             echo "Processing $dir (safe name: $safe_name)"
             docker build -t tst-app:${safe_name} "$dir"
 
