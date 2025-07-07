@@ -128,7 +128,7 @@ jobs:
           done
 
       - name: Post Trivy results as PR comments
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.detect_dockerfiles.outputs.should_continue == 'true'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
