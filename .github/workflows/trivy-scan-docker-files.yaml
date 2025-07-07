@@ -107,11 +107,6 @@ jobs:
               --exit-code 0 \
               --format json --output /reports/trivy-${safe_name}.json /src
 
-            pwd
-            echo ls -l $base_dir/test
-            ls -l $base_dir/test   
-            cat $base_dir/test/Dockerfile       
-
             echo ls -l $base_dir/reports
             ls -l $base_dir/reports
             echo cat $base_dir/reports/trivy-${safe_name}.json
@@ -133,7 +128,7 @@ jobs:
           done
 
       - name: Post Trivy results as PR comments
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.detect_dockerfiles.outputs.should_continue == 'true'
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
