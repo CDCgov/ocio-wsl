@@ -107,11 +107,6 @@ jobs:
               --exit-code 0 \
               --format json --output /reports/trivy-${safe_name}.json /src
 
-            pwd
-            echo ls -l $base_dir/test
-            ls -l $base_dir/test   
-            cat $base_dir/test/Dockerfile       
-
             echo ls -l $base_dir/reports
             ls -l $base_dir/reports
             echo cat $base_dir/reports/trivy-${safe_name}.json
