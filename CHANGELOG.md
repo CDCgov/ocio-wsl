@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/cdcent/ocio-wsl/compare/2.4.0...2.5.0) (2025-07-07)
+
+
+### Features
+
+* upgrading os packages and mise tools ([#83](https://github.com/cdcent/ocio-wsl/issues/83)) ([45a4033](https://github.com/cdcent/ocio-wsl/commit/45a40339c812b730c482f41e7e9acece542a5cb1))
+
 # [2.4.0](https://github.com/cdcent/ocio-wsl/compare/2.3.0...2.4.0) (2025-04-09)
 
 
