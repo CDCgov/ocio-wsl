@@ -160,12 +160,12 @@ COPY config/wsl.conf /etc/wsl.conf
 ## Copy helpful bash scripts over for testing the environment.
 ###########################################################################
 COPY scripts/ /opt/scripts/
+RUN chmod +x /opt/scripts/*.sh
 
 ###########################################################################
 ## Run the run-once.sh script on startup 
 ###########################################################################
 COPY config/run-once.service /etc/systemd/system
-RUN chmod +x /opt/scripts/run-once.sh
 RUN systemctl enable run-once.service
 
 # Clean up the local repository of retrieved package files, useful only for
