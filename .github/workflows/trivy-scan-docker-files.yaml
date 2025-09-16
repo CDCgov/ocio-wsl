@@ -5,7 +5,7 @@ on:
 
 jobs:
   trivy-scan:
-    runs-on: [edso-non-prod-runner]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code 
         uses: actions/checkout@v4
