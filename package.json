@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cdcent/ocio-wsl.git"
+    "url": "git+https://github.com/cdcgov/ocio-wsl.git"
   },
   "keywords": [
     "wsl",
@@ -16,9 +16,9 @@
   "author": "Boris Ning",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cdcent/ocio-wsl/issues"
+    "url": "https://github.com/cdcgov/ocio-wsl/issues"
   },
-  "homepage": "https://github.com/cdcent/ocio-wsl#readme",
+  "homepage": "https://github.com/cdcgov/ocio-wsl#readme",
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
