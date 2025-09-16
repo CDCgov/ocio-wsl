@@ -30,7 +30,7 @@ jobs:
       issues: write
     runs-on: ubuntu-latest
     environment:
-      name: github-app-ocio-wsl-distro
+      name: ocio-edso-gh-actions-app
     steps:
       ## The default Github token does not provide a way for semantic release
       ## to publish to a protected branch without having an administrative bot
