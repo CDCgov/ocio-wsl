@@ -1,14 +1,12 @@
 # Windows Subsystem Build
 
 [![semantic-release: conventional-commit](https://img.shields.io/badge/semantic--release-conventionalcommit-e10079?logo=semantic-release&style=for-the-badge)](https://github.com/semantic-release/semantic-release)
-[![last release](https://cdc-badge.app.cloud.gov/github/release-date/cdcent/ocio-wsl?style=for-the-badge)](https://github.com/cdcent/ocio-wsl/releases)
-![total downloads](https://cdc-badge.app.cloud.gov/github/downloads/cdcent/ocio-wsl/total?style=for-the-badge)
-[![latest tag](https://cdc-badge.app.cloud.gov/github/v/tag/cdcent/ocio-wsl?style=for-the-badge)](https://github.com/cdcent/ocio-wsl/releases)
-![commit history](https://cdc-badge.app.cloud.gov/github/commit-activity/y/cdcent/ocio-wsl?label=commits&style=for-the-badge)
+[![last release](https://img.shields.io/github/release-date/cdcgov/ocio-wsl?style=for-the-badge)](https://img.shields.io/badge/cdcent/ocio-wsl/releases)
+![total downloads](https://img.shields.io/github/downloads/cdcgov/ocio-wsl/total?style=for-the-badge)
+[![latest tag](https://img.shields.io/github/v/tag/cdcent/ocio-wsl?style=for-the-badge)](https://github.com/cdcgov/ocio-wsl/releases)
+![commit history](https://img.shields.io/github/commit-activity/y/cdcgov/ocio-wsl?label=commits&style=for-the-badge)
 
-This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://github.com/cdcent/ocio-wsl/actions/workflows/distro.yml/badge.svg).
-
-For longer term repository statistics, visit the [Github pages](https://bookish-fishstick-m61kqvo.pages.github.io/cdcent/ocio-wsl/latest-report/report.html).
+This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://img.shields.io/badge/cdcgov/ocio-wsl/actions/workflows/distro.yml/badge.svg).
 
 ## Specific Centers Implementation
 
@@ -30,7 +28,7 @@ Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup
 
 **Note**: when running `wsl` for the first time, WSL will require administrative rights using your -su account in powershell. The username is your 4 letter user name + `-su` (ex. tpz7-su) and the password is in [CyberArk](https://cyber.cdc.gov).
 
-1. Download the [latest release](https://github.com/cdcent/ocio-wsl/releases/latest).
+1. Download the [latest release](https://img.shields.io/badge/cdcent/ocio-wsl/releases/latest).
 
 2. Import a tar file and wait a bit.
    `wsl --import <distroName> <virtual hard disk> <tar file>`
@@ -58,7 +56,6 @@ For the Ubuntu 24.04 distro, with a **virtual hard disk** path of **C:\Users\tpz
 
 4. Login again: `wsl -d ubuntu-24.04-cdc`
 
-
 ## Installing Extra Tools
 
 Inside the image, the /opt/scripts folder has a script to install [an additional list](./scripts/add-extra-tools.sh) of tools.
@@ -70,13 +67,15 @@ To install this list of tools, run `bash /opt/scripts/add-extra-tools.sh`. We co
 Inside the image, the /opt/scripts folder has a [run-once](./scripts/run-once.sh) script to perform one-time automated actions. This script is run automatically on startup by the run-once.service systemd unit.
 
 ### Setting the default login user
+
 When you login for the first time, the run-once script creates a non-root user account based on your windows username and sets it as the default login user in /etc/wsl.conf.
 
-If you login again and still see the root user prompt, then logout and wait for 1 minute before logging back in and you should see your regular user prompt. From then on, all subsequent logins will default to your non-root user account, which has sudo privileges. To sudo to the root user, type `sudo su root`, or `sudo su - root` to include the root environment. Packages requiring non-root user accounts with sudo access, such as [homebrew](https://brew.sh/) can then be installed. 
+If you login again and still see the root user prompt, then logout and wait for 1 minute before logging back in and you should see your regular user prompt. From then on, all subsequent logins will default to your non-root user account, which has sudo privileges. To sudo to the root user, type `sudo su root`, or `sudo su - root` to include the root environment. Packages requiring non-root user accounts with sudo access, such as [homebrew](https://brew.sh/) can then be installed.
 
 If you wish to change the default login back to root, change the default user entry in /etc/wsl.conf to `root` and logout and terminate the distro before logging in again: `wsl --terminate <distroName>`.
 
 ### Configuring DNS
+
 Also on first login, the run-once script will configure DNS resolution by getting the resolver IP or IPs from your Windows DNS configuration and adding them as nameserver entries to /etc/resolv.conf. This fixes a known issue with WSL's default DNS configuration. If you further customize the file, the script will not overwrite your changes as long as the file is not empty. Conversely, if you need to reset the DNS configuration, leave the file empty and logout and either terminate the distro directly, i.e. from a command shell: `wsl --terminate <distro_name>`, or wait one minute after logging out before logging back in, which should trigger the DNS configuration again.
 
 ## Change Tool versions
