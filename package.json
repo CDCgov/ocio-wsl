@@ -25,6 +25,11 @@
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "semantic-release": "^25.0.2"
   },
+  "overrides": {
+      "@semantic-release/npm": {
+        "npm": "11.6.2"
+      }
+  },
   "release": {
     "branches": [
       "main"
