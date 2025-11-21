@@ -5,14 +5,18 @@ on:
 
 jobs:
   trivy-scan:
-    runs-on: [edso-non-prod-runner]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout code 
-        uses: actions/checkout@v4
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
         with:
           fetch-depth: 0
           fetch-tags: false
-
+          persist-credentials: true
+          
       # Purpose is to identify files associated with a Dockerfile
       # Reasoning is to validate that a script being copied into 
       # the container at build time to configure the container 
@@ -129,7 +133,7 @@ jobs:
 
       - name: Post Trivy results as PR comments
         if: github.event_name == 'pull_request' && steps.detect_dockerfiles.outputs.should_continue == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
