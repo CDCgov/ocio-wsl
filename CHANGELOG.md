@@ -1,3 +1,10 @@
+## [2.5.2](https://github.com/cdcgov/ocio-wsl/compare/2.5.1...2.5.2) (2025-11-25)
+
+
+### Bug Fixes
+
+* make utility bash scripts executable ([#90](https://github.com/cdcgov/ocio-wsl/issues/90)) ([4a5d6a1](https://github.com/cdcgov/ocio-wsl/commit/4a5d6a1ae18d6b6fb681e7fe6514c253b99b4b73))
+
 ## [2.5.1](https://github.com/cdcgov/ocio-wsl/compare/2.5.0...2.5.1) (2025-11-25)
 
 
