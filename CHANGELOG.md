@@ -1,3 +1,11 @@
+## [2.5.1](https://github.com/cdcgov/ocio-wsl/compare/2.5.0...2.5.1) (2025-11-25)
+
+
+### Bug Fixes
+
+* locking npm due to broken deps ([#98](https://github.com/cdcgov/ocio-wsl/issues/98)) ([ae91163](https://github.com/cdcgov/ocio-wsl/commit/ae911633f49b66ac2f13f282eab61305fdc20fa5))
+* removing stats from running and failing ([#96](https://github.com/cdcgov/ocio-wsl/issues/96)) ([c8f689a](https://github.com/cdcgov/ocio-wsl/commit/c8f689a098905b0c432ee62bd313fed9ab2e7c5f))
+
 # [2.5.0](https://github.com/cdcent/ocio-wsl/compare/2.4.0...2.5.0) (2025-07-07)
 
 
