@@ -2,6 +2,10 @@ version: 2
 updates:
   - package-ecosystem: npm
     directory: /
+    groups:
+      npm-deps:
+        patterns:
+          - "*"
     schedule:
       interval: monthly
     cooldown:
