@@ -20,15 +20,10 @@
   },
   "homepage": "https://github.com/cdcgov/ocio-wsl#readme",
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "conventional-changelog-conventionalcommits": "^9.1.0",
-    "semantic-release": "^25.0.2"
-  },
-  "overrides": {
-      "@semantic-release/npm": {
-        "npm": "11.6.2"
-      }
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "conventional-changelog-conventionalcommits": "9.3.1",
+    "semantic-release": "25.0.3"
   },
   "release": {
     "branches": [

@@ -8,20 +8,6 @@
 
 This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://img.shields.io/badge/cdcgov/ocio-wsl/actions/workflows/distro.yml/badge.svg).
 
-## Specific Centers Implementation
-
-Other Centers within CDC has already started their own implementation of distros for Windows Subsystem Linux (WSL) due to specialized needs of those centers.
-
-For example,
-
-- [Centers for Forecast Analytics and Outbreaks (CFA) Virtual Analytics Platform (VAP)](https://github.com/cdcent/cfa-vap-autoconfig) contains an Ubuntu based image with R, Python, and specialized disk mounts for a [CFA developer's needs](https://github.com/cdcent/cfa-vap-user-guides/blob/main/src/IV-wsl/00-wsl_intro.md).
-- [NCEZID - Office of the Advanced Molecular Detection Platform (OAMDP)](https://github.com/cdcent/oamd-infra-utils/blob/develop/docs/WSL_INSTALL_GUIDE.md) includes an Ubuntu based image with a series of steps to install an Ubuntu image with podman, python, and Github API (gh).
-- [CDC Data Hub (CDH) Lifecycle, Analysis, Visualization Accelerator (LAVA) Guide](https://wcms-wp-intra.cdc.gov/datahub/dashboards/recipes/wsl_on_prem_configure.html) provides a guide for data scientists working within EDAV or another data pipelines.
-
-## Prerequisities
-
-For requirements and prerequisities, go to [docs/prerequisities.md](docs/prerequisites.md).
-
 ## How to use this?
 
 Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup properly by opening powershell and typing `wsl`.
@@ -82,9 +68,9 @@ Also on first login, the run-once script will configure DNS resolution by gettin
 
 We utilize [mise](https://mise.jdx.dev/getting-started.html) to install common programming tools and it comes with a [tool versions file](./config/config.toml).
 
-To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.12.9, save the file, and run `mise upgrade`.
+To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.13.13, save the file, and run `mise upgrade`.
 
-Once it is completed, you can run `python -v` with python 3.12.9.
+Once it is completed, you can run `python -v` with python 3.13.13.
 
 Use `mise list` to figure out the available versions of python you can install.
 
