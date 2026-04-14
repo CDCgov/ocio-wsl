@@ -6,7 +6,7 @@
 [![latest tag](https://img.shields.io/github/v/tag/cdcent/ocio-wsl?style=for-the-badge)](https://github.com/cdcgov/ocio-wsl/releases)
 ![commit history](https://img.shields.io/github/commit-activity/y/cdcgov/ocio-wsl?label=commits&style=for-the-badge)
 
-This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://img.shields.io/badge/cdcgov/ocio-wsl/actions/workflows/distro.yml/badge.svg).
+This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://img.shields.io/github/actions/workflow/status/cdcgov/ocio-wsl/distro.yml).
 
 ## How to use this?
 
