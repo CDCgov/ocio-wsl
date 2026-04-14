@@ -1,3 +1,10 @@
+## [2.5.5](https://github.com/cdcgov/ocio-wsl/compare/2.5.4...2.5.5) (2026-04-14)
+
+
+### Bug Fixes
+
+* build badge ([75947b3](https://github.com/cdcgov/ocio-wsl/commit/75947b3362d3a28023dff617928e543258a293b7))
+
 ## [2.5.4](https://github.com/cdcgov/ocio-wsl/compare/2.5.3...2.5.4) (2026-04-14)
 
 
