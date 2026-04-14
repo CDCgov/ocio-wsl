@@ -2,8 +2,8 @@ FROM docker.io/ubuntu:24.04
 
 LABEL updated_at=2025-03-31
 
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 
 ##############################################################################
 # Install Linux based tools for various activities such as networking,
