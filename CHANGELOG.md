@@ -1,3 +1,13 @@
+## [2.5.4](https://github.com/cdcgov/ocio-wsl/compare/2.5.3...2.5.4) (2026-04-14)
+
+
+### Bug Fixes
+
+* locking down mise versions and update all dependencies ([0fb7684](https://github.com/cdcgov/ocio-wsl/commit/0fb768486142f47293e84e6747d2f27214f7b400))
+* npm deps group together from dependabot ([761a3b1](https://github.com/cdcgov/ocio-wsl/commit/761a3b1eacbfbddf224f9149d35c8c2e83067f56))
+* stop trivy from complaining ([0ba2d8f](https://github.com/cdcgov/ocio-wsl/commit/0ba2d8fd66c184fc2267b9db1c73328156345db3))
+* update depreciated setup ([6b59de2](https://github.com/cdcgov/ocio-wsl/commit/6b59de233e9d395d4f6a9c958d3e06c2ea7db0ca))
+
 ## [2.5.3](https://github.com/cdcgov/ocio-wsl/compare/2.5.2...2.5.3) (2026-04-14)
 
 
