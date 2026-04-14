@@ -135,7 +135,7 @@ RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
-RUN mise use python@3.12.9 --global
+RUN mise use python@3.13.13 --global
 
 ##############################################################################
 ## Create skeleton bashrc files for users to use when they login to the
