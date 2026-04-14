@@ -1,3 +1,10 @@
+## [2.5.3](https://github.com/cdcgov/ocio-wsl/compare/2.5.2...2.5.3) (2026-04-14)
+
+
+### Bug Fixes
+
+* updating the certificate flow ([ccb8f26](https://github.com/cdcgov/ocio-wsl/commit/ccb8f26b77bdcbe875c79ebdd08d2958eb0cf078))
+
 ## [2.5.2](https://github.com/cdcgov/ocio-wsl/compare/2.5.1...2.5.2) (2025-11-25)
 
 
