@@ -13,15 +13,16 @@ env:
 
 jobs:
   update-certificate:
+    environment: prod
     permissions:
-      contents: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
 
       - name: Pull latest certificate into repository
         if: github.ref == 'refs/heads/main'
@@ -42,12 +43,13 @@ jobs:
           fi
           echo "Certificate file verified successfully"
 
-      - uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
+      - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
         id: app-token
         with:
-          app-id: ${{ vars.GIT_APP_OCIO_EDSO_APP_ID }}
-          private-key: ${{ secrets.GIT_APP_OCIO_EDSO_PRIVATE_KEY }}
-          owner: cdcent
+          app-id: ${{ vars.GH_APP_OCIO_WSL_APP_ID }}
+          private-key: ${{ secrets.GH_APP_OCIO_WSL_PRIVATE_KEY }}
+          owner: cdcgov
+          repository: ocio-wsl
 
       - name: Configure Pull Request
         if: github.ref == 'refs/heads/main'
@@ -88,8 +90,9 @@ jobs:
         if: github.ref == 'refs/heads/main' && steps.write_to_file.outputs.changes_exist == 'true'
         env:
           GITHUB_TOKEN: '${{ steps.app-token.outputs.token }}'
+          BRANCH_NAME: '${{ steps.switch_branch.outputs.BRANCH_NAME }}'
         run: |
-          gh pr create --title "Automate certificates update" --body "Automate certificates update" --base main --head '${{ steps.switch_branch.outputs.BRANCH_NAME }}'
+          gh pr create --title "Automate certificates update" --body "Automate certificates update" --base main --head "$BRANCH_NAME"
 
       - name: Merge PR
         if: github.ref == 'refs/heads/main' && steps.write_to_file.outputs.changes_exist == 'true'
