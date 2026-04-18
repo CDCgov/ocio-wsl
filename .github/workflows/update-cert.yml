@@ -104,7 +104,7 @@ jobs:
           pr_number=$(gh pr list --state open --limit 1 --json number --jq '.[0].number')
 
           # Try to merge
-          if ! gh pr merge "$pr_number" --admin --squash; then
+          if ! gh pr merge "$pr_number" --admin --merge; then
             echo "PR can't be merged automatically. Merging with auto..."
-            gh pr merge "$pr_number" --admin --squash --auto
+            gh pr merge "$pr_number" --merge --auto
           fi
