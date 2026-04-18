@@ -1,3 +1,10 @@
+## [2.5.7](https://github.com/cdcgov/ocio-wsl/compare/2.5.6...2.5.7) (2026-04-18)
+
+
+### Bug Fixes
+
+* fix broken pipeline for merging, rebase only for this repository ([6a4a45c](https://github.com/cdcgov/ocio-wsl/commit/6a4a45ce147421b29b705232eefaf30e488eccc3))
+
 ## [2.5.6](https://github.com/cdcgov/ocio-wsl/compare/2.5.5...2.5.6) (2026-04-18)
 
 
