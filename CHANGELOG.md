@@ -1,3 +1,10 @@
+## [2.5.6](https://github.com/cdcgov/ocio-wsl/compare/2.5.5...2.5.6) (2026-04-18)
+
+
+### Bug Fixes
+
+* use the github token to merge ([7c132a2](https://github.com/cdcgov/ocio-wsl/commit/7c132a2584c35f0eda0fd5097ded576788a9742f))
+
 ## [2.5.5](https://github.com/cdcgov/ocio-wsl/compare/2.5.4...2.5.5) (2026-04-14)
 
 
