@@ -20,9 +20,14 @@ NEWUSER=$(echo "$RAWUSER" | awk -F'/' '{print $NF}')
 if getent passwd "$NEWUSER" > /dev/null; then
   echo -e "The user '$NEWUSER' already exists - skipping creation."
 else
-  echo -e "The user '$NEWUSER' does not exist. Creating user with sudo permissions in Ubuntu..."
+  echo -e "The user '$NEWUSER' does not exist. Creating user with sudo permissions..."
+  # Use 'wheel' on Fedora, 'sudo' on Debian/Ubuntu
+  SUDO_GROUP='sudo'
+  if getent group wheel > /dev/null 2>&1 && ! getent group sudo > /dev/null 2>&1; then
+    SUDO_GROUP='wheel'
+  fi
   useradd -ms /bin/bash "$NEWUSER"
-  usermod -aG sudo "$NEWUSER"
+  usermod -aG "$SUDO_GROUP" "$NEWUSER"
   passwd -d "$NEWUSER" # Default empty password for the user
 
   echo -e "User '$NEWUSER' created successfully!"

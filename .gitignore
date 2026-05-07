@@ -219,7 +219,9 @@ $RECYCLE.BIN/
 
 ##############
 # Don't save any docker image files, the files are at least hundreds of MB each
+images/*.wsl
 images/*.tar
 images/checksums.txt
+images/manifest.json
 .tool-versions.latest
 config.toml.latest

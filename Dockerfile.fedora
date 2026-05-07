@@ -1,0 +1,141 @@
+FROM docker.io/fedora:43
+
+LABEL updated_at=2026-05-07
+LABEL fedora_version=43
+
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+##############################################################################
+# Install Linux based tools for various activities such as networking,
+# certificate management, software engineering, and building other software.
+##############################################################################
+RUN dnf upgrade -y && dnf install -y \
+  autossh \
+  ca-certificates \
+  bind-utils \
+  procps-ng \
+  curl \
+  git \
+  gnupg2 \
+  iperf3 \
+  jq \
+  nano \
+  nmap-ncat \
+  podman \
+  sudo \
+  strace \
+  rsync \
+  unzip \
+  vim \
+  wget \
+  whois \
+  tcpdump \
+  \
+  # For python installation
+  gcc \
+  gcc-c++ \
+  make \
+  bzip2-devel \
+  ncurses-devel \
+  gdbm-devel \
+  nss-devel \
+  readline-devel \
+  sqlite-devel \
+  openssl-devel \
+  libffi-devel \
+  xz-devel \
+  python3 \
+  zlib-devel \
+  \
+  # For R installation
+  libcurl-devel \
+  gcc-gfortran \
+  xz-libs \
+  bzip2-libs \
+  libX11-devel \
+  libXt-devel \
+  xorg-x11-proto-devel \
+  pcre2-devel \
+  \
+  tzdata && \
+  dnf clean all
+
+###############################################################################
+## Install the enterprise certificates into the operating system truststore
+###############################################################################
+COPY config/bundle-ca.pem /etc/pki/ca-trust/source/anchors/enterprise-bundle.crt
+RUN cp /etc/pki/ca-trust/source/anchors/enterprise-bundle.crt /etc/pki/tls/cert.pem && \
+  update-ca-trust extract
+
+###############################################################################
+## Install mise to install a variety of programming languages and command line
+## tools.
+###############################################################################
+ENV MISE_DATA_DIR=/opt/mise
+ENV XDG_DATA_HOME=/opt/mise
+ENV MISE_CONFIG_DIR=/opt/mise/config
+ENV PATH="/opt/mise/bin:/opt/mise/shims:$PATH"
+
+RUN rpm --import 'https://mise.jdx.dev/gpg-key.pub' && \
+  dnf config-manager addrepo --from-repofile=https://mise.jdx.dev/rpm/mise.repo && \
+  dnf install -y mise && \
+  mkdir -p /opt/mise/bin && \
+  ln -s /usr/bin/mise /opt/mise/bin/mise && \
+  dnf clean all
+
+COPY config/config.toml "${MISE_CONFIG_DIR}/config.toml"
+COPY config/config.toml "/etc/mise/config.toml"
+
+RUN echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /etc/skel/.bashrc && \
+  echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /root/.bashrc && \
+  echo 'eval "$(mise activate bash)"' >> /etc/skel/.bashrc && \
+  echo 'eval "$(mise activate bash)"' >> /root/.bashrc
+
+ENV REQUESTS_CA_BUNDLE='/etc/pki/tls/certs/ca-bundle.crt'
+ENV SSL_CERT_FILE='/etc/pki/tls/certs/ca-bundle.crt'
+ENV NODE_OPTIONS='--use-openssl-ca'
+ENV CURL_CA_BUNDLE='/etc/pki/tls/certs/ca-bundle.crt'
+
+RUN git config --global http.sslcainfo '/etc/pki/tls/certs/ca-bundle.crt'
+
+RUN mise use python@3.13.13 --global
+
+##############################################################################
+## Create skeleton bashrc files for users
+##############################################################################
+COPY config/.bashrc /root/.bashrc
+COPY config/.bashrc /etc/skel/.bashrc
+
+COPY config/.bash_aliases /root/.bash_aliases
+COPY config/.bash_aliases /etc/skel/.bash_aliases
+
+COPY config/wsl.conf /etc/wsl.conf
+
+###########################################################################
+## WSL distribution configuration
+###########################################################################
+COPY config/wsl-distribution-fedora.conf /etc/wsl-distribution.conf
+RUN chmod 0644 /etc/wsl-distribution.conf && chown root:root /etc/wsl-distribution.conf
+
+COPY config/oobe.sh /etc/oobe.sh
+RUN chmod 0755 /etc/oobe.sh && chown root:root /etc/oobe.sh
+
+RUN mkdir -p /usr/lib/wsl
+COPY config/terminal-profile.json /usr/lib/wsl/terminal-profile.json
+COPY config/cdc.ico /usr/lib/wsl/cdc.ico
+RUN chmod 0644 /usr/lib/wsl/terminal-profile.json /usr/lib/wsl/cdc.ico
+
+###########################################################################
+## Copy helpful bash scripts over for testing the environment.
+###########################################################################
+COPY scripts/ /opt/scripts/
+RUN chmod +x /opt/scripts/*.sh
+
+###########################################################################
+## Run the run-once.sh script on startup
+###########################################################################
+COPY config/run-once.service /etc/systemd/system
+RUN systemctl enable run-once.service
+
+CMD ["/bin/bash"]
