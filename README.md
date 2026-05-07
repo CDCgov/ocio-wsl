@@ -1,12 +1,12 @@
 # Windows Subsystem Build
 
 [![semantic-release: conventional-commit](https://img.shields.io/badge/semantic--release-conventionalcommit-e10079?logo=semantic-release&style=for-the-badge)](https://github.com/semantic-release/semantic-release)
-[![last release](https://img.shields.io/github/release-date/cdcgov/ocio-wsl?style=for-the-badge)](https://img.shields.io/badge/cdcent/ocio-wsl/releases)
+[![last release](https://img.shields.io/github/release-date/cdcgov/ocio-wsl?style=for-the-badge)](https://img.shields.io/badge/cdcgov/ocio-wsl/releases)
 ![total downloads](https://img.shields.io/github/downloads/cdcgov/ocio-wsl/total?style=for-the-badge)
-[![latest tag](https://img.shields.io/github/v/tag/cdcent/ocio-wsl?style=for-the-badge)](https://github.com/cdcgov/ocio-wsl/releases)
+[![latest tag](https://img.shields.io/github/v/tag/cdcgov/ocio-wsl?style=for-the-badge)](https://github.com/cdcgov/ocio-wsl/releases)
 ![commit history](https://img.shields.io/github/commit-activity/y/cdcgov/ocio-wsl?label=commits&style=for-the-badge)
 
-This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://img.shields.io/github/actions/workflow/status/cdcgov/ocio-wsl/distro.yml).
+This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://img.shields.io/github/actions/workflow/status/cdcgov/ocio-wsl/deploy.yml).
 
 ## How to use this?
 

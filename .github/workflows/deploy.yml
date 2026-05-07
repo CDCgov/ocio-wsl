@@ -1,7 +1,16 @@
-name: Redeploy Manually
+name: Build and Release WSL Images
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - 'images/**'
+      - '**.md'
+      - '!README.md'
+      - '.github/workflows/stats.yml'
 
 jobs:
   deploy:
@@ -13,8 +22,8 @@ jobs:
     environment:
       name: ocio-edso-gh-actions-app
     steps:
-      ## App token must be created before checkout so the checkout uses it,
-      ## allowing semantic-release to push to the protected main branch.
+      ## App token must be created before checkout so semantic-release can
+      ## push the version commit back to the protected main branch.
       ## https://github.com/orgs/community/discussions/25305
       - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
         id: app-token
@@ -62,29 +71,26 @@ jobs:
           sha256sum ubuntu-24.04-cdc.wsl fedora-43-cdc.wsl > checksums.txt
         working-directory: ./images
 
-      - name: Release
-        id: release
+      # Dry-run to get the next version so we can generate the manifest before
+      # the release is published. This avoids the HTTP 422 immutable-release
+      # error that occurs when uploading assets after publication.
+      - name: Compute next release version
+        id: next-version
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          npx semantic-release
-          NEXT_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-          if [ -n "$NEXT_TAG" ] && [ "$PREV_TAG" != "$NEXT_TAG" ]; then
-            echo "released=true" >> "$GITHUB_OUTPUT"
-            echo "version=$NEXT_TAG" >> "$GITHUB_OUTPUT"
-          else
-            echo "released=false" >> "$GITHUB_OUTPUT"
-          fi
+          NEXT_VERSION=$(npx semantic-release --dry-run 2>&1 \
+            | grep -oP '(?<=The next release version is )\S+' || echo "")
+          echo "version=$NEXT_VERSION" >> "$GITHUB_OUTPUT"
+          echo "will_release=$([ -n "$NEXT_VERSION" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
-      - name: Generate and publish manifest
-        if: steps.release.outputs.released == 'true'
+      - name: Generate manifest
+        if: steps.next-version.outputs.will_release == 'true'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          NEXT_VERSION: ${{ steps.next-version.outputs.version }}
         run: |
-          VERSION="${{ steps.release.outputs.version }}"
+          VERSION="$NEXT_VERSION"
           BASE_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION"
 
           UBUNTU_SHA=$(sha256sum images/ubuntu-24.04-cdc.wsl | cut -d' ' -f1)
@@ -121,4 +127,8 @@ jobs:
           }
           EOF
 
-          gh release upload "$VERSION" images/manifest.json --clobber
+      - name: Release
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: npx semantic-release
