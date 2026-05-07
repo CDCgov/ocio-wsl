@@ -1,3 +1,10 @@
+## [2.6.1](https://github.com/cdcgov/ocio-wsl/compare/2.6.0...2.6.1) (2026-05-07)
+
+
+### Bug Fixes
+
+* deployment doing too much and badges to display in README ([78aa27f](https://github.com/cdcgov/ocio-wsl/commit/78aa27f98dfda39261232aa5d836afc17231c164))
+
 # [2.6.0](https://github.com/cdcgov/ocio-wsl/compare/2.5.7...2.6.0) (2026-05-07)
 
 ### Features
