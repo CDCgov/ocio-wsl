@@ -44,7 +44,7 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   libssl-dev \
   libffi-dev \
   liblzma-dev \
-  python3.12-venv \
+  python3.13-venv \
   zlib1g-dev \
 
   # For R installation: https://github.com/asdf-community/asdf-r

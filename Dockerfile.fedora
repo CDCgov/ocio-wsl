@@ -14,6 +14,7 @@ RUN dnf upgrade -y && dnf install -y \
   autossh \
   bash-completion \
   ca-certificates \
+  glibc-langpack-en \
   bind-utils \
   procps-ng \
   curl \
