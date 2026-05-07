@@ -33,7 +33,10 @@ create_user() {
     /usr/sbin/useradd --uid "$DEFAULT_UID" --create-home --shell /bin/bash "$username"
     /usr/sbin/usermod "$username" -aG "$GROUPS_TO_ADD"
     passwd -d "$username"
+    # shellcheck disable=SC2016
+  if ! grep -qF 'eval "$(mise activate bash)"' "/home/$username/.bashrc"; then
     echo 'eval "$(mise activate bash)"' >> "/home/$username/.bashrc"
+  fi
 }
 
 if [ -n "$WINDOWS_USER" ]; then

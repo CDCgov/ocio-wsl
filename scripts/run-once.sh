@@ -55,4 +55,6 @@ fi
 
 # Add mise to the user's bashrc for the user's environment for easy access
 # shellcheck disable=SC2016
-echo 'eval "$(mise activate bash)"' >> "/home/$NEWUSER/.bashrc"
+if ! grep -qF 'eval "$(mise activate bash)"' "/home/$NEWUSER/.bashrc"; then
+  echo 'eval "$(mise activate bash)"' >> "/home/$NEWUSER/.bashrc"
+fi
