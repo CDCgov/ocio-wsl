@@ -1,6 +1,6 @@
 {
   "name": "cdc-wsl-build",
-  "version": "2.0.2",
+  "version": "2.5.7",
   "description": "For building Windows Subsystem Linux (WSL) images",
   "main": "index.js",
   "repository": {
@@ -37,13 +37,26 @@
           "preset": "conventionalcommits"
         }
       ],
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      [
+        "@semantic-release/git",
+        {
+          "assets": ["package.json", "CHANGELOG.md"],
+          "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ],
       [
         "@semantic-release/github",
         {
           "assets": [
             {
-              "path": "images/ubuntu-24.04-cdc.tar",
-              "label": "Image distribution"
+              "path": "images/ubuntu-24.04-cdc.wsl",
+              "label": "Ubuntu 24.04 CDC WSL Image"
+            },
+            {
+              "path": "images/fedora-43-cdc.wsl",
+              "label": "Fedora 43 CDC WSL Image"
             },
             {
               "path": "images/checksums.txt",
@@ -51,10 +64,7 @@
             }
           ]
         }
-      ],
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/git"
+      ]
     ]
   }
 }

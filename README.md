@@ -14,33 +14,18 @@ Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup
 
 **Note**: when running `wsl` for the first time, WSL will require administrative rights using your -su account in powershell. The username is your 4 letter user name + `-su` (ex. tpz7-su) and the password is in [CyberArk](https://cyber.cdc.gov).
 
-1. Download the [latest release](https://img.shields.io/badge/cdcent/ocio-wsl/releases/latest).
+1. Download the `.wsl` file for your preferred distro from the [latest release](https://github.com/cdcgov/ocio-wsl/releases/latest):
+   - `ubuntu-24.04-cdc.wsl` — Ubuntu 24.04
+   - `fedora-43-cdc.wsl` — Fedora 43
 
-2. Import a tar file and wait a bit.
-   `wsl --import <distroName> <virtual hard disk> <tar file>`
+2. Install it by double-clicking the `.wsl` file in File Explorer, or from the command line:
+   `wsl --install --from-file <path-to-file.wsl>`
 
-3. Set it as the default distro:
-   `wsl --set-default <distroName>`
-
-4. Once imported, run the distro. This first time, you will be logged in as root while the run-once script runs:
-   `wsl` or `wsl -d <distroName>`
-
-5. Logout and either wait 1 minute, or else run the following command to ensure the distro restarts:
-   `wsl --terminate <distroName>`
-
-6. Login again and you should be logged in as your default non-root user with sudo access and DNS should be working going forward.
+3. On first launch, the distro will automatically create a user account matching your Windows login and configure DNS.
 
 Example:
 
-For the Ubuntu 24.04 distro, with a **virtual hard disk** path of **C:\Users\tpz7\ubuntu-24.04-vhd** and the tar file in **C:\Users\tpz7\Downloads\ubuntu-24.04-cdc.tar**
-
-1. `wsl --import ubuntu-24.04-cdc C:\Users\tpz7\ubuntu-24.04-vhd C:\Users\tpz7\Downloads\ubuntu-24.04-cdc.tar`
-
-2. Run the distro once to trigger the run-once actions: `wsl -d ubuntu-24.04-cdc`
-
-3. Logout and terminate the distro: `wsl --terminate ubuntu-24.04-cdc`
-
-4. Login again: `wsl -d ubuntu-24.04-cdc`
+`wsl --install --from-file C:\Users\tpz7\Downloads\ubuntu-24.04-cdc.wsl`
 
 ## Installing Extra Tools
 
@@ -98,7 +83,12 @@ For more troubleshooting, visit [Microsoft WSL Troubleshooting](https://learn.mi
 
 ## Local Testing
 
-- Build the Container: `bash build.sh`
+Build a specific distro by passing `ubuntu` or `fedora` as an argument:
+
+- Build Ubuntu: `bash build.sh ubuntu`
+- Build Fedora: `bash build.sh fedora`
+
+Run tests against the built image:
 
 - Run a simple curl: `podman run -t ubuntu-24.04-cdc bash -c "curl -vv google.com"`
 

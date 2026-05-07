@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:24.04
 
-LABEL updated_at=2025-03-31
+LABEL updated_at=2026-05-07
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
@@ -157,13 +157,29 @@ COPY config/.bash_aliases /etc/skel/.bash_aliases
 COPY config/wsl.conf /etc/wsl.conf
 
 ###########################################################################
+## WSL distribution configuration: OOBE, shortcut, and terminal profile.
+## /etc/wsl-distribution.conf is read by WSL on first launch and controls
+## the out-of-box experience (user creation) and Windows integration.
+###########################################################################
+COPY config/wsl-distribution-ubuntu.conf /etc/wsl-distribution.conf
+RUN chmod 0644 /etc/wsl-distribution.conf && chown root:root /etc/wsl-distribution.conf
+
+COPY config/oobe.sh /etc/oobe.sh
+RUN chmod 0755 /etc/oobe.sh && chown root:root /etc/oobe.sh
+
+RUN mkdir -p /usr/lib/wsl
+COPY config/terminal-profile.json /usr/lib/wsl/terminal-profile.json
+COPY config/cdc.ico /usr/lib/wsl/cdc.ico
+RUN chmod 0644 /usr/lib/wsl/terminal-profile.json /usr/lib/wsl/cdc.ico
+
+###########################################################################
 ## Copy helpful bash scripts over for testing the environment.
 ###########################################################################
 COPY scripts/ /opt/scripts/
 RUN chmod +x /opt/scripts/*.sh
 
 ###########################################################################
-## Run the run-once.sh script on startup 
+## Run the run-once.sh script on startup
 ###########################################################################
 COPY config/run-once.service /etc/systemd/system
 RUN systemctl enable run-once.service
