@@ -1,3 +1,10 @@
+## [2.6.3](https://github.com/cdcgov/ocio-wsl/compare/2.6.2...2.6.3) (2026-05-07)
+
+
+### Bug Fixes
+
+* git completion for ubuntu + fedora image ([44b634d](https://github.com/cdcgov/ocio-wsl/commit/44b634d1262c4b32b2aa7e25857865d1217cdedc))
+
 ## [2.6.2](https://github.com/cdcgov/ocio-wsl/compare/2.6.1...2.6.2) (2026-05-07)
 
 
