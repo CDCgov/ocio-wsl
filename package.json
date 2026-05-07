@@ -61,6 +61,10 @@
             {
               "path": "images/checksums.txt",
               "label": "Checksums for integrity validation"
+            },
+            {
+              "path": "images/manifest.json",
+              "label": "WSL Distribution Manifest"
             }
           ]
         }
