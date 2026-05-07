@@ -1,3 +1,10 @@
+## [2.6.2](https://github.com/cdcgov/ocio-wsl/compare/2.6.1...2.6.2) (2026-05-07)
+
+
+### Bug Fixes
+
+* run the mise eval once so user's not hitting it all the time ([910a854](https://github.com/cdcgov/ocio-wsl/commit/910a854a7a341b53be4996879ec4da746e1de5a2))
+
 ## [2.6.1](https://github.com/cdcgov/ocio-wsl/compare/2.6.0...2.6.1) (2026-05-07)
 
 
