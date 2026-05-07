@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/cdcgov/ocio-wsl/compare/2.5.7...2.6.0) (2026-05-07)
+
+
+### Features
+
+* release with fedora 43 and ubuntu 24.04 ([b0e5e67](https://github.com/cdcgov/ocio-wsl/commit/b0e5e67ed14f89058fbc03d9f0e8fd40f4ca6630))
+
 ## [2.5.7](https://github.com/cdcgov/ocio-wsl/compare/2.5.6...2.5.7) (2026-04-18)
 
 
