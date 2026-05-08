@@ -1,3 +1,10 @@
+## [2.6.6](https://github.com/cdcgov/ocio-wsl/compare/2.6.5...2.6.6) (2026-05-08)
+
+
+### Bug Fixes
+
+* permission issue with resolv.conf where it's far too restrictive ([8b8afb2](https://github.com/cdcgov/ocio-wsl/commit/8b8afb28a4f1e9cd3e1d8c234035e46ec6e63950))
+
 ## [2.6.5](https://github.com/cdcgov/ocio-wsl/compare/2.6.4...2.6.5) (2026-05-08)
 
 
