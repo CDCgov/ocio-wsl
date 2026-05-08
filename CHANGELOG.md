@@ -1,3 +1,11 @@
+## [2.6.5](https://github.com/cdcgov/ocio-wsl/compare/2.6.4...2.6.5) (2026-05-08)
+
+
+### Bug Fixes
+
+* filter DNS fields to avoid random PATH entries ([e792bdd](https://github.com/cdcgov/ocio-wsl/commit/e792bdde776bb10fc15737e636ca2bd046447a65))
+* filter out bad records that aren't IP address for DNS server ([affc0ae](https://github.com/cdcgov/ocio-wsl/commit/affc0aef5d12695f6fc92b6d1ef57cd9ba50f87a))
+
 ## [2.6.4](https://github.com/cdcgov/ocio-wsl/compare/2.6.3...2.6.4) (2026-05-08)
 
 
