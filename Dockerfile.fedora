@@ -47,7 +47,6 @@ RUN dnf upgrade -y && dnf install -y \
   openssl-devel \
   libffi-devel \
   xz-devel \
-  python3 \
   zlib-devel \
   \
   # For R installation
