@@ -1,3 +1,10 @@
+## [2.6.8](https://github.com/cdcgov/ocio-wsl/compare/2.6.7...2.6.8) (2026-05-08)
+
+
+### Bug Fixes
+
+* why is ping not installed by default ([92d51e6](https://github.com/cdcgov/ocio-wsl/commit/92d51e6f7707c5330abecf034a4087c0b965c5e6))
+
 ## [2.6.7](https://github.com/cdcgov/ocio-wsl/compare/2.6.6...2.6.7) (2026-05-08)
 
 
