@@ -1,3 +1,12 @@
+## [2.6.4](https://github.com/cdcgov/ocio-wsl/compare/2.6.3...2.6.4) (2026-05-08)
+
+
+### Bug Fixes
+
+* fedora language issues ([78556de](https://github.com/cdcgov/ocio-wsl/commit/78556de1d5807dee3d48c58efab8f82e3248ad9e))
+* mise won't install because of minimum release age ([27f9158](https://github.com/cdcgov/ocio-wsl/commit/27f915887859806160999045eca14a5065cc018d))
+* rely on mise to install python ([6ab10b1](https://github.com/cdcgov/ocio-wsl/commit/6ab10b1ebbaa58ae897bce81e3363e9d13db969b))
+
 ## [2.6.3](https://github.com/cdcgov/ocio-wsl/compare/2.6.2...2.6.3) (2026-05-07)
 
 
