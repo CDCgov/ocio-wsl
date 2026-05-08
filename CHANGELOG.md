@@ -1,3 +1,10 @@
+## [2.6.7](https://github.com/cdcgov/ocio-wsl/compare/2.6.6...2.6.7) (2026-05-08)
+
+
+### Bug Fixes
+
+* mise azure-cli installation tuning ([3119826](https://github.com/cdcgov/ocio-wsl/commit/31198264bf789f6d58b09734c3367858d2950864))
+
 ## [2.6.6](https://github.com/cdcgov/ocio-wsl/compare/2.6.5...2.6.6) (2026-05-08)
 
 
