@@ -31,6 +31,7 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   vim \
   wget \
   whois \
+  iputils-ping \
   tcpdump \
 
   # For python installation
@@ -100,11 +101,6 @@ RUN install -dm 755 /etc/apt/keyrings && \
 COPY config/config.toml "${MISE_CONFIG_DIR}/config.toml"
 COPY config/config.toml "/etc/mise/config.toml"
 
-# Ensure mise is initialized for all users
-RUN echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /etc/skel/.bashrc && \
-  echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /root/.bashrc && \
-  echo 'eval "$(mise activate bash)"' >> /etc/skel/.bashrc && \
-  echo 'eval "$(mise activate bash)"' >> /root/.bashrc
 
 # Ensure Python trusts the CDC root certificates, so that it can access internal 
 # websites signed by CDC's certificate and cross firewalls using man-in-the-middle 

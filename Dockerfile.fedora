@@ -32,6 +32,7 @@ RUN dnf upgrade -y && dnf install -y \
   vim \
   wget \
   whois \
+  iputils \
   tcpdump \
   \
   # For python installation
@@ -88,10 +89,6 @@ RUN rpm --import 'https://mise.jdx.dev/gpg-key.pub' && \
 COPY config/config.toml "${MISE_CONFIG_DIR}/config.toml"
 COPY config/config.toml "/etc/mise/config.toml"
 
-RUN echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /etc/skel/.bashrc && \
-  echo 'export PATH="/opt/mise/bin:/opt/mise/shims:$PATH"' >> /root/.bashrc && \
-  echo 'eval "$(mise activate bash)"' >> /etc/skel/.bashrc && \
-  echo 'eval "$(mise activate bash)"' >> /root/.bashrc
 
 ENV REQUESTS_CA_BUNDLE='/etc/pki/tls/certs/ca-bundle.crt'
 ENV SSL_CERT_FILE='/etc/pki/tls/certs/ca-bundle.crt'
