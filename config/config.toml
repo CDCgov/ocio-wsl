@@ -1,5 +1,6 @@
 [tools]
 actionlint = "1.7.12"
+"asdf:boris-ning-usds/asdf-azure-cli" = "2.85.0"
 "asdf:mise-plugins/mise-oc" = "stable-4.20"
 "asdf:mise-plugins/mise-r" = "4.5.3"
 awscli = "2.34.44"

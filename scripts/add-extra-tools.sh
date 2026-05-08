@@ -14,9 +14,6 @@ mise install "asdf:mise-plugins/mise-r" --env /opt/mise/config/config.toml
 export RUSTUP_USE_CURL=1
 mise install rust --env /opt/mise/config/config.toml
 
-## Azure CLI's default asdf forces a python version, while this rewritten version does not.
-mise plugins install https://github.com/boris-ning-usds/asdf-azure-cli --force
-
 ## Install the rest of the tools as dependencies should already be installed
 mise upgrade --env /opt/mise/config/config.toml
 
