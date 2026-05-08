@@ -55,6 +55,7 @@ else
   while read -r ip; do
     echo "nameserver $ip" >> $DNSFILE
   done <<< "$DNSLIST"
+  chmod 644 $DNSFILE
   echo "DNS configuration written to $DNSFILE:"
   cat $DNSFILE
 fi
