@@ -47,10 +47,16 @@ if [ -s "$DNSFILE" ]; then
   echo "Using existing DNS configuration in $DNSFILE"
 else
   echo "Configuring DNS $DNSFILE with resolver IPs from Windows"
-  DNSLIST=$(/mnt/c/windows/system32/windowspowershell/v1.0/powershell.exe -command "Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandProperty ServerAddresses" | tr -d '\r')
-  for ip in $(echo $DNSLIST); do
-    echo "nameserver $ip" >> $DNSFILE
-  done
+  /mnt/c/windows/system32/windowspowershell/v1.0/powershell.exe -command \
+    "Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandProperty ServerAddresses" \
+    | tr -d '\r' \
+    | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' \
+    | while read -r ip; do
+        echo "nameserver $ip"
+        echo "nameserver $ip" >> $DNSFILE
+      done
+  echo "DNS configuration written to $DNSFILE:"
+  cat $DNSFILE
 fi
 
 # Add mise to the user's bashrc for the user's environment for easy access
