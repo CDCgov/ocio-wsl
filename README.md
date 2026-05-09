@@ -1,121 +1,87 @@
-# Windows Subsystem Build
+# CDC WSL Distribution
+
+<div align="center">
 
 [![semantic-release: conventional-commit](https://img.shields.io/badge/semantic--release-conventionalcommit-e10079?logo=semantic-release&style=for-the-badge)](https://github.com/semantic-release/semantic-release)
-[![last release](https://img.shields.io/github/release-date/cdcgov/ocio-wsl?style=for-the-badge)](https://img.shields.io/badge/cdcgov/ocio-wsl/releases)
-![total downloads](https://img.shields.io/github/downloads/cdcgov/ocio-wsl/total?style=for-the-badge)
 [![latest tag](https://img.shields.io/github/v/tag/cdcgov/ocio-wsl?style=for-the-badge)](https://github.com/cdcgov/ocio-wsl/releases)
+[![last release](https://img.shields.io/github/release-date/cdcgov/ocio-wsl?style=for-the-badge)](https://github.com/cdcgov/ocio-wsl/releases)
+![total downloads](https://img.shields.io/github/downloads/cdcgov/ocio-wsl/total?style=for-the-badge)
 ![commit history](https://img.shields.io/github/commit-activity/y/cdcgov/ocio-wsl?label=commits&style=for-the-badge)
+![deploy status](https://img.shields.io/github/actions/workflow/status/cdcgov/ocio-wsl/deploy.yml?style=for-the-badge)
 
-This builds an Windows Subsystem Linux (WSL) tarball image for CDC as part of the developer experience. Builds are currently ![deploy badge](https://img.shields.io/github/actions/workflow/status/cdcgov/ocio-wsl/deploy.yml).
+</div>
 
-## How to use this?
+Pre-built [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) images for CDC developers, with common tooling pre-installed via [mise](https://mise.jdx.dev).
 
-Make sure [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is setup properly by opening powershell and typing `wsl`.
+## Installation
 
-**Note**: when running `wsl` for the first time, WSL will require administrative rights using your -su account in powershell. The username is your 4 letter user name + `-su` (ex. tpz7-su) and the password is in [CyberArk](https://cyber.cdc.gov).
+1. Make sure WSL2 is enabled. Open PowerShell and run `wsl` — the first run may require an admin `-su` account (password in [CyberArk](https://cyber.cdc.gov)).
 
-1. Download the `.wsl` file for your preferred distro from the [latest release](https://github.com/cdcgov/ocio-wsl/releases/latest):
+2. Download the `.wsl` file for your preferred distro from the [latest release](https://github.com/cdcgov/ocio-wsl/releases/latest):
    - `ubuntu-24.04-cdc.wsl` — Ubuntu 24.04
    - `fedora-43-cdc.wsl` — Fedora 43
 
-2. Install it by double-clicking the `.wsl` file in File Explorer, or from the command line:
-   `wsl --install --from-file <path-to-file.wsl>`
+3. Install it:
 
-3. On first launch, the distro will automatically create a user account matching your Windows login and configure DNS.
+   ```powershell
+   wsl --install --from-file C:\Users\<username>\Downloads\ubuntu-24.04-cdc.wsl
+   ```
 
-Example:
+   Or double-click the `.wsl` file in File Explorer.
 
-`wsl --install --from-file C:\Users\tpz7\Downloads\ubuntu-24.04-cdc.wsl`
+4. Launch the distro. On first boot it will automatically create your user account and configure DNS — no manual steps needed.
 
-## Installing Extra Tools
+## Installed Tools
 
-Inside the image, the /opt/scripts folder has a script to install [an additional list](./scripts/add-extra-tools.sh) of tools.
+Tools are managed by [mise](https://mise.jdx.dev) and configured in `/etc/mise/config.toml`. To see what's installed:
 
-To install this list of tools, run `bash /opt/scripts/add-extra-tools.sh`. We couldn't fit it all into the image due to a [2GB restriction](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
+```bash
+mise list
+```
 
-## First-time login automation
+To upgrade all tools to their configured versions:
 
-Inside the image, the /opt/scripts folder has a [run-once](./scripts/run-once.sh) script to perform one-time automated actions. This script is run automatically on startup by the run-once.service systemd unit.
+```bash
+mise upgrade
+```
 
-### Setting the default login user
+To install a tool or change a version, edit `/etc/mise/config.toml` or your personal `~/.config/mise/config.toml`, then run `mise upgrade`.
 
-When you login for the first time, the run-once script creates a non-root user account based on your windows username and sets it as the default login user in /etc/wsl.conf.
+### Pre-installed tools
 
-If you login again and still see the root user prompt, then logout and wait for 1 minute before logging back in and you should see your regular user prompt. From then on, all subsequent logins will default to your non-root user account, which has sudo privileges. To sudo to the root user, type `sudo su root`, or `sudo su - root` to include the root environment. Packages requiring non-root user accounts with sudo access, such as [homebrew](https://brew.sh/) can then be installed.
+| Category  | Tools                                                 |
+| --------- | ----------------------------------------------------- |
+| Languages | Python 3.13, Node.js, Go, Java, R, Rust               |
+| Cloud     | AWS CLI, Azure CLI, kubectl, Helm, Terraform          |
+| Build     | Gradle, Maven                                         |
+| Linting   | shellcheck, ruff, black, actionlint, semgrep, checkov |
+| Utilities | ripgrep, grype, pre-commit, poetry, uv, pipx          |
 
-If you wish to change the default login back to root, change the default user entry in /etc/wsl.conf to `root` and logout and terminate the distro before logging in again: `wsl --terminate <distroName>`.
+## Extra Tools
 
-### Configuring DNS
+Some tools are excluded from the base image due to a [2 GB GitHub release limit](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas). Install them with:
 
-Also on first login, the run-once script will configure DNS resolution by getting the resolver IP or IPs from your Windows DNS configuration and adding them as nameserver entries to /etc/resolv.conf. This fixes a known issue with WSL's default DNS configuration. If you further customize the file, the script will not overwrite your changes as long as the file is not empty. Conversely, if you need to reset the DNS configuration, leave the file empty and logout and either terminate the distro directly, i.e. from a command shell: `wsl --terminate <distro_name>`, or wait one minute after logging out before logging back in, which should trigger the DNS configuration again.
+```bash
+bash /opt/scripts/add-extra-tools.sh
+```
 
-## Change Tool versions
+## Local Development
 
-We utilize [mise](https://mise.jdx.dev/getting-started.html) to install common programming tools and it comes with a [tool versions file](./config/config.toml).
+Build a specific distro image locally:
 
-To update or change the version of [these tools](./config/.tool-versions), change the version of the tool in the file; ex. python 3.13.13, save the file, and run `mise upgrade`.
+```bash
+bash build.sh ubuntu   # builds ubuntu-24.04-cdc
+bash build.sh fedora   # builds fedora-43-cdc
+```
 
-Once it is completed, you can run `python -v` with python 3.13.13.
+Run a quick test against the built image:
 
-Use `mise list` to figure out the available versions of python you can install.
+```bash
+podman run -t ubuntu-24.04-cdc bash -c "bash /opt/scripts/check-google.sh"
+```
 
-## WSL Tricks
+## Documentation
 
-To find out what distros are running, run `wsl --list --running`.
-
-To shutdown WSL distros, run `wsl --shutdown` and [wait 8 seconds](https://learn.microsoft.com/en-us/windows/wsl/wsl-config#the-8-second-rule).
-
-When using `wsl --image` to run the image, it always logs you in [as the root user](https://learn.microsoft.com/en-us/windows/wsl/use-custom-distro#add-wsl-specific-components-like-a-default-user).
-
-For whatever reason, occasionally if you run `wsl --shutdown`, you may end up crashing the Windows `vmcompute` service, so running `wsl` to log back into your default machine will incur an error:  
-**Logon failure: the user has not been granted the requested logon type at this computer, with an error code of wsl/service/CreateInstance/CreateVm**.
-
-If that occurs, fix it like this (does not require restarting):
-
-1. (Optional) Run `gpupdate /force` to ensure you're up to day with Group Policy settings with the rest of the Enterprise. This could take up to 10 minutes. This probably won't fix your problem either, but good to keep updated on your own terms. Continue on!
-1. Find your -su user password and open an administrative powershell.
-1. Restart the **vmcompute** service by running `Restart-Service vmcompute` in your admin powershell.
-1. Try using `wsl` again.
-
-It is possible to navigate the filesystem of the distro by going to \\wsl$\ and finding the distribution folder using Windows. Otherwise, one quick way to access it is to `wsl -d <distro>` and go to the root `cd ~` and then run `explorer.exe .`, a Window will pop up going to the filesystem.
-
-For more troubleshooting, visit [Microsoft WSL Troubleshooting](https://learn.microsoft.com/en-us/windows/wsl/troubleshooting).
-
-## Local Testing
-
-Build a specific distro by passing `ubuntu` or `fedora` as an argument:
-
-- Build Ubuntu: `bash build.sh ubuntu`
-- Build Fedora: `bash build.sh fedora`
-
-Run tests against the built image:
-
-- Run a simple curl: `podman run -t ubuntu-24.04-cdc bash -c "curl -vv google.com"`
-
-- Check whether going to google.com works: `podman run -t ubuntu-24.04-cdc bash -c "bash /opt/scripts/check-google.sh"`
-
-- Download additional software: `podman run -t ubuntu-24.04-cdc bash -c "bash /opt/scripts/add-extra-tools.sh"`
-
-## Releases
-
-We utilize [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) messages and automated tagging via Semantic Versioning.
-
-The most important prefixes you should have in mind when writing git commit messages are:
-
-    fix: which represents bug fixes, and correlates to a SemVer patch.
-    feat: which represents a new feature, and correlates to a SemVer minor.
-    feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a SemVer major.
-
-Review through [commit-analyzer](https://github.com/semantic-release/commit-analyzer/blob/master/lib/default-release-rules.js) for a set of meaningful terms to use.
-
-## Ongoing Issues
-
-- mise should be accessible by all Linux users in the WSL distro
-- Github Releases per file has a [upper limit of 2GB](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas).
-  - Sort of fixed - slim down the image.
-
-## External Guides on making WSL work
-
-- [mvaisakh/wsl-distro-tars](https://github.com/mvaisakh/wsl-distro-tars) - teaches us how to build a tar file for a Linux distro
-- [Linux user creation for WSL](https://superuser.com/questions/1566022/how-to-set-default-user-for-manually-installed-wsl-distro) - on how to create a default user for a manually installed WSL distro
-- [Finding Windows username from WSL](https://www.reddit.com/r/bashonubuntuonwindows/comments/8dhhrr/comment/dxn9obq/) - on access to cmd.exe via WSL (apparently cmd is accessible via WSL by default)
+- [First-Time Setup](docs/first-time-setup.md) — user creation, DNS configuration
+- [WSL Tips and Troubleshooting](docs/wsl-tricks.md) — common commands, vmcompute crash fix
+- [Releases](docs/releases.md) — how versioning and CI releases work
