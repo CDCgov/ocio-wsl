@@ -5,6 +5,7 @@
 | Task                        | Command                                       |
 | --------------------------- | --------------------------------------------- |
 | List running distros        | `wsl --list --running`                        |
+| List all distros            | `wsl --list --verbose`                        |
 | Shut down all distros       | `wsl --shutdown`                              |
 | Terminate a specific distro | `wsl --terminate <distroName>`                |
 | Enter a specific distro     | `wsl -d <distroName>`                         |
@@ -33,4 +34,4 @@ Open File Explorer and go to `\\wsl$\` to browse all installed distro filesystem
 ## Further reading
 
 - [Microsoft WSL Troubleshooting](https://learn.microsoft.com/en-us/windows/wsl/troubleshooting)
-- [mvaisakh/wsl-distro-tars](https://github.com/mvaisakh/wsl-distro-tars) — how WSL tar images are built
+- [mvaisakh/wsl-distro-tars](https://github.com/mvaisakh/wsl-distro-tars) illustrates how WSL tar images are built

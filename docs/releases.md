@@ -14,7 +14,7 @@ The `!` suffix (or a `BREAKING CHANGE:` footer) triggers a major bump regardless
 
 See the [commit-analyzer default rules](https://github.com/semantic-release/commit-analyzer/blob/master/lib/default-release-rules.js) for the full list of recognized prefixes.
 
-## What happens on release
+## On Release
 
 1. CI runs the deploy workflow on merge to `main`
 2. `@semantic-release/commit-analyzer` reads commits since the last tag and calculates the next version
