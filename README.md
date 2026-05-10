@@ -56,7 +56,7 @@ mise upgrade
 
 To install a tool or change a version, edit `/etc/mise/config.toml` or your personal `~/.config/mise/config.toml`, then run `mise upgrade`.
 
-### Pre-installed Tools
+Find the full list of tools and their versions in the [config.toml file](https://github.com/CDCgov/ocio-wsl/blob/main/config/config.toml).
 
 | Category  | Tools                                                 |
 | --------- | ----------------------------------------------------- |
