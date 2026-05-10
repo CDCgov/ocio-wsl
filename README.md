@@ -21,9 +21,7 @@ Running `wsl --install` requires a Windows elevated privilege account. See [Prer
 
 ## Installation
 
-Before starting, make sure you have an elevated privilege (`-su`) account and WSL2 installed and updated. See [Prerequisites](docs/prerequisites.md) if this is a new computer.
-
-1. Open PowerShell using your `-su` account and confirm WSL2 is ready by running `wsl`.
+1. Open PowerShell with your normal account and confirm WSL2 is ready by running `wsl`. If it isn't, see [Prerequisites](docs/prerequisites.md) for how to request one.
 
 2. Download the `.wsl` file for your preferred distro from the [latest release](https://github.com/cdcgov/ocio-wsl/releases/latest):
 
