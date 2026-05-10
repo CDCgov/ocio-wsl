@@ -57,7 +57,7 @@ run_test "scripts executable"  "ls /opt/scripts/*.sh | xargs -I{} test -x {}"
 
 echo ""
 echo "=========================================="
-echo " Test Report — ${IMAGE_NAME}"
+echo " Test Report - ${IMAGE_NAME}"
 echo "=========================================="
 for t in "${PASS[@]}"; do
   echo "  PASS  $t"
