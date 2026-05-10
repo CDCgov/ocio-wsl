@@ -11,7 +11,7 @@
 
 </div>
 
-Pre-built [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) images for CDC developers. Common tools come pre-installed via [mise](https://mise.jdx.dev), and [enterprise certificates](https://github.com/CDCgov/ocio-certificates/blob/main/docs/technical.md) are already trusted so you can hit internal sites without fighting SSL errors.
+Pre-built [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) images for CDC developers. Common tools come pre-installed via [mise](https://mise.jdx.dev), and [enterprise certificates](https://github.com/CDCgov/ocio-certificates/blob/main/docs/technical.md) are already trusted so you don't have to fight with SSL certificate issues.
 
 ## Prerequisites
 
