@@ -1,3 +1,10 @@
+## [2.6.9](https://github.com/cdcgov/ocio-wsl/compare/2.6.8...2.6.9) (2026-07-04)
+
+
+### Bug Fixes
+
+* test fix with cert pipeline ([8100f82](https://github.com/cdcgov/ocio-wsl/commit/8100f8243600a0b48c8cff4e5db95af7e06688dd))
+
 ## [2.6.8](https://github.com/cdcgov/ocio-wsl/compare/2.6.7...2.6.8) (2026-05-08)
 
 
