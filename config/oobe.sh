@@ -34,7 +34,7 @@ create_user() {
     /usr/sbin/usermod "$username" -aG "$GROUPS_TO_ADD"
     passwd -d "$username"
     # shellcheck disable=SC2016
-  if ! grep -qF 'eval "$(mise activate bash)"' "/home/$username/.bashrc"; then
+  if ! grep -qF 'mise activate bash' "/home/$username/.bashrc"; then
     echo 'eval "$(mise activate bash)"' >> "/home/$username/.bashrc"
   fi
 }

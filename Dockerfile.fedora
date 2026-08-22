@@ -22,6 +22,7 @@ RUN dnf upgrade -y && dnf install -y \
   gnupg2 \
   iperf3 \
   jq \
+  libatomic \
   nano \
   nmap-ncat \
   podman \
@@ -63,6 +64,7 @@ COPY config/config.toml "/etc/skel/.config/mise/config.toml"
 
 ENV REQUESTS_CA_BUNDLE='/etc/pki/tls/certs/ca-bundle.crt'
 ENV SSL_CERT_FILE='/etc/pki/tls/certs/ca-bundle.crt'
+ENV PIP_CERT='/etc/pki/tls/certs/ca-bundle.crt'
 ENV NODE_OPTIONS='--use-openssl-ca'
 ENV CURL_CA_BUNDLE='/etc/pki/tls/certs/ca-bundle.crt'
 
@@ -73,6 +75,9 @@ RUN git config --global http.sslcainfo '/etc/pki/tls/certs/ca-bundle.crt'
 ##############################################################################
 COPY config/.bashrc /root/.bashrc
 COPY config/.bashrc /etc/skel/.bashrc
+
+COPY config/.gitconfig /root/.gitconfig
+COPY config/.gitconfig /etc/skel/.gitconfig
 
 COPY config/.bash_aliases /root/.bash_aliases
 COPY config/.bash_aliases /etc/skel/.bash_aliases

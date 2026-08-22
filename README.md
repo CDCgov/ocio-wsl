@@ -56,9 +56,9 @@ mise upgrade
 
 To install a tool or change a version, edit your personal `~/.config/mise/config.toml`, then run `mise install` or `mise upgrade`.
 
-Azure CLI is installed through mise's native `pipx:azure-cli` backend. Do not add a second Azure CLI entry using the older `asdf:boris-ning-usds/asdf-azure-cli` plugin; that plugin creates a virtual environment tied to the exact Python installation active at install time, so upgrading Python can leave `az` pointing at a removed interpreter.
+Azure CLI uses the CDC-maintained `asdf:boris-ning-usds/asdf-azure-cli` fork. The fork avoids the upstream plugin's restrictive Python-version behavior and creates an independent virtual environment for Azure CLI. The fork should create that environment with `python3 -m venv --copies` so a later mise Python upgrade cannot remove its interpreter. Do not also declare the native `azure-cli` backend; two entries can create conflicting `az` launchers.
 
-The first-login setup also bootstraps `pip` inside Azure CLI's own managed environment. Azure CLI extensions, including `resource-graph`, use that private interpreter to install extension wheels and should not depend on the separately managed user Python.
+The first-login setup bootstraps `pip` inside the Azure CLI environment when needed. Azure CLI extensions, including `resource-graph`, use that private interpreter and do not depend on the separately managed user Python.
 
 Find the full list of tools and their versions in the [config.toml file](https://github.com/CDCgov/ocio-wsl/blob/main/config/config.toml).
 
@@ -118,12 +118,12 @@ R --version | head -1
 mise ls
 ```
 
-If upgrading an existing image left `az` broken, remove the old `asdf:boris-ning-usds/asdf-azure-cli` entry from `~/.config/mise/config.toml`, add the native entry, and reinstall it:
+If upgrading an existing image left `az` broken, remove the native `azure-cli` entry from `~/.config/mise/config.toml`, use the custom fork, and reinstall it:
 
 ```bash
-mise use --global azure-cli@2.85.0
-mise install azure-cli
-mise prune
+mise uninstall azure-cli@2.85.0 || true
+mise use --global 'asdf:boris-ning-usds/asdf-azure-cli@2.85.0'
+mise install
 az --version
 ```
 

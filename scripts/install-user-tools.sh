@@ -23,18 +23,22 @@ if ! runuser -u "$USERNAME" -- env \
   echo "WARNING: mise tool installation did not complete. Run 'mise install' as $USERNAME to retry."
 fi
 
-# Azure CLI installs through mise's uv-backed pipx backend. Its environment
-# intentionally omits pip, but `az extension add` uses pip to install wheels.
-# Bootstrap pip inside Azure CLI's own environment without relying on the
-# user's separately managed Python installation.
+# Keep Azure CLI extensions independent of the user's separately managed
+# Python installation. The custom asdf plugin normally creates a private venv
+# with pip; the first path below supports the native backend for upgrades from
+# older images that used it.
 # shellcheck disable=SC2016
 runuser -u "$USERNAME" -- env \
   HOME="$USER_HOME" \
   MISE_SYSTEM_CONFIG_DIR=/etc/mise \
   /bin/bash -c '
     azure_root=$(mise where azure-cli 2>/dev/null || true)
-    azure_python="$azure_root/azure-cli/bin/python"
-    if [ -x "$azure_python" ]; then
-      "$azure_python" -m ensurepip --upgrade >/dev/null
-    fi
+    for azure_python in \
+      "$azure_root/bin/venv/bin/python3" \
+      "$azure_root/azure-cli/bin/python"; do
+      if [ -x "$azure_python" ]; then
+        "$azure_python" -m ensurepip --upgrade >/dev/null
+        break
+      fi
+    done
   '

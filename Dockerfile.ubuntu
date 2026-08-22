@@ -81,6 +81,7 @@ COPY config/config.toml "/etc/skel/.config/mise/config.toml"
 # https://go.dev/src/crypto/x509/root_linux.go
 ENV REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
 ENV SSL_CERT_FILE='/etc/ssl/certs/ca-certificates.crt'
+ENV PIP_CERT='/etc/ssl/certs/ca-certificates.crt'
 
 # Ensure NodeJS trusts the CDC root certificates, so that it can access internal 
 # websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
@@ -109,6 +110,9 @@ RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 ##############################################################################
 COPY config/.bashrc /root/.bashrc
 COPY config/.bashrc /etc/skel/.bashrc
+
+COPY config/.gitconfig /root/.gitconfig
+COPY config/.gitconfig /etc/skel/.gitconfig
 
 COPY config/.bash_aliases /root/.bash_aliases
 COPY config/.bash_aliases /etc/skel/.bash_aliases
