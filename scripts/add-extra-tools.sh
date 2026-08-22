@@ -7,8 +7,6 @@ set -eu
 mise install nodejs --env /etc/mise/config.toml
 mise install java --env /etc/mise/config.toml
 mise install golang --env /etc/mise/config.toml
-mise install "asdf:mise-plugins/mise-r" --env /etc/mise/config.toml
-
 # Use curl workaround due to rust docs download timing out after 30 seconds on zscalar connection
 export RUSTUP_USE_CURL=1
 mise install rust --env /etc/mise/config.toml

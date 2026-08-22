@@ -42,11 +42,11 @@ run_test() {
 }
 
 run_test "os-release"          "uname -a && cat /etc/os-release"
-run_test "python3"             "python3 --version && which python3"
 run_test "add-extra-tools"     "bash /opt/scripts/add-extra-tools.sh"
+run_test "python3"             "mise exec -- python3 --version && mise which python3"
+run_test "azure cli"           "mise exec -- az --version && mise which az"
 run_test "mise list"           "mise ls"
 run_test "mise doctor"         "mise doctor"
-run_test "R"                   "R --version | head -1"
 run_test "opt layout"          "ls -l /opt"
 run_test "bashrc"              "cat ~/.bashrc"
 run_test "wsl-distribution"    "cat /etc/wsl-distribution.conf"

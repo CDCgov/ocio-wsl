@@ -33,6 +33,8 @@ else
   echo -e "User '$NEWUSER' created successfully!"
 fi
 
+/opt/scripts/install-user-tools.sh "$NEWUSER"
+
 # Set the user as the default for WSL for ease of access
 if ! grep -q "default=${NEWUSER}" /etc/wsl.conf; then
   echo -e "\n\n[user]\ndefault=${NEWUSER}" | tee -a /etc/wsl.conf > /dev/null

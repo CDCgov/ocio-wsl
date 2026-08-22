@@ -52,3 +52,10 @@ else
         fi
     done
 fi
+
+if [ -n "$WINDOWS_USER" ]; then
+    TARGET_USER="$WINDOWS_USER"
+else
+    TARGET_USER="$username"
+fi
+/opt/scripts/install-user-tools.sh "$TARGET_USER"

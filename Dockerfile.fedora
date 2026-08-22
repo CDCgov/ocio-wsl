@@ -35,31 +35,6 @@ RUN dnf upgrade -y && dnf install -y \
   iputils \
   tcpdump \
   \
-  # For python installation
-  gcc \
-  gcc-c++ \
-  make \
-  bzip2-devel \
-  ncurses-devel \
-  gdbm-devel \
-  nss-devel \
-  readline-devel \
-  sqlite-devel \
-  openssl-devel \
-  libffi-devel \
-  xz-devel \
-  zlib-devel \
-  \
-  # For R installation
-  libcurl-devel \
-  gcc-gfortran \
-  xz-libs \
-  bzip2-libs \
-  libX11-devel \
-  libXt-devel \
-  xorg-x11-proto-devel \
-  pcre2-devel \
-  \
   tzdata && \
   dnf clean all
 
@@ -74,21 +49,17 @@ RUN cp /etc/pki/ca-trust/source/anchors/enterprise-bundle.crt /etc/pki/tls/cert.
 ## Install mise to install a variety of programming languages and command line
 ## tools.
 ###############################################################################
-ENV MISE_DATA_DIR=/opt/mise
-ENV XDG_DATA_HOME=/opt/mise
-ENV MISE_CONFIG_DIR=/opt/mise/config
-ENV PATH="/opt/mise/bin:/opt/mise/shims:$PATH"
+ENV MISE_SYSTEM_CONFIG_DIR=/etc/mise
 
 RUN rpm --import 'https://mise.jdx.dev/gpg-key.pub' && \
   dnf config-manager addrepo --from-repofile=https://mise.jdx.dev/rpm/mise.repo && \
   dnf install -y mise && \
-  mkdir -p /opt/mise/bin && \
-  ln -s /usr/bin/mise /opt/mise/bin/mise && \
   dnf clean all
 
-COPY config/config.toml "${MISE_CONFIG_DIR}/config.toml"
 COPY config/config.toml "/etc/mise/config.toml"
 
+RUN install -d -m 0755 /etc/skel/.config/mise
+COPY config/config.toml "/etc/skel/.config/mise/config.toml"
 
 ENV REQUESTS_CA_BUNDLE='/etc/pki/tls/certs/ca-bundle.crt'
 ENV SSL_CERT_FILE='/etc/pki/tls/certs/ca-bundle.crt'
@@ -96,8 +67,6 @@ ENV NODE_OPTIONS='--use-openssl-ca'
 ENV CURL_CA_BUNDLE='/etc/pki/tls/certs/ca-bundle.crt'
 
 RUN git config --global http.sslcainfo '/etc/pki/tls/certs/ca-bundle.crt'
-
-RUN mise use python@3.13.13 --global
 
 ##############################################################################
 ## Create skeleton bashrc files for users

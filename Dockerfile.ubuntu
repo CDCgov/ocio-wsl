@@ -32,31 +32,7 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   wget \
   whois \
   iputils-ping \
-  tcpdump \
-
-  # For python installation
-  build-essential \
-  libbz2-dev \
-  libncurses5-dev \
-  libgdbm-dev \
-  libnss3-dev \
-  libreadline-dev \
-  libsqlite3-dev \
-  libssl-dev \
-  libffi-dev \
-  liblzma-dev \
-  zlib1g-dev \
-
-  # For R installation: https://github.com/asdf-community/asdf-r
-  libcurl3-dev \
-  gfortran \
-  liblzma5 \
-  libbz2-1.0 \
-  libbz2-dev \
-  xorg-dev \
-  libbz2-dev \
-  liblzma-dev \
-  libpcre2-dev && \
+  tcpdump && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
 
 ###############################################################################
@@ -77,15 +53,11 @@ RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.
 ## find the latest version, update the ~/.config/mise/config.toml file for the version
 ## they want, and run mise upgrade to install that version.
 ##
-## To install mise into the /opt directory so that all users can use
-## mise, we follow the instructions from this issue:
-## https://github.com/jdx/mise/blob/main/packaging/mise/Dockerfile
+## mise is installed system-wide, while each WSL user owns their tool
+## installations and global configuration.
 ###############################################################################
-# Set environment variables to install tools globally
-ENV MISE_DATA_DIR=/opt/mise
-ENV XDG_DATA_HOME=/opt/mise
-ENV MISE_CONFIG_DIR=/opt/mise/config
-ENV PATH="/opt/mise/bin:/opt/mise/shims:$PATH"
+# Use the shared system configuration as the source for first-login setup.
+ENV MISE_SYSTEM_CONFIG_DIR=/etc/mise
 
 # Install mise, the package manager for command line tools
 RUN install -dm 755 /etc/apt/keyrings && \
@@ -93,13 +65,13 @@ RUN install -dm 755 /etc/apt/keyrings && \
   echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | tee /etc/apt/sources.list.d/mise.list && \
   apt update && \
   apt install -y mise && \
-  mkdir -p /opt/mise/bin && \
-  ln -s /usr/bin/mise /opt/mise/bin/mise && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy config file
-COPY config/config.toml "${MISE_CONFIG_DIR}/config.toml"
 COPY config/config.toml "/etc/mise/config.toml"
+
+RUN install -d -m 0755 /etc/skel/.config/mise
+COPY config/config.toml "/etc/skel/.config/mise/config.toml"
 
 
 # Ensure Python trusts the CDC root certificates, so that it can access internal 
@@ -131,8 +103,6 @@ RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
-RUN mise use python@3.13.13 --global
-
 ##############################################################################
 ## Create skeleton bashrc files for users to use when they login to the
 ## container. These files will be copied to the user's home directory.

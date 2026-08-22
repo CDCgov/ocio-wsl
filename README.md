@@ -42,7 +42,7 @@ Running `wsl --install` requires a Windows elevated privilege account. See [Prer
 
 ## Installed Tools
 
-Tools are managed by [mise](https://mise.jdx.dev) and configured in `/etc/mise/config.toml`. To see what's installed:
+Tools are managed by [mise](https://mise.jdx.dev). The image’s default tool list is in `/etc/mise/config.toml`; on first launch it is copied to `~/.config/mise/config.toml` and installed as the WSL user. The initial installation may take several minutes; if it is interrupted, run `mise install` to retry. To see what's installed:
 
 ```bash
 mise list
@@ -54,13 +54,17 @@ To upgrade everything:
 mise upgrade
 ```
 
-To install a tool or change a version, edit `/etc/mise/config.toml` or your personal `~/.config/mise/config.toml`, then run `mise upgrade`.
+To install a tool or change a version, edit your personal `~/.config/mise/config.toml`, then run `mise install` or `mise upgrade`.
+
+Azure CLI is installed through mise's native `pipx:azure-cli` backend. Do not add a second Azure CLI entry using the older `asdf:boris-ning-usds/asdf-azure-cli` plugin; that plugin creates a virtual environment tied to the exact Python installation active at install time, so upgrading Python can leave `az` pointing at a removed interpreter.
+
+The first-login setup also bootstraps `pip` inside Azure CLI's own managed environment. Azure CLI extensions, including `resource-graph`, use that private interpreter to install extension wheels and should not depend on the separately managed user Python.
 
 Find the full list of tools and their versions in the [config.toml file](https://github.com/CDCgov/ocio-wsl/blob/main/config/config.toml).
 
 | Category  | Tools                                                 |
 | --------- | ----------------------------------------------------- |
-| Languages | Python 3.13, Node.js, Go, Java, R, Rust               |
+| Languages | Python 3.13, Node.js, Go, Java, Rust                  |
 | Cloud     | AWS CLI, Azure CLI, kubectl, Helm, Terraform          |
 | Build     | Gradle, Maven                                         |
 | Linting   | shellcheck, ruff, black, actionlint, semgrep, checkov |
@@ -74,7 +78,54 @@ Some tools are excluded from the base image due to a [2 GB GitHub release limit]
 bash /opt/scripts/add-extra-tools.sh
 ```
 
-The script installs foundational tools (Node.js, Java, Go, R, Rust) in the correct order before running `mise upgrade` for the rest.
+The script installs foundational tools (Node.js, Java, Go, Rust) in the correct order before running `mise upgrade` for the rest.
+
+## Optional R Installation
+
+R is not installed in the base image because the mise R plugin compiles R from source. Install the platform build dependencies first, then run this as your normal user:
+
+```bash
+mise use asdf:mise-plugins/mise-r --global
+```
+
+The image installs only the mise executable system-wide. Tool installations and the global configuration live in the user’s home directory. The image also trusts the CDC certificate bundle and activates mise in new Bash shells. These setup details matter here; the upstream one-line mise installer does not configure the enterprise certificate trust or the initial user tool setup.
+
+R compilation defaults to one job in the plugin and can take a long time. Use all available CPUs when installing it:
+
+```bash
+ASDF_CONCURRENCY="$(nproc)" mise use asdf:mise-plugins/mise-r --global
+```
+
+For Fedora:
+
+```bash
+sudo dnf install -y libcurl-devel gcc-gfortran xz-libs bzip2-libs \
+  libX11-devel libXt-devel xorg-x11-proto-devel pcre2-devel
+```
+
+For Ubuntu:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y build-essential libcurl4-openssl-dev gfortran \
+  liblzma-dev liblzma5 libbz2-dev libbz2-1.0 xorg-dev libpcre2-dev
+```
+
+Verify the installation with:
+
+```bash
+R --version | head -1
+mise ls
+```
+
+If upgrading an existing image left `az` broken, remove the old `asdf:boris-ning-usds/asdf-azure-cli` entry from `~/.config/mise/config.toml`, add the native entry, and reinstall it:
+
+```bash
+mise use --global azure-cli@2.85.0
+mise install azure-cli
+mise prune
+az --version
+```
 
 ## Local Development
 
