@@ -23,8 +23,8 @@
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/npm": "13.1.5",
-    "conventional-changelog-conventionalcommits": "10.2.0",
-    "semantic-release": "25.0.5"
+    "conventional-changelog-conventionalcommits": "10.2.1",
+    "semantic-release": "25.0.8"
   },
   "release": {
     "branches": [
