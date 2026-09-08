@@ -9,6 +9,40 @@ When you first launch the distro, a startup script (`run-once.service`) runs aut
 
 You do not need to do anything manually for these steps.
 
+## GitHub SSH setup
+
+The first-login banner includes these commands. To connect to GitHub over SSH:
+
+```bash
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+ssh-keygen -t ed25519 -o -a 100 -C "you@example.com" -f ~/.ssh/github_ed25519
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/github_ed25519
+clip.exe < ~/.ssh/github_ed25519.pub
+```
+
+Open [GitHub SSH keys](https://github.com/settings/keys), select **New SSH key**, and paste the copied public key. Test the connection with:
+
+```bash
+ssh -T git@github.com
+```
+
+The command requests a passphrase and uses ED25519 with OpenSSH’s encrypted private-key format and a high key-derivation work factor. The private key stays in `~/.ssh/github_ed25519`; only the `.pub` file should be added to GitHub.
+
+For a dedicated GitHub SSH configuration, add this to `~/.ssh/config`:
+
+```sshconfig
+Host github.com
+    HostName github.com
+    User git
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/github_ed25519
+    IdentitiesOnly yes
+```
+
+Protect the configuration with `chmod 600 ~/.ssh/config`. If you use multiple GitHub accounts, give each account a separate `Host` alias and key instead of reusing this entry. Newer OpenSSH versions may also support post-quantum key exchange; inspect support with `ssh -Q kex | grep -E '(mlkem|sntrup)'` before configuring it.
+
 ## If the default user is still root after first login
 
 Log out, wait one minute, then log back in. WSL needs time to restart the distro with the new default user set in `/etc/wsl.conf`.

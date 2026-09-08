@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -121,7 +122,7 @@ if [ -x /usr/bin/mise ] && [ ! -e "$HOME/.config/mise/.first-login-shown" ]; the
     touch "$HOME/.config/mise/.first-login-shown"
     printf '\n'
     printf '%s\n' 'Welcome to the CDC WSL development environment.'
-    printf '%s\n' 'Your tools are installed and managed in your user account with mise.'
+    printf '%s\n' 'mise is installed system-wide; your tools and configuration belong to your user account.'
     printf '\n'
     printf '%s\n' 'Getting started:'
     printf '%s\n' '  mise install                 Install or retry the default tools'
@@ -129,11 +130,40 @@ if [ -x /usr/bin/mise ] && [ ! -e "$HOME/.config/mise/.first-login-shown" ]; the
     printf '%s\n' '  mise upgrade                 Upgrade configured tools'
     printf '%s\n' '  $EDITOR ~/.config/mise/config.toml  Change your tool list or versions'
     printf '\n'
+    if [ -t 1 ]; then
+        _CDC_BOLD='\033[1m'
+        _CDC_CYAN='\033[36m'
+        _CDC_GREEN='\033[32m'
+        _CDC_RESET='\033[0m'
+    else
+        _CDC_BOLD=''
+        _CDC_CYAN=''
+        _CDC_GREEN=''
+        _CDC_RESET=''
+    fi
+    printf '%b\n' "${_CDC_BOLD}${_CDC_CYAN}Major tools available through mise:${_CDC_RESET}"
+    printf '%b\n' "  ${_CDC_BOLD}${_CDC_GREEN}Python${_CDC_RESET}  ${_CDC_BOLD}${_CDC_GREEN}Node.js${_CDC_RESET}  ${_CDC_BOLD}${_CDC_GREEN}Go${_CDC_RESET}  ${_CDC_BOLD}${_CDC_GREEN}Java${_CDC_RESET}  ${_CDC_BOLD}${_CDC_GREEN}Rust${_CDC_RESET}"
+    printf '%b\n' "  ${_CDC_BOLD}${_CDC_GREEN}AWS CLI${_CDC_RESET}  ${_CDC_BOLD}${_CDC_GREEN}Azure CLI${_CDC_RESET}  ${_CDC_BOLD}${_CDC_GREEN}kubectl${_CDC_RESET}  ${_CDC_BOLD}${_CDC_GREEN}Helm${_CDC_RESET}  ${_CDC_BOLD}${_CDC_GREEN}Terraform${_CDC_RESET}"
+    printf '\n'
     printf '%s\n' 'Azure CLI extensions are installed with:'
     printf '%s\n' '  az extension add --name resource-graph'
+    printf '\n'
+    printf '%b\n' "${_CDC_BOLD}${_CDC_CYAN}GitHub SSH setup:${_CDC_RESET}"
+    printf '%s\n' '  mkdir -p ~/.ssh && chmod 700 ~/.ssh'
+    printf '%s\n' '  ssh-keygen -t ed25519 -o -a 100 -C "you@example.com" -f ~/.ssh/github_ed25519'
+    printf '%s\n' '  eval "$(ssh-agent -s)" && ssh-add ~/.ssh/github_ed25519'
+    printf '%s\n' '  clip.exe < ~/.ssh/github_ed25519.pub'
+    printf '%s\n' '  Paste the copied key at https://github.com/settings/keys'
+    printf '%s\n' '  ssh -T git@github.com             Test the connection'
+    printf '\n'
+    printf '%b\n' "${_CDC_BOLD}${_CDC_CYAN}Guides included with this image:${_CDC_RESET}"
+    printf '%s\n' '  cat /usr/share/doc/cdc-wsl/first-time-setup.md'
+    printf '%s\n' '  cat /usr/share/doc/cdc-wsl/wsl-tricks.md'
+    printf '%s\n' '  Git and SSH: https://fartbagxp.github.io/git-and-ssh/'
     printf '\n'
     printf '%s\n' 'Before committing, configure your Git identity:'
     printf '%s\n' '  git config --global user.name "Your Name"'
     printf '%s\n' '  git config --global user.email "you@example.com"'
     printf '\n'
+    unset _CDC_BOLD _CDC_CYAN _CDC_GREEN _CDC_RESET
 fi

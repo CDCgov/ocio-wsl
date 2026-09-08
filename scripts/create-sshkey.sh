@@ -17,8 +17,7 @@ set -eu
 key_type="ed25519"
 key_filename=""
 email=""
-key_options=""
-password_option="-N \"\""
+key_options=()
 current_datetime=$(date +'%Y-%m-%d-%H-%M-%S')
 
 while getopts "t:f:e:" opt; do
@@ -30,7 +29,7 @@ while getopts "t:f:e:" opt; do
       key_filename="$OPTARG"
       ;;
     e)
-      email="-C $OPTARG"
+      email="$OPTARG"
       ;;
     \?)
       echo "Usage: $0 [-t key_type] [-f key_filename] [-e email]"
@@ -42,9 +41,9 @@ done
 shift $((OPTIND-1))
 
 if [ "$key_type" == "rsa" ]; then
-  key_options="-t rsa -b 4096"
+  key_options=(-t rsa -b 4096)
 elif [ "$key_type" == "ed25519" ]; then
-  key_options="-t ed25519 -a 100"
+  key_options=(-t ed25519 -o -a 100)
 fi
 
 if [ -z "$key_filename" ]; then
@@ -61,12 +60,17 @@ fi
 ## Feel free to copy and paste these commands instead of running this script.
 ## 
 ## For ED25519 keys, this script will generate the following:
-## ssh-keygen -t ed25519 -a 100 -C "<email>" -N "" -f ~/.ssh/id_ed25519
+## ssh-keygen -t ed25519 -o -a 100 -C "<email>" -f ~/.ssh/id_ed25519
 ##
 ## For RSA keys, this script will generate the following:
-## ssh-keygen -t rsa -b 4096 -C "<email>" -N "" -f ~/.ssh/id_ed25519
+## ssh-keygen -t rsa -b 4096 -C "<email>" -f ~/.ssh/id_rsa
 ##############################################################################
-ssh-keygen "$key_options" "$email" "$password_option" -f ~/.ssh/"${key_filename}"
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+if [ -n "$email" ]; then
+  key_options+=(-C "$email")
+fi
+ssh-keygen "${key_options[@]}" -f ~/.ssh/"${key_filename}"
 
 echo "Generated Key Results: "
 echo "Private key path: ~/.ssh/$key_filename"

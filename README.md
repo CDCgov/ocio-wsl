@@ -42,7 +42,7 @@ Running `wsl --install` requires a Windows elevated privilege account. See [Prer
 
 ## Installed Tools
 
-Tools are managed by [mise](https://mise.jdx.dev). The image’s default tool list is in `/etc/mise/config.toml`; on first launch it is copied to `~/.config/mise/config.toml` and installed as the WSL user. The initial installation may take several minutes; if it is interrupted, run `mise install` to retry. To see what's installed:
+Tools are managed by [mise](https://mise.jdx.dev). mise itself is installed in the image, while each user gets an independent `~/.config/mise/config.toml` and tool directory. On first launch, the default tool list is copied into the user’s configuration; run `mise install` when you are ready to install the tools. The initial installation may take several minutes. To see what is installed:
 
 ```bash
 mise list
@@ -58,7 +58,7 @@ To install a tool or change a version, edit your personal `~/.config/mise/config
 
 Azure CLI uses the CDC-maintained `asdf:boris-ning-usds/asdf-azure-cli` fork. The fork avoids the upstream plugin's restrictive Python-version behavior and creates an independent virtual environment for Azure CLI. The fork should create that environment with `python3 -m venv --copies` so a later mise Python upgrade cannot remove its interpreter. Do not also declare the native `azure-cli` backend; two entries can create conflicting `az` launchers.
 
-The first-login setup bootstraps `pip` inside the Azure CLI environment when needed. Azure CLI extensions, including `resource-graph`, use that private interpreter and do not depend on the separately managed user Python.
+The custom Azure CLI plugin owns its private Python environment. Azure CLI extensions, including `resource-graph`, use that private interpreter and do not depend on the separately managed user Python.
 
 Find the full list of tools and their versions in the [config.toml file](https://github.com/CDCgov/ocio-wsl/blob/main/config/config.toml).
 
@@ -72,7 +72,7 @@ Find the full list of tools and their versions in the [config.toml file](https:/
 
 ## Extra Tools
 
-Some tools are excluded from the base image due to a [2 GB GitHub release limit](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas). All of them are already listed in `/etc/mise/config.toml`, so running `mise upgrade` should install everything. If you run into ordering or timeout issues (particularly with Rust behind Zscaler), use the helper script instead:
+Some tools are excluded from the base image due to a [2 GB GitHub release limit](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas). All of them are already listed in your `~/.config/mise/config.toml`, so running `mise upgrade` should install everything. If you run into ordering or timeout issues (particularly with Rust behind Zscaler), use the helper script instead:
 
 ```bash
 bash /opt/scripts/add-extra-tools.sh
