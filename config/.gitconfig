@@ -1,0 +1,53 @@
+[init]
+    defaultBranch = main
+
+[tag]
+    sort = version:refname
+
+[branch]
+    sort = -committerdate
+
+[diff]
+    algorithm = histogram
+    colorMoved = plain
+    mnemonicPrefix = true
+    renames = true
+
+[push]
+    default = simple
+    autoSetupRemote = true
+    followTags = true
+
+[fetch]
+    prune = true
+    pruneTags = true
+    all = true
+
+[help]
+    autocorrect = prompt
+
+[commit]
+    verbose = true
+
+[pull]
+    rebase = true
+
+[rebase]
+    autostash = true
+    autoStash = true
+    updateRefs = true
+
+[alias]
+    tidy = !git branch --merged "$(git config init.defaultBranch)" \
+        | grep -Fv "$(git config init.defaultBranch)" \
+        | grep -vF '*' \
+        | grep -vF '+' \
+        | xargs -r git branch -d \
+        && git fetch \
+        && git remote prune origin \
+        && git branch -v \
+        | grep -F '[gone]' \
+        | grep -vF '*' \
+        | grep -vF '+' \
+        | awk '{print $1}' \
+        | xargs -r git branch -D

@@ -33,6 +33,9 @@ else
   echo -e "User '$NEWUSER' created successfully!"
 fi
 
+/opt/scripts/configure-rootless-podman.sh "$NEWUSER"
+/opt/scripts/install-user-tools.sh "$NEWUSER"
+
 # Set the user as the default for WSL for ease of access
 if ! grep -q "default=${NEWUSER}" /etc/wsl.conf; then
   echo -e "\n\n[user]\ndefault=${NEWUSER}" | tee -a /etc/wsl.conf > /dev/null
@@ -62,6 +65,6 @@ fi
 
 # Add mise to the user's bashrc for the user's environment for easy access
 # shellcheck disable=SC2016
-if ! grep -qF 'eval "$(mise activate bash)"' "/home/$NEWUSER/.bashrc"; then
+if ! grep -qF 'mise activate bash' "/home/$NEWUSER/.bashrc"; then
   echo 'eval "$(mise activate bash)"' >> "/home/$NEWUSER/.bashrc"
 fi

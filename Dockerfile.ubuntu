@@ -17,13 +17,16 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   watch \
   curl \
   dnsperf \
+  fuse-overlayfs \
   git \
   gpg \
   iperf3 \
   jq \
+  libcap2-bin \
   nano \
   netcat-openbsd \
   podman \
+  slirp4netns \
   sudo \
   strace \
   rsync \
@@ -33,31 +36,12 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   whois \
   iputils-ping \
   tcpdump \
-
-  # For python installation
-  build-essential \
-  libbz2-dev \
-  libncurses5-dev \
-  libgdbm-dev \
-  libnss3-dev \
-  libreadline-dev \
-  libsqlite3-dev \
-  libssl-dev \
-  libffi-dev \
-  liblzma-dev \
-  zlib1g-dev \
-
-  # For R installation: https://github.com/asdf-community/asdf-r
-  libcurl3-dev \
-  gfortran \
-  liblzma5 \
-  libbz2-1.0 \
-  libbz2-dev \
-  xorg-dev \
-  libbz2-dev \
-  liblzma-dev \
-  libpcre2-dev && \
+  uidmap && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+
+# The Ubuntu container image includes a placeholder UID 1000 account. WSL's
+# OOBE reserves UID 1000 for the Windows user's matching Linux account.
+RUN if getent passwd ubuntu > /dev/null 2>&1; then userdel --remove ubuntu; fi
 
 ###############################################################################
 ## Install the enterprise certificates into the operating system truststore
@@ -77,29 +61,19 @@ RUN cp /usr/local/share/ca-certificates/enterprise-bundle.crt /usr/lib/ssl/cert.
 ## find the latest version, update the ~/.config/mise/config.toml file for the version
 ## they want, and run mise upgrade to install that version.
 ##
-## To install mise into the /opt directory so that all users can use
-## mise, we follow the instructions from this issue:
-## https://github.com/jdx/mise/blob/main/packaging/mise/Dockerfile
+## mise is installed system-wide, while each WSL user owns their tool
+## installations and global configuration.
 ###############################################################################
-# Set environment variables to install tools globally
-ENV MISE_DATA_DIR=/opt/mise
-ENV XDG_DATA_HOME=/opt/mise
-ENV MISE_CONFIG_DIR=/opt/mise/config
-ENV PATH="/opt/mise/bin:/opt/mise/shims:$PATH"
-
 # Install mise, the package manager for command line tools
 RUN install -dm 755 /etc/apt/keyrings && \
   wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null && \
   echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | tee /etc/apt/sources.list.d/mise.list && \
   apt update && \
   apt install -y mise && \
-  mkdir -p /opt/mise/bin && \
-  ln -s /usr/bin/mise /opt/mise/bin/mise && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy config file
-COPY config/config.toml "${MISE_CONFIG_DIR}/config.toml"
-COPY config/config.toml "/etc/mise/config.toml"
+RUN install -d -m 0755 /etc/skel/.config/mise
+COPY config/config.toml "/etc/skel/.config/mise/config.toml"
 
 
 # Ensure Python trusts the CDC root certificates, so that it can access internal 
@@ -109,6 +83,7 @@ COPY config/config.toml "/etc/mise/config.toml"
 # https://go.dev/src/crypto/x509/root_linux.go
 ENV REQUESTS_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
 ENV SSL_CERT_FILE='/etc/ssl/certs/ca-certificates.crt'
+ENV PIP_CERT='/etc/ssl/certs/ca-certificates.crt'
 
 # Ensure NodeJS trusts the CDC root certificates, so that it can access internal 
 # websites signed by CDC's certificate and cross firewalls using man-in-the-middle 
@@ -131,14 +106,18 @@ RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 ##
 ## There is a file limit to Github releases of 2GB:
 ##############################################################################
-RUN mise use python@3.13.13 --global
-
 ##############################################################################
 ## Create skeleton bashrc files for users to use when they login to the
 ## container. These files will be copied to the user's home directory.
 ##############################################################################
 COPY config/.bashrc /root/.bashrc
 COPY config/.bashrc /etc/skel/.bashrc
+
+COPY config/.gitconfig /root/.gitconfig
+COPY config/.gitconfig /etc/skel/.gitconfig
+
+COPY docs/ /usr/share/doc/cdc-wsl/
+RUN chmod -R a+rX /usr/share/doc/cdc-wsl
 
 COPY config/.bash_aliases /root/.bash_aliases
 COPY config/.bash_aliases /etc/skel/.bash_aliases
