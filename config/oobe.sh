@@ -6,7 +6,10 @@ set -ue
 DEFAULT_UID='1000'
 
 if getent passwd "$DEFAULT_UID" > /dev/null 2>&1; then
-    echo 'User account already exists, skipping creation'
+    EXISTING_USER=$(getent passwd "$DEFAULT_UID" | cut -d: -f1)
+    echo "User account '$EXISTING_USER' already exists, skipping creation"
+    /opt/scripts/configure-rootless-podman.sh "$EXISTING_USER"
+    /opt/scripts/install-user-tools.sh "$EXISTING_USER"
     exit 0
 fi
 
@@ -58,4 +61,5 @@ if [ -n "$WINDOWS_USER" ]; then
 else
     TARGET_USER="$username"
 fi
+/opt/scripts/configure-rootless-podman.sh "$TARGET_USER"
 /opt/scripts/install-user-tools.sh "$TARGET_USER"

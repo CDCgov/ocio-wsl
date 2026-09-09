@@ -6,8 +6,25 @@ When you first launch the distro, a startup script (`run-once.service`) runs aut
 
 - **User creation** - creates a non-root account matching your Windows username and grants it `sudo` access
 - **DNS configuration** - reads your Windows DNS resolver IPs and writes them to `/etc/resolv.conf`
+- **Rootless Podman** - assigns subordinate UID/GID ranges and repairs the user-namespace helpers after WSL image import
 
 You do not need to do anything manually for these steps.
+
+## Rootless Podman
+
+Run Podman as your normal user; `sudo` is not required:
+
+```bash
+podman info --format '{{.Host.Security.Rootless}}'
+podman run --rm quay.io/podman/hello
+```
+
+The first command should print `true`. If it does not, repair the current user and retry:
+
+```bash
+sudo /opt/scripts/configure-rootless-podman.sh "$USER"
+podman system migrate
+```
 
 ## GitHub SSH setup
 

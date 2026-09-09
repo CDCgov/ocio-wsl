@@ -20,12 +20,17 @@ RUN dnf upgrade -y && dnf install -y \
   curl \
   git \
   gnupg2 \
+  fuse-overlayfs \
   iperf3 \
   jq \
+  libcap \
   libatomic \
   nano \
   nmap-ncat \
+  passt \
   podman \
+  shadow-utils \
+  slirp4netns \
   sudo \
   strace \
   rsync \

@@ -17,13 +17,16 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   watch \
   curl \
   dnsperf \
+  fuse-overlayfs \
   git \
   gpg \
   iperf3 \
   jq \
+  libcap2-bin \
   nano \
   netcat-openbsd \
   podman \
+  slirp4netns \
   sudo \
   strace \
   rsync \
@@ -32,8 +35,13 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   wget \
   whois \
   iputils-ping \
-  tcpdump && \
+  tcpdump \
+  uidmap && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+
+# The Ubuntu container image includes a placeholder UID 1000 account. WSL's
+# OOBE reserves UID 1000 for the Windows user's matching Linux account.
+RUN if getent passwd ubuntu > /dev/null 2>&1; then userdel --remove ubuntu; fi
 
 ###############################################################################
 ## Install the enterprise certificates into the operating system truststore

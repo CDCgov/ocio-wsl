@@ -148,6 +148,10 @@ if [ -x /usr/bin/mise ] && [ ! -e "$HOME/.config/mise/.first-login-shown" ]; the
     printf '%s\n' 'Azure CLI extensions are installed with:'
     printf '%s\n' '  az extension add --name resource-graph'
     printf '\n'
+    printf '%b\n' "${_CDC_BOLD}${_CDC_CYAN}Rootless containers:${_CDC_RESET}"
+    printf '%s\n' '  podman run --rm quay.io/podman/hello'
+    printf '%s\n' '  Podman is configured for your user; sudo is not required.'
+    printf '\n'
     printf '%b\n' "${_CDC_BOLD}${_CDC_CYAN}GitHub SSH setup:${_CDC_RESET}"
     printf '%s\n' '  mkdir -p ~/.ssh && chmod 700 ~/.ssh'
     printf '%s\n' '  ssh-keygen -t ed25519 -o -a 100 -C "you@example.com" -f ~/.ssh/github_ed25519'

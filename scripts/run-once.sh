@@ -33,6 +33,7 @@ else
   echo -e "User '$NEWUSER' created successfully!"
 fi
 
+/opt/scripts/configure-rootless-podman.sh "$NEWUSER"
 /opt/scripts/install-user-tools.sh "$NEWUSER"
 
 # Set the user as the default for WSL for ease of access

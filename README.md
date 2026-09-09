@@ -60,6 +60,13 @@ Azure CLI uses the CDC-maintained `asdf:boris-ning-usds/asdf-azure-cli` fork. Th
 
 The custom Azure CLI plugin owns its private Python environment. Azure CLI extensions, including `resource-graph`, use that private interpreter and do not depend on the separately managed user Python.
 
+Podman is installed as a base operating-system tool and is ready for rootless use by the default WSL user. The first-boot setup assigns subordinate UID/GID ranges and restores the mapping-helper privileges that may be lost while exporting and importing a WSL image. Verify it without `sudo`:
+
+```bash
+podman info --format '{{.Host.Security.Rootless}}'
+podman run --rm quay.io/podman/hello
+```
+
 Find the full list of tools and their versions in the [config.toml file](https://github.com/CDCgov/ocio-wsl/blob/main/config/config.toml).
 
 | Category  | Tools                                                 |
