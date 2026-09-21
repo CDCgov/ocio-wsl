@@ -41,18 +41,17 @@ WSL_NAME="${IMAGE_NAME}.wsl"
 echo "Building image $IMAGE_NAME from $DOCKERFILE"
 podman build . -f "$DOCKERFILE" -t "$IMAGE_NAME"
 
-echo "Running image $IMAGE_NAME"
-podman run --privileged -t "$IMAGE_NAME" sh -c echo
-containerID=$(podman container ls -a | grep -i "$IMAGE_NAME" | tail -1 | awk '{print $1}') # last one is most current
+echo "Creating temporary export container from $IMAGE_NAME"
+container_id=$(podman create "$IMAGE_NAME")
 
-echo "Exporting image $containerID > $TAR_DIR/$WSL_NAME"
-podman export "$containerID" > "$TAR_DIR/$WSL_NAME"
+cleanup_export_container() {
+  podman rm "$container_id" > /dev/null 2>&1 || true
+}
+trap cleanup_export_container EXIT
 
-# Remove the image from podman container storage to avoid piling up of containers
-containerIDs=($(podman container ls -a | grep -i "$IMAGE_NAME" | awk '{print $1}' | tr '\n' ' '))
-echo "Removing containers with image: $IMAGE_NAME"
-for containerID in "${containerIDs[@]}"
-do
-  echo "Removing container ID: $containerID"
-  podman rm "$containerID"
-done
+echo "Exporting image $container_id > $TAR_DIR/$WSL_NAME"
+podman export "$container_id" > "$TAR_DIR/$WSL_NAME"
+
+echo "Removing temporary export container $container_id"
+podman rm "$container_id"
+trap - EXIT
