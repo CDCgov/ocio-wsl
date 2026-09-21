@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/cdcgov/ocio-wsl/compare/2.6.9...2.7.0) (2026-09-21)
+
+
+### Features
+
+* revising tooling to install mise as a user tooling ([a92c278](https://github.com/cdcgov/ocio-wsl/commit/a92c2789b8293594560b17948f7c016c29b36189))
+
 ## [2.6.9](https://github.com/cdcgov/ocio-wsl/compare/2.6.8...2.6.9) (2026-07-04)
 
 
