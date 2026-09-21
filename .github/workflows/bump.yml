@@ -1,0 +1,169 @@
+name: Bump version
+
+# The release flow for the WSL images. Run it from the Actions tab, pick a
+# semver level, and it will:
+#   1. bump package.json
+#   2. build both .wsl images and generate the checksums and manifest
+#   3. commit the bump to main and push the tag (bare semver, e.g. 2.8.0)
+#   4. create the GitHub release and attach the images
+
+on:
+  workflow_dispatch:
+    inputs:
+      level:
+        description: Semver level to bump
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
+
+permissions: {}
+
+# Never cancel a bump halfway through pushing the commit and tag.
+concurrency:
+  group: bump-version
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    name: Bump version
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write # push the bump commit and tag, and create the release
+    environment:
+      name: ocio-edso-gh-actions-app
+    steps:
+      ## App token must be created before checkout so the bump commit can be
+      ## pushed back to the protected main branch.
+      ## https://github.com/orgs/community/discussions/25305
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        with:
+          client-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: cdcgov
+          repositories: ocio-wsl
+
+      - name: Checkout main
+        # zizmor: ignore[artipacked] - this job pushes the bump commit and tag, so it needs the token
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: true
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 'lts/*'
+
+      # package.json carries no dependencies, so there is nothing to install.
+      # It exists purely to hold the version that the release is tagged with.
+      - name: Bump package.json
+        id: version
+        env:
+          LEVEL: ${{ inputs.level }}
+        run: |
+          pnpm version "$LEVEL" --no-git-tag-version --no-git-checks
+          version="$(node -p "require('./package.json').version")"  # e.g. 2.8.0
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Podman
+        run: |
+          if ! command -v podman &> /dev/null; then
+            sudo apt update
+            sudo apt install -y podman
+          fi
+          podman --version
+        shell: bash
+
+      - name: Generate WSL images
+        run: |
+          bash build.sh ubuntu
+          bash build.sh fedora
+
+      - name: Generate checksums
+        run: |
+          sha256sum ubuntu-24.04-cdc.wsl fedora-43-cdc.wsl > checksums.txt
+        working-directory: ./images
+
+      - name: Generate manifest
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          BASE_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION"
+
+          UBUNTU_SHA=$(sha256sum images/ubuntu-24.04-cdc.wsl | cut -d' ' -f1)
+          FEDORA_SHA=$(sha256sum images/fedora-43-cdc.wsl | cut -d' ' -f1)
+          UBUNTU_SHA_FMT="0x$(echo "$UBUNTU_SHA" | tr '[:lower:]' '[:upper:]')"
+          FEDORA_SHA_FMT="0x$(echo "$FEDORA_SHA" | tr '[:lower:]' '[:upper:]')"
+
+          cat > images/manifest.json << EOF
+          {
+            "ModernDistributions": {
+              "cdc-ubuntu": [
+                {
+                  "Name": "cdc-ubuntu",
+                  "FriendlyName": "CDC Ubuntu 24.04",
+                  "Default": true,
+                  "Amd64Url": {
+                    "Url": "$BASE_URL/ubuntu-24.04-cdc.wsl",
+                    "Sha256": "$UBUNTU_SHA_FMT"
+                  }
+                }
+              ],
+              "cdc-fedora": [
+                {
+                  "Name": "cdc-fedora",
+                  "FriendlyName": "CDC Fedora 43",
+                  "Default": true,
+                  "Amd64Url": {
+                    "Url": "$BASE_URL/fedora-43-cdc.wsl",
+                    "Sha256": "$FEDORA_SHA_FMT"
+                  }
+                }
+              ]
+            }
+          }
+          EOF
+
+      - name: Commit, tag, and push
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add package.json
+          git commit -m "chore(release): $VERSION"
+          git tag -a "$VERSION" -m "$VERSION"
+
+          git push origin HEAD:main
+          git push origin "refs/tags/$VERSION"
+
+      # Published releases are immutable, so their assets have to be uploaded
+      # while the release is still a draft or the upload fails with HTTP 422.
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          gh release create "$VERSION" \
+            --title "$VERSION" \
+            --generate-notes \
+            --draft \
+            'images/ubuntu-24.04-cdc.wsl#Ubuntu 24.04 CDC WSL Image' \
+            'images/fedora-43-cdc.wsl#Fedora 43 CDC WSL Image' \
+            'images/checksums.txt#Checksums for integrity validation' \
+            'images/manifest.json#WSL Distribution Manifest'
+
+          gh release edit "$VERSION" --draft=false --latest
