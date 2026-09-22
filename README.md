@@ -2,12 +2,11 @@
 
 <div align="center">
 
-[![semantic-release: conventional-commit](https://img.shields.io/badge/semantic--release-conventionalcommit-e10079?logo=semantic-release&style=for-the-badge)](https://github.com/semantic-release/semantic-release)
 [![latest tag](https://img.shields.io/github/v/tag/cdcgov/ocio-wsl?style=for-the-badge)](https://github.com/cdcgov/ocio-wsl/releases)
 [![last release](https://img.shields.io/github/release-date/cdcgov/ocio-wsl?style=for-the-badge)](https://github.com/cdcgov/ocio-wsl/releases)
 ![total downloads](https://img.shields.io/github/downloads/cdcgov/ocio-wsl/total?style=for-the-badge)
 ![commit history](https://img.shields.io/github/commit-activity/y/cdcgov/ocio-wsl?label=commits&style=for-the-badge)
-![deploy status](https://img.shields.io/github/actions/workflow/status/cdcgov/ocio-wsl/deploy.yml?style=for-the-badge)
+![build status](https://img.shields.io/github/actions/workflow/status/cdcgov/ocio-wsl/bump.yml?style=for-the-badge)
 
 </div>
 
