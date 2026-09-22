@@ -6,10 +6,10 @@ DISTRO="${1:-ubuntu}"
 
 case "$DISTRO" in
   ubuntu)
-    IMAGE_NAME="ubuntu-24.04-cdc"
+    IMAGE_NAME="ubuntu-26.04-cdc"
     ;;
   fedora)
-    IMAGE_NAME="fedora-43-cdc"
+    IMAGE_NAME="fedora-44-cdc"
     ;;
   *)
     echo "Usage: $0 [ubuntu|fedora]"

@@ -1,7 +1,7 @@
-FROM docker.io/fedora:43
+FROM docker.io/fedora:44
 
-LABEL updated_at=2026-05-07
-LABEL fedora_version=43
+LABEL updated_at=2026-09-21
+LABEL fedora_version=44
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8

@@ -23,11 +23,11 @@ mkdir -p "$TAR_DIR"
 
 case "$DISTRO" in
   ubuntu)
-    IMAGE_NAME="ubuntu-24.04-cdc"
+    IMAGE_NAME="ubuntu-26.04-cdc"
     DOCKERFILE="Dockerfile.ubuntu"
     ;;
   fedora)
-    IMAGE_NAME="fedora-43-cdc"
+    IMAGE_NAME="fedora-44-cdc"
     DOCKERFILE="Dockerfile.fedora"
     ;;
   *)
