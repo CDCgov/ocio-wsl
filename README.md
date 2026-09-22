@@ -26,13 +26,13 @@ Running `wsl --install` requires a Windows elevated privilege account. See [Prer
 
    | File                   | Distro       |
    | ---------------------- | ------------ |
-   | `ubuntu-24.04-cdc.wsl` | Ubuntu 24.04 |
-   | `fedora-43-cdc.wsl`    | Fedora 43    |
+   | `ubuntu-26.04-cdc.wsl` | Ubuntu 26.04 |
+   | `fedora-44-cdc.wsl`    | Fedora 44    |
 
 3. Install it:
 
    ```powershell
-   wsl --install --from-file C:\Users\<username>\Downloads\ubuntu-24.04-cdc.wsl
+   wsl --install --from-file C:\Users\<username>\Downloads\ubuntu-26.04-cdc.wsl
    ```
 
    Or double-click the `.wsl` file in File Explorer.
@@ -138,21 +138,21 @@ az --version
 Build a specific distro image locally:
 
 ```bash
-bash build.sh ubuntu   # builds ubuntu-24.04-cdc
-bash build.sh fedora   # builds fedora-43-cdc
+bash build.sh ubuntu   # builds ubuntu-26.04-cdc
+bash build.sh fedora   # builds fedora-44-cdc
 ```
 
 Run a quick test against the built image:
 
 ```bash
-podman run -t ubuntu-24.04-cdc bash -c "bash /opt/scripts/check-google.sh"
+podman run -t ubuntu-26.04-cdc bash -c "bash /opt/scripts/check-google.sh"
 ```
 
 To debug an image interactively, build it and exec in:
 
 ```bash
 bash build.sh fedora && bash test.sh
-podman exec -it fedora-43-cdc-test bash
+podman exec -it fedora-44-cdc-test bash
 ```
 
 Note that startup sequences like DNS setup ([config/run-once.service](config/run-once.service)) only run under WSL, so testing those requires a real Windows install.

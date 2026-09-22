@@ -2,12 +2,12 @@
 
 set -eu
 
-ALL_IMAGE_NAMES=("ubuntu-24.04-cdc" "fedora-43-cdc")
+ALL_IMAGE_NAMES=("ubuntu-26.04-cdc" "fedora-44-cdc")
 
 DISTRO="${1:-all}"
 case "$DISTRO" in
-  ubuntu) IMAGE_NAMES=("ubuntu-24.04-cdc") ;;
-  fedora) IMAGE_NAMES=("fedora-43-cdc") ;;
+  ubuntu) IMAGE_NAMES=("ubuntu-26.04-cdc") ;;
+  fedora) IMAGE_NAMES=("fedora-44-cdc") ;;
   all)    IMAGE_NAMES=("${ALL_IMAGE_NAMES[@]}") ;;
   *)
     echo "Usage: $0 [ubuntu|fedora|all]"

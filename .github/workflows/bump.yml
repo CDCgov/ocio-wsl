@@ -93,7 +93,7 @@ jobs:
 
       - name: Generate checksums
         run: |
-          sha256sum ubuntu-24.04-cdc.wsl fedora-43-cdc.wsl > checksums.txt
+          sha256sum ubuntu-26.04-cdc.wsl fedora-44-cdc.wsl > checksums.txt
         working-directory: ./images
 
       - name: Generate manifest
@@ -102,8 +102,8 @@ jobs:
         run: |
           BASE_URL="https://github.com/${{ github.repository }}/releases/download/$VERSION"
 
-          UBUNTU_SHA=$(sha256sum images/ubuntu-24.04-cdc.wsl | cut -d' ' -f1)
-          FEDORA_SHA=$(sha256sum images/fedora-43-cdc.wsl | cut -d' ' -f1)
+          UBUNTU_SHA=$(sha256sum images/ubuntu-26.04-cdc.wsl | cut -d' ' -f1)
+          FEDORA_SHA=$(sha256sum images/fedora-44-cdc.wsl | cut -d' ' -f1)
           UBUNTU_SHA_FMT="0x$(echo "$UBUNTU_SHA" | tr '[:lower:]' '[:upper:]')"
           FEDORA_SHA_FMT="0x$(echo "$FEDORA_SHA" | tr '[:lower:]' '[:upper:]')"
 
@@ -113,10 +113,10 @@ jobs:
               "cdc-ubuntu": [
                 {
                   "Name": "cdc-ubuntu",
-                  "FriendlyName": "CDC Ubuntu 24.04",
+                  "FriendlyName": "CDC Ubuntu 26.04",
                   "Default": true,
                   "Amd64Url": {
-                    "Url": "$BASE_URL/ubuntu-24.04-cdc.wsl",
+                    "Url": "$BASE_URL/ubuntu-26.04-cdc.wsl",
                     "Sha256": "$UBUNTU_SHA_FMT"
                   }
                 }
@@ -124,10 +124,10 @@ jobs:
               "cdc-fedora": [
                 {
                   "Name": "cdc-fedora",
-                  "FriendlyName": "CDC Fedora 43",
+                  "FriendlyName": "CDC Fedora 44",
                   "Default": true,
                   "Amd64Url": {
-                    "Url": "$BASE_URL/fedora-43-cdc.wsl",
+                    "Url": "$BASE_URL/fedora-44-cdc.wsl",
                     "Sha256": "$FEDORA_SHA_FMT"
                   }
                 }
@@ -161,8 +161,8 @@ jobs:
             --title "$VERSION" \
             --generate-notes \
             --draft \
-            'images/ubuntu-24.04-cdc.wsl#Ubuntu 24.04 CDC WSL Image' \
-            'images/fedora-43-cdc.wsl#Fedora 43 CDC WSL Image' \
+            'images/ubuntu-26.04-cdc.wsl#Ubuntu 26.04 CDC WSL Image' \
+            'images/fedora-44-cdc.wsl#Fedora 44 CDC WSL Image' \
             'images/checksums.txt#Checksums for integrity validation' \
             'images/manifest.json#WSL Distribution Manifest'
 
