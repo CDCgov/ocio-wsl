@@ -2,10 +2,10 @@
 
 This serves just a simple knowledge base on how we automated the initial setup sequence, it's not meant to be followed unless something wrong happened with the image.
 
-When you first launch the distro, a startup script (`run-once.service`) runs automatically and handles:
+When you first launch the distro, these steps run automatically:
 
-- **User creation** - creates a non-root account matching your Windows username and grants it `sudo` access
-- **DNS configuration** - reads your Windows DNS resolver IPs and writes them to `/etc/resolv.conf`
+- **DNS configuration** - a startup service (`run-once.service`) reads your Windows DNS resolver IPs and writes them to `/etc/resolv.conf`. This runs first, so DNS is configured even if user setup has a problem.
+- **User creation** - creates a non-root account (UID 1000) named after your Windows username, lowercased with unsupported characters removed (for example `First.Last` becomes `firstlast`), and grants it `sudo` access. When you install with `wsl --install`, the out-of-box setup (`/etc/oobe.sh`) handles this and prompts for a name if it cannot read your Windows username. When you use `wsl --import`, the startup service creates the account instead. Both use `/opt/scripts/create-default-user.sh`, so you only ever get one account.
 - **Rootless Podman** - assigns subordinate UID/GID ranges and repairs the user-namespace helpers after WSL image import
 
 You do not need to do anything manually for these steps.
@@ -70,7 +70,7 @@ To revert to root as default, change the `default` entry in `/etc/wsl.conf` to `
 
 ## If DNS is not resolving
 
-The run-once script writes nameservers from your Windows DNS configuration. If it did not run or the file is empty:
+The run-once script writes nameservers from your Windows DNS configuration. Check what happened with `sudo systemctl status run-once.service`. If it did not run or the file is empty:
 
 1. Empty `/etc/resolv.conf`: `sudo truncate -s 0 /etc/resolv.conf`
 2. Terminate the distro: `wsl --terminate <distroName>`
