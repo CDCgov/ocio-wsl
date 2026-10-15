@@ -27,20 +27,23 @@ fi
 echo "[tools]" > "$OUTPUT_FILE"
 
 # Process top-level tools
-yq -r '.tools | to_entries | .[] | select(.value | type != "object") | "\(.key) \(.value)"' "$TOOL_VERSIONS_PATH" | while read -r package version; do
+yq -r '.tools | to_entries | .[] | select(.value | tag != "!!map") | "\(.key) \(.value)"' "$TOOL_VERSIONS_PATH" | while read -r package version; do
   latest_version=$(mise latest "$package" 2>/dev/null || echo "$version")
-  echo "  $package = \"$latest_version\"" >> "$OUTPUT_FILE"
+  echo "\"$package\" = \"$latest_version\"" >> "$OUTPUT_FILE"
 done
 
 # Process nested tool categories like [tools.java]
-yq -r '.tools | to_entries | .[] | select(.value | type == "object") | .key' "$TOOL_VERSIONS_PATH" | while read -r category; do
+yq -r '.tools | to_entries | .[] | select(.value | tag == "!!map") | .key' "$TOOL_VERSIONS_PATH" | while read -r category; do
   echo "" >> "$OUTPUT_FILE"
   echo "[tools.$category]" >> "$OUTPUT_FILE"
 
   yq -r ".tools[\"$category\"] | to_entries | .[] | \"\(.key) \(.value)\"" "$TOOL_VERSIONS_PATH" | while read -r subpackage subversion; do
     latest_version=$(mise latest "$subpackage" 2>/dev/null || echo "$subversion")
-    echo "  $subpackage = \"$latest_version\"" >> "$OUTPUT_FILE"
+    echo "\"$subpackage\" = \"$latest_version\"" >> "$OUTPUT_FILE"
   done
 done
+
+# Carry over every non-tools table (e.g. [settings]) unchanged
+awk '/^\[/ { keep = ($0 !~ /^\[tools[].]/); if (keep) print "" } keep' "$TOOL_VERSIONS_PATH" >> "$OUTPUT_FILE"
 
 echo "Updated config.toml file created as $OUTPUT_FILE"

@@ -71,6 +71,11 @@ ENV CURL_CA_BUNDLE='/etc/pki/tls/certs/ca-bundle.crt'
 
 RUN git config --global http.sslcainfo '/etc/pki/tls/certs/ca-bundle.crt'
 
+# The ENV values above only apply to builds and `podman run`; `podman export`
+# drops them, so WSL login shells load the same settings from profile.d.
+COPY config/cdc-env.sh /etc/profile.d/cdc-env.sh
+RUN chmod 0644 /etc/profile.d/cdc-env.sh
+
 ##############################################################################
 ## Create skeleton bashrc files for users
 ##############################################################################
