@@ -100,6 +100,11 @@ ENV CURL_CA_BUNDLE='/etc/ssl/certs/ca-certificates.crt'
 # certificate
 RUN git config --global http.sslcainfo '/etc/ssl/certs/ca-certificates.crt'
 
+# The ENV values above only apply to builds and `podman run`; `podman export`
+# drops them, so WSL login shells load the same settings from profile.d.
+COPY config/cdc-env.sh /etc/profile.d/cdc-env.sh
+RUN chmod 0644 /etc/profile.d/cdc-env.sh
+
 ##############################################################################
 ## All other tools are in the folder: python requires special care to install.
 ## Install all other tools by running: mise upgrade

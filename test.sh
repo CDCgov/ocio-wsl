@@ -44,6 +44,8 @@ run_test() {
 run_test "os-release"          "uname -a && cat /etc/os-release"
 run_test "mise executable"     "mise --version"
 run_test "mise user template"  "test -f /etc/skel/.config/mise/config.toml"
+run_test "mise template parses" "! MISE_GLOBAL_CONFIG_FILE=/etc/skel/.config/mise/config.toml mise ls 2>&1 | grep -q 'Error loading'"
+run_test "cert env in login shell" "env -i HOME=/root bash -lc 'test -s \"\$SSL_CERT_FILE\" && test -s \"\$REQUESTS_CA_BUNDLE\" && [[ \"\$NODE_OPTIONS\" == *--use-openssl-ca* ]]'"
 run_test "no system config"    "test ! -e /etc/mise/config.toml"
 run_test "uid 1000 available"  "test -z \"\$(getent passwd 1000)\""
 run_test "rootless podman prerequisites" "for command_name in podman newuidmap newgidmap fuse-overlayfs setcap; do command -v \"\$command_name\" >/dev/null; done"

@@ -1,65 +1,27 @@
 #!/bin/bash
 # WSL out-of-box experience: runs once on first interactive shell launch.
 # Creates a non-root user matching the Windows login (with sudo access).
+# The shared helper also runs from run-once.service, so whichever runs
+# first creates the account and the other only finishes its setup.
 set -ue
 
-DEFAULT_UID='1000'
-
-if getent passwd "$DEFAULT_UID" > /dev/null 2>&1; then
-    EXISTING_USER=$(getent passwd "$DEFAULT_UID" | cut -d: -f1)
-    echo "User account '$EXISTING_USER' already exists, skipping creation"
-    /opt/scripts/configure-rootless-podman.sh "$EXISTING_USER"
-    /opt/scripts/install-user-tools.sh "$EXISTING_USER"
+status=0
+/opt/scripts/create-default-user.sh || status=$?
+if [ "$status" -eq 0 ]; then
     exit 0
 fi
 
-# Try to auto-detect Windows username; fall back to interactive prompt
-RAWUSER=$(/mnt/c/windows/system32/cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr -d '\r') || RAWUSER=""
-WINDOWS_USER=$(echo "$RAWUSER" | awk -F'/' '{print $NF}' | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9_-]//g')
-
-# Determine the appropriate sudo group (wheel on Fedora, sudo on Debian/Ubuntu)
-SUDO_GROUP='sudo'
-if getent group wheel > /dev/null 2>&1 && ! getent group sudo > /dev/null 2>&1; then
-    SUDO_GROUP='wheel'
-fi
-
-# Build list of groups that actually exist on this distro
-GROUPS_TO_ADD="$SUDO_GROUP"
-for group in adm cdrom dip plugdev; do
-    if getent group "$group" > /dev/null 2>&1; then
-        GROUPS_TO_ADD="$GROUPS_TO_ADD,$group"
+# No usable Windows username, or it was rejected: ask for one instead
+echo 'Please create a default UNIX user account.'
+echo 'For more information visit: https://aka.ms/wslusers'
+while true; do
+    read -rp 'Enter new UNIX username: ' username
+    if /opt/scripts/create-default-user.sh "$username"; then
+        break
+    fi
+    # The account exists but a later setup step failed; a new name won't help
+    if getent passwd 1000 > /dev/null 2>&1; then
+        echo 'User setup did not finish; see the errors above.' >&2
+        exit 1
     fi
 done
-
-create_user() {
-    local username="$1"
-    /usr/sbin/useradd --uid "$DEFAULT_UID" --create-home --shell /bin/bash "$username"
-    /usr/sbin/usermod "$username" -aG "$GROUPS_TO_ADD"
-    passwd -d "$username"
-    # shellcheck disable=SC2016
-  if ! grep -qF 'mise activate bash' "/home/$username/.bashrc"; then
-    echo 'eval "$(mise activate bash)"' >> "/home/$username/.bashrc"
-  fi
-}
-
-if [ -n "$WINDOWS_USER" ]; then
-    echo "Creating user '$WINDOWS_USER' (from Windows login)..."
-    create_user "$WINDOWS_USER"
-else
-    echo 'Please create a default UNIX user account.'
-    echo 'For more information visit: https://aka.ms/wslusers'
-    while true; do
-        read -rp 'Enter new UNIX username: ' username
-        if create_user "$username"; then
-            break
-        fi
-    done
-fi
-
-if [ -n "$WINDOWS_USER" ]; then
-    TARGET_USER="$WINDOWS_USER"
-else
-    TARGET_USER="$username"
-fi
-/opt/scripts/configure-rootless-podman.sh "$TARGET_USER"
-/opt/scripts/install-user-tools.sh "$TARGET_USER"

@@ -2,69 +2,63 @@
 # This script is for any action to be run once on startup and is called by a custom systemd unit: run-once.service
 #
 # Currently, it does the following if not already configured:
-# - Creates and sets the default login user to a non-root user matching the windows login username and with sudo access
 # - Configures DNS resolution matching the Windows configuration using /etc/resolv.conf
+# - Creates and sets the default login user to a non-root user matching the windows login username and with sudo access
+#
+# DNS runs first and the steps are independent, so a failure in one does not
+# skip the other. The service is marked failed if either step fails.
 #
 # To get the status or check for errors: sudo systemctl status run-once.service
 # To disable the service: sudo systemctl disable run-once.service
 # To reenable the service: sudo systemctl enable run-once.service
 
-set -eu
+set -u
 
-# use the Windows username and extract only the part after the domain (if present)
-# which is normally the way we login into Windows
-RAWUSER=$(/mnt/c/windows/system32/cmd.exe /c "echo %USERNAME%" | tr -d '\r')
-NEWUSER=$(echo "$RAWUSER" | awk -F'/' '{print $NF}')
-
-# check and verify if the user already exists, create if not
-if getent passwd "$NEWUSER" > /dev/null; then
-  echo -e "The user '$NEWUSER' already exists - skipping creation."
-else
-  echo -e "The user '$NEWUSER' does not exist. Creating user with sudo permissions..."
-  # Use 'wheel' on Fedora, 'sudo' on Debian/Ubuntu
-  SUDO_GROUP='sudo'
-  if getent group wheel > /dev/null 2>&1 && ! getent group sudo > /dev/null 2>&1; then
-    SUDO_GROUP='wheel'
-  fi
-  useradd -ms /bin/bash "$NEWUSER"
-  usermod -aG "$SUDO_GROUP" "$NEWUSER"
-  passwd -d "$NEWUSER" # Default empty password for the user
-
-  echo -e "User '$NEWUSER' created successfully!"
-fi
-
-/opt/scripts/configure-rootless-podman.sh "$NEWUSER"
-/opt/scripts/install-user-tools.sh "$NEWUSER"
-
-# Set the user as the default for WSL for ease of access
-if ! grep -q "default=${NEWUSER}" /etc/wsl.conf; then
-  echo -e "\n\n[user]\ndefault=${NEWUSER}" | tee -a /etc/wsl.conf > /dev/null
-  echo "Default user set to '${NEWUSER}' in WSL configuration."
-else
-  echo "Default user '${NEWUSER}' is already set in WSL configuration."
-fi
+DNSFILE=/etc/resolv.conf
+POWERSHELL=/mnt/c/windows/system32/windowspowershell/v1.0/powershell.exe
 
 # Configure DNS based on Windows configuration if not already configured
-DNSFILE=/etc/resolv.conf
-if [ -s "$DNSFILE" ]; then
-  echo "Using existing DNS configuration in $DNSFILE"
-else
+configure_dns() {
+  local dnslist attempt
+
+  if [ -s "$DNSFILE" ]; then
+    echo "Using existing DNS configuration in $DNSFILE"
+    return 0
+  fi
+
   echo "Configuring DNS $DNSFILE with resolver IPs from Windows"
-  DNSLIST=$(/mnt/c/windows/system32/windowspowershell/v1.0/powershell.exe -command \
-    "Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandProperty ServerAddresses" \
-    | tr -d '\r' \
-    | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
-  echo "Detected nameservers: $DNSLIST"
+  # Windows interop can lag behind early boot, so retry briefly
+  for attempt in 1 2 3 4 5; do
+    dnslist=$("$POWERSHELL" -NoProfile -Command \
+      "Get-DnsClientServerAddress -AddressFamily IPv4 | Select-Object -ExpandProperty ServerAddresses" \
+      2>/dev/null | tr -d '\r' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | awk '!seen[$0]++') || true
+    [ -n "$dnslist" ] && break
+    echo "No IPv4 resolvers found from Windows (attempt $attempt/5)"
+    sleep 2
+  done
+
+  if [ -z "$dnslist" ]; then
+    echo "Could not read DNS resolvers from Windows; leaving $DNSFILE unchanged" >&2
+    return 1
+  fi
+
+  echo "Detected nameservers: $dnslist"
   while read -r ip; do
-    echo "nameserver $ip" >> $DNSFILE
-  done <<< "$DNSLIST"
-  chmod 644 $DNSFILE
+    echo "nameserver $ip"
+  done <<< "$dnslist" > "$DNSFILE"
+  chmod 644 "$DNSFILE"
   echo "DNS configuration written to $DNSFILE:"
-  cat $DNSFILE
+  cat "$DNSFILE"
+}
+
+status=0
+configure_dns || status=1
+
+# Exit code 3 means no Windows username was available; OOBE will prompt for one
+user_status=0
+/opt/scripts/create-default-user.sh || user_status=$?
+if [ "$user_status" -ne 0 ] && [ "$user_status" -ne 3 ]; then
+  status=1
 fi
 
-# Add mise to the user's bashrc for the user's environment for easy access
-# shellcheck disable=SC2016
-if ! grep -qF 'mise activate bash' "/home/$NEWUSER/.bashrc"; then
-  echo 'eval "$(mise activate bash)"' >> "/home/$NEWUSER/.bashrc"
-fi
+exit "$status"
