@@ -23,7 +23,7 @@ ruff = "0.16.8"
 rust = "1.98.1"
 shellcheck = "0.11.0"
 terraform = "1.16.3"
-uv = "0.12.17"
+uv = "0.13.1"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node", "python"]
