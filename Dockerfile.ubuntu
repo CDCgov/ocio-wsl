@@ -23,6 +23,7 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   iperf3 \
   jq \
   libcap2-bin \
+  locales \
   nano \
   netcat-openbsd \
   podman \
@@ -39,9 +40,21 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   uidmap && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
 
+# Support shells and applications that request the US English UTF-8 locale.
+RUN sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+  locale-gen && \
+  LC_ALL=en_US.UTF-8 locale charmap | grep -qx UTF-8
+
 # The Ubuntu container image includes a placeholder UID 1000 account. WSL's
 # OOBE reserves UID 1000 for the Windows user's matching Linux account.
 RUN if getent passwd ubuntu > /dev/null 2>&1; then userdel --remove ubuntu; fi
+
+# WSL creates the default user in the sudo group without a password prompt.
+# Allow that account to administer the distro immediately after installation.
+RUN install -d -m 0755 /etc/sudoers.d && \
+  printf '%s\n' '%sudo ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/99-cdc-wsl && \
+  chmod 0440 /etc/sudoers.d/99-cdc-wsl && \
+  visudo -cf /etc/sudoers
 
 ###############################################################################
 ## Install the enterprise certificates into the operating system truststore
