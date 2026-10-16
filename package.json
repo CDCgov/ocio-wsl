@@ -1,6 +1,6 @@
 {
   "name": "cdc-wsl-build",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "Version marker for the WSL image releases; bumped by .github/workflows/bump.yml",
   "license": "MIT"
 }
