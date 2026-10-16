@@ -87,7 +87,7 @@ mise upgrade
 
 To install a tool or change a version, edit your personal `~/.config/mise/config.toml`, then run `mise install` or `mise upgrade`.
 
-Azure CLI uses the CDC-maintained `asdf:boris-ning-usds/asdf-azure-cli` fork. The fork avoids the upstream plugin's restrictive Python-version behavior and creates an independent virtual environment for Azure CLI. The fork should create that environment with `python3 -m venv --copies` so a later mise Python upgrade cannot remove its interpreter. Do not also declare the native `azure-cli` backend; two entries can create conflicting `az` launchers.
+Azure CLI uses the CDC-maintained `asdf:boris-ning-usds/asdf-azure-cli` fork. Its tool entry declares `depends = ["python"]` so the first `mise install` finishes installing Python before starting Azure CLI. The fork avoids the upstream plugin's restrictive Python-version behavior and creates an independent virtual environment for Azure CLI. The fork should create that environment with `python3 -m venv --copies` so a later mise Python upgrade cannot remove its interpreter. Do not also declare the native `azure-cli` backend; two entries can create conflicting `az` launchers.
 
 The custom Azure CLI plugin owns its private Python environment. Azure CLI extensions, including `resource-graph`, use that private interpreter and do not depend on the separately managed user Python.
 
@@ -116,7 +116,7 @@ Some tools are excluded from the base image due to a [2 GB GitHub release limit]
 bash /opt/scripts/add-extra-tools.sh
 ```
 
-The script installs foundational tools (Node.js, Java, Go, Rust) in the correct order before running `mise upgrade` for the rest.
+The script installs foundational tools (Python, Node.js, Java, Go, Rust) before running `mise upgrade` for the rest.
 
 ## Optional R Installation
 

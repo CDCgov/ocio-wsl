@@ -134,9 +134,8 @@ if command -v mise >/dev/null 2>&1; then
     eval "$(mise activate bash)"
 fi
 
-if [ -x /usr/bin/mise ] && [ ! -e "$HOME/.config/mise/.first-login-shown" ]; then
+if [ -t 1 ] && command -v mise >/dev/null 2>&1 && [ ! -e "$HOME/.config/mise/.first-login-shown" ]; then
     mkdir -p "$HOME/.config/mise"
-    touch "$HOME/.config/mise/.first-login-shown"
     printf '\n'
     printf '%s\n' 'Welcome to the CDC WSL development environment.'
     printf '%s\n' 'mise is installed system-wide; your tools and configuration belong to your user account.'
@@ -188,4 +187,5 @@ if [ -x /usr/bin/mise ] && [ ! -e "$HOME/.config/mise/.first-login-shown" ]; the
     printf '%s\n' '  git config --global user.email "you@example.com"'
     printf '\n'
     unset _CDC_BOLD _CDC_CYAN _CDC_GREEN _CDC_RESET
+    touch "$HOME/.config/mise/.first-login-shown"
 fi

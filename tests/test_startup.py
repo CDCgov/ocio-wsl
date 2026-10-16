@@ -7,6 +7,7 @@ import configparser
 import fcntl
 import os
 from pathlib import Path
+import pty
 import shlex
 import subprocess
 import tempfile
@@ -180,6 +181,46 @@ fi''')
         self.assertEqual(service["Unit"]["StartLimitIntervalSec"], "infinity")
         self.assertGreater(service.getint("Service", "TimeoutStartSec"), 0)
         self.assertGreater(service.getint("Service", "TimeoutStopSec"), 0)
+
+    def test_welcome_waits_for_terminal_and_uses_mise_on_path(self):
+        self.executable("mise", "exit 0")
+        rc = REPO / "config/.bashrc"
+        env = self.env | {"HOME": str(self.home), "TERM": "dumb",
+                          "HISTFILE": "/dev/null"}
+        command = ["bash", "--noprofile", "--rcfile", str(rc), "-ic", "exit"]
+        marker = self.home / ".config/mise/.first-login-shown"
+        captured = subprocess.run(command, env=env, capture_output=True,
+                                  text=True, timeout=10)
+        self.assertEqual(captured.returncode, 0, captured.stderr)
+        self.assertNotIn("Welcome to the CDC", captured.stdout)
+        self.assertFalse(marker.exists())
+
+        for first in (True, False):
+            with self.subTest(first=first):
+                master, slave = pty.openpty()
+                try:
+                    result = subprocess.run(command, env=env, stdout=slave,
+                                            stderr=subprocess.PIPE, timeout=10)
+                    os.close(slave)
+                    slave = None
+                    output = bytearray()
+                    while True:
+                        try:
+                            chunk = os.read(master, 65536)
+                        except OSError as error:
+                            if error.errno != 5:  # Linux PTY end of output
+                                raise
+                            break
+                        if not chunk:
+                            break
+                        output.extend(chunk)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual(b"Welcome to the CDC" in output, first)
+                    self.assertTrue(marker.exists())
+                finally:
+                    if slave is not None:
+                        os.close(slave)
+                    os.close(master)
 
     def prepare_new_account(self, useradd_status=0, password_status=0):
         self.account.unlink(missing_ok=True)
