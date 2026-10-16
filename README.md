@@ -195,8 +195,8 @@ uv run --locked pytest -q
 ```
 
 The test environment uses Python from `.python-version` and the dependency
-versions in `uv.lock`. Use uv 0.13.1; `--locked` fails if the project and lockfile
-are out of sync. To update dependencies deliberately, run `uv lock --upgrade`
+versions in `uv.lock`. Use uv 0.13.1 or newer; CI installs the latest uv release.
+`--locked` fails if the project and lockfile are out of sync. To update dependencies deliberately, run `uv lock --upgrade`
 and commit the updated lockfile.
 
 The checks exercise failure and recovery paths using temporary account and path
