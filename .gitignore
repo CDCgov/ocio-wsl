@@ -225,3 +225,9 @@ images/checksums.txt
 images/manifest.json
 .tool-versions.latest
 config.toml.latest
+# Python regression test bytecode
+__pycache__/
+
+# Local Python test environment
+.venv/
+.pytest_cache/

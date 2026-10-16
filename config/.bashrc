@@ -3,8 +3,25 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+# Editors can start a non-login shell without sourcing /etc/profile.
+if [ -r /etc/profile.d/cdc-env.sh ]; then
+    # shellcheck source=/dev/null
+    . /etc/profile.d/cdc-env.sh
+fi
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
+
+# CDC WSL: start new shells in the Linux workspace.
+# Preserve nested shells and Linux project directories opened by an editor.
+if [ "${SHLVL:-1}" -eq 1 ] && [ -d "$HOME/code/cdc" ]; then
+    case "$PWD" in
+        "$HOME"|/mnt/[a-z]|/mnt/[a-z]/*)
+            cd -- "$HOME/code/cdc" || return
+            ;;
+    esac
+fi
+# End CDC WSL workspace startup.
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
@@ -125,6 +142,7 @@ if [ -x /usr/bin/mise ] && [ ! -e "$HOME/.config/mise/.first-login-shown" ]; the
     printf '%s\n' 'mise is installed system-wide; your tools and configuration belong to your user account.'
     printf '\n'
     printf '%s\n' 'Getting started:'
+    printf '%s\n' '  cd ~/code/cdc                Work on the Linux filesystem'
     printf '%s\n' '  mise install                 Install or retry the default tools'
     printf '%s\n' '  mise list                    Show installed tools'
     printf '%s\n' '  mise upgrade                 Upgrade configured tools'

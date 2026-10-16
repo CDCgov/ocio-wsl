@@ -2,11 +2,17 @@
 Description=Run one-time actions on startup
 After=local-fs.target
 After=network.target
+StartLimitIntervalSec=infinity
+StartLimitBurst=6
 
 [Service]
 ExecStart=/opt/scripts/run-once.sh
 RemainAfterExit=true
 Type=oneshot
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=30
+TimeoutStopSec=5
 
 [Install]
 WantedBy=multi-user.target

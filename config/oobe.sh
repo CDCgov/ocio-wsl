@@ -10,6 +10,10 @@ status=0
 if [ "$status" -eq 0 ]; then
     exit 0
 fi
+if getent passwd 1000 > /dev/null 2>&1; then
+    echo 'The user account exists, but setup did not finish; see the errors above.' >&2
+    exit 1
+fi
 
 # No usable Windows username, or it was rejected: ask for one instead
 echo 'Please create a default UNIX user account.'

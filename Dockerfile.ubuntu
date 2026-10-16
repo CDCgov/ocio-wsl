@@ -128,11 +128,7 @@ COPY config/.bash_aliases /root/.bash_aliases
 COPY config/.bash_aliases /etc/skel/.bash_aliases
 
 ##############################################################################
-## Ensure DNS is working properly: 
-## https://gist.github.com/ThePlenkov/6ecf2a43e2b3898e8cd4986d277b5ecf
-##
-## Make the resolv.conf file immutable so that wsl won't delete it on startup
-## https://github.com/microsoft/wsl/issues/5420
+## Let WSL generate resolv.conf so resolver settings follow Windows networking.
 ##############################################################################
 COPY config/wsl.conf /etc/wsl.conf
 

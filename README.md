@@ -39,6 +39,38 @@ Running `wsl --install` requires a Windows elevated privilege account. See [Prer
 
 4. Launch the distro. On first boot it will automatically create your user account and configure DNS.
 
+## Linux workspace
+
+First-login setup creates `~/code/cdc` on the WSL Linux filesystem. Keep your
+repositories, virtual environments, and build output there for good I/O performance.
+
+New interactive Bash shells start in `~/code/cdc` when launched from your Linux
+home or a Windows drive under `/mnt`. Shells opened in an existing Linux project
+keep that directory. Nested shells and non-interactive commands keep their
+working directory too. If workspace setup has not finished, the shell keeps its
+original directory.
+
+For example:
+
+```bash
+cd ~/code/cdc
+git clone git@github.com:CDCgov/ocio-wsl.git
+cd ocio-wsl
+```
+
+Use a WSL-connected editor opened from this directory. To browse the current
+directory in Windows File Explorer, run `explorer.exe .` from WSL.
+
+`~/shared` links to your Windows profile's `wsl-shared` folder when Windows interop
+is available during setup. Use it to transfer files between Windows and Linux.
+If Windows is unavailable, setup creates a local `~/shared` directory instead.
+A later setup run converts it to the Windows link if it is still empty. Existing
+files and links are preserved.
+Keep active repositories under `~/code/cdc`; `/mnt/c` remains available for Windows files.
+
+For existing installations, workspace setup and repository migration instructions
+are in [First-Time Setup](docs/first-time-setup.md#linux-workspace).
+
 ## Installed Tools
 
 Tools are managed by [mise](https://mise.jdx.dev). mise itself is installed in the image, while each user gets an independent `~/.config/mise/config.toml` and tool directory. On first launch, the default tool list is copied into the user’s configuration; run `mise install` when you are ready to install the tools. The initial installation may take several minutes. To see what is installed:
@@ -155,7 +187,21 @@ bash build.sh fedora && bash test.sh
 podman exec -it fedora-44-cdc-test bash
 ```
 
-Note that startup sequences like DNS setup ([config/run-once.service](config/run-once.service)) only run under WSL, so testing those requires a real Windows install.
+Run the isolated startup regression checks without a container:
+
+```bash
+uv sync --locked
+uv run --locked pytest -q
+```
+
+The test environment uses Python from `.python-version` and the dependency
+versions in `uv.lock`. Use uv 0.13.1; `--locked` fails if the project and lockfile
+are out of sync. To update dependencies deliberately, run `uv lock --upgrade`
+and commit the updated lockfile.
+
+The checks exercise failure and recovery paths using temporary account and path
+fixtures. Full OOBE, systemd startup ([config/run-once.service](config/run-once.service)),
+and WSL-managed DNS still require testing both images on Windows.
 
 For a quick build-test-cleanup loop:
 

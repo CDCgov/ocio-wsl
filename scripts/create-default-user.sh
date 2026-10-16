@@ -13,6 +13,8 @@ set -euo pipefail
 
 DEFAULT_UID='1000'
 LOCK_FILE='/run/lock/cdc-default-user.lock'
+STATE_DIR='/var/lib/cdc-wsl'
+PENDING_PASSWORD_FILE="$STATE_DIR/pending-user-password"
 
 if [ "$(id -u)" -ne 0 ]; then
   echo 'Default user setup must be run as root.' >&2
@@ -26,14 +28,18 @@ sanitize_username() {
 
 windows_username() {
   local raw
-  raw=$(/mnt/c/windows/system32/cmd.exe /c 'echo %USERNAME%' 2>/dev/null | tr -d '\r') || return 0
+  raw=$(timeout --kill-after=2s 5s /mnt/c/windows/system32/cmd.exe /d /c 'echo %USERNAME%' 9>&- 2>/dev/null | tr -d '\r') || return 0
+  [ "$raw" != '%USERNAME%' ] || return 0
   # Drop a DOMAIN\ prefix if one is ever present
   sanitize_username "${raw##*\\}"
 }
 
 mkdir -p "$(dirname "$LOCK_FILE")"
 exec 9> "$LOCK_FILE"
-flock 9
+if ! flock -w 35 9; then
+  echo 'Timed out waiting for another default-user setup process.' >&2
+  exit 1
+fi
 
 if getent passwd "$DEFAULT_UID" > /dev/null 2>&1; then
   USERNAME=$(getent passwd "$DEFAULT_UID" | cut -d: -f1)
@@ -62,13 +68,29 @@ else
   done
 
   echo "Creating user '$USERNAME'..."
+  # Persist intent before useradd: it can create the account before a later
+  # step fails or the service is stopped. Only our own pending account may
+  # receive the initial empty password on a retry.
+  install -d -m 0700 "$STATE_DIR"
+  (umask 077; printf '%s\n' "$USERNAME" > "$PENDING_PASSWORD_FILE")
   /usr/sbin/useradd --uid "$DEFAULT_UID" --create-home --shell /bin/bash \
     --groups "$GROUPS_TO_ADD" "$USERNAME"
-  passwd -d "$USERNAME" # Default empty password for the user
 fi
 
-/opt/scripts/configure-rootless-podman.sh "$USERNAME"
-/opt/scripts/install-user-tools.sh "$USERNAME"
+if [ -f "$PENDING_PASSWORD_FILE" ]; then
+  if [ "$(cat "$PENDING_PASSWORD_FILE")" != "$USERNAME" ]; then
+    echo 'Pending password setup belongs to a different account; manual repair is required.' >&2
+    exit 1
+  fi
+  # useradd uses a bare lock marker for a new account. Preserve any password
+  # set since the interrupted attempt, including a locked password hash.
+  password_hash=$(getent shadow "$USERNAME" | cut -d: -f2)
+  case "$password_hash" in
+    '!'|'!!') passwd -d "$USERNAME" ;;
+  esac
+  unset password_hash
+  rm -- "$PENDING_PASSWORD_FILE"
+fi
 
 # wsl-distribution.conf sets defaultUid for wsl --install; wsl --import only
 # honours /etc/wsl.conf, so record the default user there too.
@@ -76,3 +98,11 @@ if ! grep -qx "default=${USERNAME}" /etc/wsl.conf; then
   printf '\n[user]\ndefault=%s\n' "$USERNAME" >> /etc/wsl.conf
   echo "Default user set to '$USERNAME' in /etc/wsl.conf"
 fi
+
+# Each step must get a chance to finish even if another tool needs repair.
+# Keep a failing status so the startup service retries unfinished setup.
+status=0
+/opt/scripts/install-user-tools.sh "$USERNAME" || status=1
+/opt/scripts/setup-user-workspace.sh "$USERNAME" || status=1
+/opt/scripts/configure-rootless-podman.sh "$USERNAME" || status=1
+exit "$status"
