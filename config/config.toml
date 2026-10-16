@@ -1,16 +1,11 @@
 [tools]
 actionlint = "1.7.12"
 awscli = "2.36.50"
-"asdf:boris-ning-usds/asdf-azure-cli" = "2.90.0"
+# The plugin needs Python on PATH while creating its virtual environment.
+"asdf:boris-ning-usds/asdf-azure-cli" = { version = "2.90.0", depends = ["python"] }
 black = "26.5.1"
 "github:clever/csvlint" = "0.3.0"
-golang = "1.27.1"
-gradle = "9.7.1"
-grype = "0.119.0"
-helm = "4.3.0"
-java = "27.0.0"
 kubectl = "1.37.0"
-maven = "3.9.16"
 nodejs = "26.9.0"
 pipx = "1.17.5"
 "pipx:checkov" = "3.3.19"
@@ -22,7 +17,6 @@ ripgrep = "15.2.0"
 ruff = "0.16.8"
 rust = "1.98.1"
 shellcheck = "0.11.0"
-terraform = "1.16.3"
 uv = "0.13.1"
 
 [settings]
