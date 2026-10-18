@@ -102,21 +102,14 @@ Find the full list of tools and their versions in the [config.toml file](https:/
 
 | Category  | Tools                                                 |
 | --------- | ----------------------------------------------------- |
-| Languages | Python 3.13, Node.js, Go, Java, Rust                  |
-| Cloud     | AWS CLI, Azure CLI, kubectl, Helm, Terraform          |
-| Build     | Gradle, Maven                                         |
+| Languages | Python, Node.js, Rust                                 |
+| Cloud     | AWS CLI, Azure CLI, kubectl                           |
 | Linting   | shellcheck, ruff, black, actionlint, semgrep, checkov |
-| Utilities | ripgrep, grype, pre-commit, poetry, uv, pipx          |
+| Utilities | ripgrep, csvlint, pre-commit, poetry, uv, pipx        |
 
 ## Extra Tools
 
-Some tools are excluded from the base image due to a [2 GB GitHub release limit](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas). All of them are already listed in your `~/.config/mise/config.toml`, so running `mise upgrade` should install everything. If you run into ordering or timeout issues (particularly with Rust behind Zscaler), use the helper script instead:
-
-```bash
-bash /opt/scripts/add-extra-tools.sh
-```
-
-The script installs foundational tools (Python, Node.js, Java, Go, Rust) before running `mise upgrade` for the rest.
+Some tools are excluded from the base image due to a [2 GB GitHub release limit](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas). All of them are already listed in your `~/.config/mise/config.toml`, so running `mise upgrade` installs everything.
 
 ## Optional R Installation
 
