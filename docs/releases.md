@@ -29,6 +29,6 @@ Nothing parses your commit messages, so the level is your call:
 
 ## Limitations
 
-GitHub Releases have a [2 GB per-file limit](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas), which is why some tools are excluded from the base image and available via `mise upgrade` or `bash /opt/scripts/add-extra-tools.sh` instead.
+GitHub Releases have a [2 GB per-file limit](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases#storage-and-bandwidth-quotas), which is why some tools are excluded from the base image and available via `mise upgrade` instead.
 
 Because the images are built inside the bump workflow, a broken `Dockerfile` fails the run after the version has already been bumped locally in the job but before anything is pushed. Fix the build and run the workflow again; nothing is left behind on `main`.
