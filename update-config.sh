@@ -26,24 +26,26 @@ fi
 # Start the output file
 echo "[tools]" > "$OUTPUT_FILE"
 
-# Process top-level tools
-yq -r '.tools | to_entries | .[] | select(.value | tag != "!!map") | "\(.key) \(.value)"' "$TOOL_VERSIONS_PATH" | while read -r package version; do
-  latest_version=$(mise latest "$package" 2>/dev/null || echo "$version")
-  echo "\"$package\" = \"$latest_version\"" >> "$OUTPUT_FILE"
-done
-
-# Process nested tool categories like [tools.java]
-yq -r '.tools | to_entries | .[] | select(.value | tag == "!!map") | .key' "$TOOL_VERSIONS_PATH" | while read -r category; do
-  echo "" >> "$OUTPUT_FILE"
-  echo "[tools.$category]" >> "$OUTPUT_FILE"
-
-  yq -r ".tools[\"$category\"] | to_entries | .[] | \"\(.key) \(.value)\"" "$TOOL_VERSIONS_PATH" | while read -r subpackage subversion; do
-    latest_version=$(mise latest "$subpackage" 2>/dev/null || echo "$subversion")
-    echo "\"$subpackage\" = \"$latest_version\"" >> "$OUTPUT_FILE"
-  done
+# Process tools in their original order. Tools with options, e.g.
+# "tool" = { version = "1.0", depends = ["python"] }, are written back as
+# inline tables with only the version bumped.
+yq -r '.tools | keys | .[]' "$TOOL_VERSIONS_PATH" | while read -r package; do
+  if [[ $(yq -r ".tools[\"$package\"] | tag" "$TOOL_VERSIONS_PATH") == "!!map" ]]; then
+    version=$(yq -r ".tools[\"$package\"].version" "$TOOL_VERSIONS_PATH")
+    latest_version=$(mise latest "$package" 2>/dev/null || echo "$version")
+    # Strings and arrays of strings serialize identically in JSON and TOML
+    options=$(yq -r ".tools[\"$package\"] | del(.version) | to_entries | .[] | \", \" + .key + \" = \" + (.value | @json)" "$TOOL_VERSIONS_PATH" | tr -d '\n')
+    echo "\"$package\" = { version = \"$latest_version\"$options }" >> "$OUTPUT_FILE"
+  else
+    version=$(yq -r ".tools[\"$package\"]" "$TOOL_VERSIONS_PATH")
+    latest_version=$(mise latest "$package" 2>/dev/null || echo "$version")
+    echo "\"$package\" = \"$latest_version\"" >> "$OUTPUT_FILE"
+  fi
 done
 
 # Carry over every non-tools table (e.g. [settings]) unchanged
 awk '/^\[/ { keep = ($0 !~ /^\[tools[].]/); if (keep) print "" } keep' "$TOOL_VERSIONS_PATH" >> "$OUTPUT_FILE"
 
 echo "Updated config.toml file created as $OUTPUT_FILE"
+# Review the output before replacing the original, since comments are not carried over
+echo "Review it, then apply with: mv $OUTPUT_FILE $TOOL_VERSIONS_PATH"

@@ -87,10 +87,6 @@ mise upgrade
 
 To install a tool or change a version, edit your personal `~/.config/mise/config.toml`, then run `mise install` or `mise upgrade`.
 
-Azure CLI uses the CDC-maintained `asdf:boris-ning-usds/asdf-azure-cli` fork. Its tool entry declares `depends = ["python"]` so the first `mise install` finishes installing Python before starting Azure CLI. The fork avoids the upstream plugin's restrictive Python-version behavior and creates an independent virtual environment for Azure CLI. The fork should create that environment with `python3 -m venv --copies` so a later mise Python upgrade cannot remove its interpreter. Do not also declare the native `azure-cli` backend; two entries can create conflicting `az` launchers.
-
-The custom Azure CLI plugin owns its private Python environment. Azure CLI extensions, including `resource-graph`, use that private interpreter and do not depend on the separately managed user Python.
-
 Podman is installed as a base operating-system tool and is ready for rootless use by the default WSL user. The first-boot setup assigns subordinate UID/GID ranges and restores the mapping-helper privileges that may be lost while exporting and importing a WSL image. Verify it without `sudo`:
 
 ```bash
@@ -147,15 +143,6 @@ Verify the installation with:
 ```bash
 R --version | head -1
 mise ls
-```
-
-If upgrading an existing image left `az` broken, remove the native `azure-cli` entry from `~/.config/mise/config.toml`, use the custom fork, and reinstall it:
-
-```bash
-mise uninstall azure-cli@2.85.0 || true
-mise use --global 'asdf:boris-ning-usds/asdf-azure-cli@2.85.0'
-mise install
-az --version
 ```
 
 ## Local Development
