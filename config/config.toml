@@ -1,23 +1,22 @@
 [tools]
-actionlint = "1.7.12"
-awscli = "2.36.50"
-# The plugin needs Python on PATH while creating its virtual environment.
-"asdf:boris-ning-usds/asdf-azure-cli" = { version = "2.90.0", depends = ["python"] }
-black = "26.5.1"
+"actionlint" = "1.7.12"
+"awscli" = "2.38.5"
+"asdf:boris-ning-usds/asdf-azure-cli" = { version = "2.91.0", depends = ["python"] }
+"black" = "26.10.1"
 "github:clever/csvlint" = "0.3.0"
-kubectl = "1.37.0"
-nodejs = "26.9.0"
-pipx = "1.17.5"
-"pipx:checkov" = "3.3.19"
-"pipx:semgrep" = "1.177.0"
-poetry = "2.5.1"
-pre-commit = "4.6.2"
-python = "3.14.7"
-ripgrep = "15.2.0"
-ruff = "0.16.8"
-rust = "1.98.1"
-shellcheck = "0.11.0"
-uv = "0.13.1"
+"kubectl" = "1.37.1"
+"nodejs" = "26.12.1"
+"pipx" = "1.18.4"
+"pipx:checkov" = "3.3.30"
+"pipx:semgrep" = "1.182.1"
+"poetry" = "2.5.1"
+"pre-commit" = "4.7.0"
+"python" = "3.15.1"
+"ripgrep" = "15.2.0"
+"ruff" = "0.17.2"
+"rust" = "1.99.1"
+"shellcheck" = "0.11.0"
+"uv" = "0.13.5"
 
 [settings]
 idiomatic_version_file_enable_tools = ["node", "python"]
