@@ -28,7 +28,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           set -e
-          if ! curl -L -k "${{ env.CERTIFICATE_URL }}" -o "${{ env.PEM_FILE_PATH }}"; then
+          if ! curl -fsSL "${{ env.CERTIFICATE_URL }}" -o "${{ env.PEM_FILE_PATH }}"; then
             echo "Failed to download the certificate"
             exit 1
           fi
@@ -50,6 +50,8 @@ jobs:
           private-key: ${{ secrets.GH_APP_OCIO_WSL_PRIVATE_KEY }}
           owner: cdcgov
           repositories: ocio-wsl
+          permission-contents: write
+          permission-pull-requests: write
 
       - name: Configure Pull Request
         if: github.ref == 'refs/heads/main'

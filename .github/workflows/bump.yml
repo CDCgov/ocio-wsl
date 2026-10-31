@@ -1,13 +1,15 @@
 name: Bump version
 
-# The release flow for the WSL images. Run it from the Actions tab, pick a
-# semver level, and it will:
+# The release flow for the WSL images. Runs every Saturday with a patch bump,
+# or from the Actions tab with a chosen semver level. It will:
 #   1. bump package.json
-#   2. build both .wsl images and generate the checksums and manifest
+#   2. refresh tool pins, test, and build both .wsl images and release metadata
 #   3. commit the bump to main and push the tag (bare semver, e.g. 2.8.0)
 #   4. create the GitHub release and attach the images
 
 on:
+  schedule:
+    - cron: '17 8 * * 6' # Saturday 08:17 UTC (03:17 EST / 04:17 EDT)
   workflow_dispatch:
     inputs:
       level:
@@ -46,6 +48,7 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: cdcgov
           repositories: ocio-wsl
+          permission-contents: write
 
       - name: Checkout main
         # zizmor: ignore[artipacked] - this job pushes the bump commit and tag, so it needs the token
@@ -71,11 +74,29 @@ jobs:
       - name: Bump package.json
         id: version
         env:
-          LEVEL: ${{ inputs.level }}
+          LEVEL: ${{ inputs.level || 'patch' }}
         run: |
           pnpm version "$LEVEL" --no-git-tag-version --no-git-checks
           version="$(node -p "require('./package.json').version")"  # e.g. 2.8.0
           echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up mise and yq for tool updates
+        uses: jdx/mise-action@6be3c7ed4c21d4f76b208d351d95aac273ebb76d # v5.2.4
+        with:
+          minimum_release_age: 14d
+          cache: false
+          mise_toml: |
+            [tools]
+            "aqua:mikefarah/yq" = "latest"
+        env:
+          MISE_MINIMUM_RELEASE_AGE: 14d
+
+      - name: Refresh default tool versions
+        env:
+          MISE_GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          bash update-config.sh config/config.toml "$RUNNER_TEMP/config.toml"
+          mv "$RUNNER_TEMP/config.toml" config/config.toml
 
       - name: Set up Podman
         run: |
@@ -87,7 +108,7 @@ jobs:
         shell: bash
 
       - name: Set up uv
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
           version: "latest"
 
@@ -154,7 +175,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add package.json
+          git add package.json config/config.toml
           git commit -m "chore(release): $VERSION"
           git tag -a "$VERSION" -m "$VERSION"
 
