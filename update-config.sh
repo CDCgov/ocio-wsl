@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
 # Default paths
 TOOL_VERSIONS_PATH=${1:-config/config.toml}
@@ -23,6 +23,20 @@ if [[ ! -f $TOOL_VERSIONS_PATH ]]; then
   exit 1
 fi
 
+# This file is not in mise's normal config discovery path. Pass its release-age
+# policy explicitly so updates retain the same supply-chain delay as installs.
+minimum_release_age=$(yq -r '.settings.minimum_release_age // "14d"' "$TOOL_VERSIONS_PATH")
+
+latest_version_for() {
+  local package=$1 current=$2 latest
+  if latest=$(mise latest --minimum-release-age "$minimum_release_age" "$package") && [[ -n $latest ]]; then
+    printf '%s\n' "$latest"
+  else
+    echo "warning: Could not resolve $package; keeping $current" >&2
+    printf '%s\n' "$current"
+  fi
+}
+
 # Start the output file
 echo "[tools]" > "$OUTPUT_FILE"
 
@@ -32,13 +46,13 @@ echo "[tools]" > "$OUTPUT_FILE"
 yq -r '.tools | keys | .[]' "$TOOL_VERSIONS_PATH" | while read -r package; do
   if [[ $(yq -r ".tools[\"$package\"] | tag" "$TOOL_VERSIONS_PATH") == "!!map" ]]; then
     version=$(yq -r ".tools[\"$package\"].version" "$TOOL_VERSIONS_PATH")
-    latest_version=$(mise latest "$package" 2>/dev/null || echo "$version")
+    latest_version=$(latest_version_for "$package" "$version")
     # Strings and arrays of strings serialize identically in JSON and TOML
     options=$(yq -r ".tools[\"$package\"] | del(.version) | to_entries | .[] | \", \" + .key + \" = \" + (.value | @json)" "$TOOL_VERSIONS_PATH" | tr -d '\n')
     echo "\"$package\" = { version = \"$latest_version\"$options }" >> "$OUTPUT_FILE"
   else
     version=$(yq -r ".tools[\"$package\"]" "$TOOL_VERSIONS_PATH")
-    latest_version=$(mise latest "$package" 2>/dev/null || echo "$version")
+    latest_version=$(latest_version_for "$package" "$version")
     echo "\"$package\" = \"$latest_version\"" >> "$OUTPUT_FILE"
   fi
 done

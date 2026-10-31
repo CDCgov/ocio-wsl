@@ -37,13 +37,28 @@ class ConfigTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("yq"), "yq is required by update-config.sh")
     def test_update_config_output_is_valid(self):
+        self.check_update("exit 1", updated_versions=False)
+
+    @unittest.skipUnless(shutil.which("yq"), "yq is required by update-config.sh")
+    def test_update_config_uses_release_age_and_preserves_options(self):
+        self.check_update('''[ "$1" = latest ] || exit 99
+[ "$2" = --minimum-release-age ] || exit 99
+[ "$3" = 14d ] || exit 99
+[ "$#" = 4 ] || exit 99
+echo 99.0.0''', updated_versions=True)
+
+    @unittest.skipUnless(shutil.which("yq"), "yq is required by update-config.sh")
+    def test_update_config_keeps_pins_for_empty_lookup(self):
+        self.check_update("exit 0", updated_versions=False)
+
+    def check_update(self, mise_script, *, updated_versions):
         with tempfile.TemporaryDirectory(prefix="cdc-config-") as temp:
             root = Path(temp)
             bin_dir = root / "bin"
             bin_dir.mkdir()
-            # Stub mise so the test is offline; "latest" fails, keeping current versions
+            # Stub mise to exercise version resolution without network access.
             mise = bin_dir / "mise"
-            mise.write_text("#!/bin/bash\nexit 1\n")
+            mise.write_text(f"#!/bin/bash\n{mise_script}\n")
             mise.chmod(0o755)
             output = root / "config.toml.latest"
             subprocess.run(["bash", str(REPO / "update-config.sh"), str(CONFIG), str(output)],
@@ -54,6 +69,12 @@ class ConfigTests(unittest.TestCase):
             with output.open("rb") as file:
                 updated = tomllib.load(file)
             check_tools(self, updated)
+            if updated_versions:
+                for name, spec in original["tools"].items():
+                    if isinstance(spec, dict):
+                        spec["version"] = "99.0.0"
+                    else:
+                        original["tools"][name] = "99.0.0"
             self.assertEqual(updated, original)
 
 

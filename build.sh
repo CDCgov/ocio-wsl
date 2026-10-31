@@ -39,7 +39,8 @@ esac
 WSL_NAME="${IMAGE_NAME}.wsl"
 
 echo "Building image $IMAGE_NAME from $DOCKERFILE"
-podman build . -f "$DOCKERFILE" -t "$IMAGE_NAME"
+# Refresh the base image and rerun package upgrades, even on a reused builder.
+podman build --pull=always --no-cache . -f "$DOCKERFILE" -t "$IMAGE_NAME"
 
 echo "Creating temporary export container from $IMAGE_NAME"
 container_id=$(podman create "$IMAGE_NAME")
