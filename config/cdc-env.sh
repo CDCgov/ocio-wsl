@@ -20,5 +20,6 @@ case " ${NODE_OPTIONS:-} " in
     *) export NODE_OPTIONS="${NODE_OPTIONS:+$NODE_OPTIONS }--use-openssl-ca" ;;
 esac
 
-export LANG="${LANG:-C.UTF-8}"
-export LC_ALL="${LC_ALL:-C.UTF-8}"
+# WSL can supply an inherited locale; use the image's US English default.
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
