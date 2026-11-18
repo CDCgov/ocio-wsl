@@ -18,6 +18,10 @@ Installing [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us
 
 ## Installation
 
+Watch this quick walkthrough to see how to install and start using the CDC WSL distribution, then follow the steps below.
+
+https://github.com/user-attachments/assets/106bf44e-52cc-4a5f-8c64-60d9fc1237ac
+
 1. Open PowerShell with your normal account and run `wsl` to confirm WSL2 is ready. If it isn't, follow [Prerequisites](docs/prerequisites.md).
 
 2. Download the `.wsl` file for your preferred distro from the [latest release](https://github.com/cdcgov/ocio-wsl/releases/latest):
