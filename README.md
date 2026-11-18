@@ -12,17 +12,17 @@
 
 This project grew out of my frustration with setting up a new development environment in government: every setup was a little different, TLS certificates were a constant fight, and running Linux on Windows brought its own headaches. It provides pre-built [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) Linux images for CDC developers. Common tools are ready to install with [mise](https://mise.jdx.dev), and the [enterprise certificates](https://github.com/CDCgov/ocio-certificates/blob/main/docs/technical.md) are already trusted, so we don't have to fight certificate errors anymore.
 
-## Prerequisites
-
-Installing [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/about) requires a Windows **elevated privilege** account. If `wsl` is already installed, you can skip this. Otherwise, see [Prerequisites](docs/prerequisites.md) for how to request the account and enable WSL2.
-
-## Installation
-
-Watch this quick walkthrough to see how to install and start using the CDC WSL distribution, then follow the steps below.
+I wanted a portable Linux environment that is easy to setup on a new Windows machine, and had 80% of everything I needed when I start it.
 
 https://github.com/user-attachments/assets/106bf44e-52cc-4a5f-8c64-60d9fc1237ac
 
-1. Open PowerShell with your normal account and run `wsl` to confirm WSL2 is ready. If it isn't, follow [Prerequisites](docs/prerequisites.md).
+## Prerequisites
+
+Installing [Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/about) requires a Windows **elevated privilege** account. If `wsl` is already installed, you can skip this. Otherwise, see [Prerequisites](docs/prerequisites.md) for how to request the account and enable [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install).
+
+## Installation
+
+1. Open PowerShell with your normal account and run `wsl` to confirm [WSL2](https://learn.microsoft.com/en-us/windows/wsl/install) is ready. If it isn't, follow [Prerequisites](docs/prerequisites.md).
 
 2. Download the `.wsl` file for your preferred distro from the [latest release](https://github.com/cdcgov/ocio-wsl/releases/latest):
 
@@ -96,14 +96,14 @@ podman run -t ubuntu-26.04-cdc bash -c "bash /opt/scripts/check-google.sh"
 To debug an image interactively, build it and exec in:
 
 ```bash
-bash build.sh fedora && bash test.sh
-podman exec -it fedora-44-cdc-test bash
+bash build.sh ubuntu && bash test.sh
+podman exec -it ubuntu-26.04-cdc bash
 ```
 
 For a quick build-test-cleanup loop:
 
 ```bash
-bash build.sh fedora && bash test.sh fedora && bash cleanup.sh fedora
+bash build.sh ubuntu && bash test.sh ubuntu && bash cleanup.sh ubuntu
 ```
 
 Run the startup regression checks without a container:
