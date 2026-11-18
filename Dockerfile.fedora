@@ -1,6 +1,6 @@
 FROM docker.io/fedora:44
 
-LABEL updated_at=2026-10-26
+LABEL updated_at=2026-11-16
 LABEL fedora_version=44
 
 ENV LANG=C.UTF-8
@@ -43,6 +43,11 @@ RUN dnf upgrade -y && dnf install -y \
   \
   tzdata && \
   dnf clean all
+
+# Persist the locale in the exported WSL filesystem as well as image metadata.
+RUN printf 'LANG=en_US.UTF-8\n' > /etc/locale.conf
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 ###############################################################################
 ## Install the enterprise certificates into the operating system truststore

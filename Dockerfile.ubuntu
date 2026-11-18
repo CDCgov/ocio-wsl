@@ -1,6 +1,6 @@
 FROM docker.io/ubuntu:26.04
 
-LABEL updated_at=2026-10-26
+LABEL updated_at=2026-11-16
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
@@ -40,10 +40,14 @@ RUN apt-get update -q && apt-get upgrade -y && apt-get install -y \
   uidmap && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
 
-# Support shells and applications that request the US English UTF-8 locale.
+# Generate and persist the default locale for the exported WSL filesystem.
 RUN sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
   locale-gen && \
-  LC_ALL=en_US.UTF-8 locale charmap | grep -qx UTF-8
+  LC_ALL=en_US.UTF-8 locale charmap | grep -qx UTF-8 && \
+  update-locale LANG=en_US.UTF-8
+
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 # The Ubuntu container image includes a placeholder UID 1000 account. WSL's
 # OOBE reserves UID 1000 for the Windows user's matching Linux account.
